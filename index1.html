@@ -1,0 +1,1426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nick Malham — 0 to 1 Product &amp; Venture Builder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Manrope:wght@300;400;500;600&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+
+/* ═══════════════════════════════════════════════════════
+   DESIGN SYSTEM — glass tokens used everywhere
+   ═══════════════════════════════════════════════════════ */
+:root {
+  --bg-0: #080604;      /* deepest — contact/footer    */
+  --bg-1: #0a0806;      /* hero                        */
+  --bg-2: #0d0b09;      /* brands                      */
+  --bg-3: #0f0d0b;      /* cases                       */
+  --bg-4: #111008;      /* experiments                 */
+  --bg-5: #0d0c0a;      /* about                       */
+
+  --glass-fill:    rgba(255,255,255,0.04);
+  --glass-border:  rgba(255,255,255,0.09);
+  --glass-shine:   rgba(255,255,255,0.13);
+  --glass-shadow:  rgba(0,0,0,0.55);
+  --glass-blur:    blur(16px);
+
+  --text-100: #f0ece3;
+  --text-60:  rgba(240,236,227,0.60);
+  --text-40:  rgba(240,236,227,0.40);
+  --text-25:  rgba(240,236,227,0.25);
+
+  --accent: #3b7fd4;
+  --ease-spring: cubic-bezier(0.23,1,0.32,1);
+  --ease-in: cubic-bezier(0.4,0,0.2,1);
+}
+
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+html { scroll-behavior:smooth; }
+body {
+  background: var(--bg-0);
+  color: var(--text-100);
+  font-family: 'Manrope', sans-serif;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ─── CUSTOM CURSOR ──────────────────────────────────── */
+#cur {
+  position: fixed; pointer-events: none; z-index: 9999;
+  transform: translate(-50%,-50%);
+  width: 10px; height: 10px;
+  background: rgba(240,236,227,0.85);
+  border-radius: 50%;
+  transition: width .28s var(--ease-spring), height .28s var(--ease-spring), background .28s;
+  mix-blend-mode: difference;
+}
+#cur.h { width: 54px; height: 54px; background: rgba(240,236,227,0.08); }
+
+/* ─── SHARED GLASS MIXIN ─────────────────────────────── */
+.glass {
+  background: var(--glass-fill);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    inset 0 1px 0 var(--glass-shine),
+    0 8px 32px var(--glass-shadow);
+}
+
+/* ─── NAV ────────────────────────────────────────────── */
+.site-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 52px;
+  transition: background .4s ease, backdrop-filter .4s ease;
+}
+.site-nav.scrolled {
+  background: rgba(8,6,4,0.82);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--glass-border);
+}
+.nav-wordmark {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px; font-weight: 700;
+  letter-spacing: -.02em; color: var(--text-100);
+  text-decoration: none;
+  transition: opacity .2s;
+}
+.nav-wordmark:hover { opacity: .7; }
+.nav-links { display: flex; gap: 36px; list-style: none; }
+.nav-links a {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--text-40); text-decoration: none;
+  transition: color .2s;
+}
+.nav-links a:hover { color: var(--text-100); }
+
+/* ─── HERO ───────────────────────────────────────────── */
+.hero {
+  position: relative; width: 100%; height: 100vh;
+  overflow: hidden; background: var(--bg-1);
+  display: flex; align-items: center; justify-content: center;
+}
+#fluid-canvas {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  display: block; z-index: 1;
+}
+.hero-inner {
+  position: relative; z-index: 2;
+  text-align: center; padding: 40px;
+}
+/* Dot grid */
+.hero-inner::before {
+  content: '';
+  position: absolute; inset: -200px;
+  background-image: radial-gradient(circle, rgba(240,236,227,0.035) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events: none;
+  animation: gridDrift 20s ease-in-out infinite alternate;
+}
+@keyframes gridDrift {
+  0%   { transform: translate(0,0); }
+  100% { transform: translate(16px,8px); }
+}
+.hero-hl {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(52px, 8.5vw, 116px);
+  font-weight: 900; line-height: .9;
+  letter-spacing: -.04em; color: var(--text-100);
+}
+.hero-hl em { font-style: italic; color: var(--text-25); }
+.hero-sub {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--text-40);
+  margin-top: 44px;
+}
+
+/* Scroll hint */
+.scroll-hint {
+  position: absolute; bottom: 32px; left: 50%;
+  transform: translateX(-50%);
+  font-family: 'DM Mono', monospace;
+  font-size: 8px; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--text-25);
+  display: flex; align-items: center; gap: 12px;
+  z-index: 10; pointer-events: none;
+}
+.sl {
+  width: 28px; height: 1px;
+  background: var(--text-25);
+  animation: sp 2.8s ease-in-out infinite;
+}
+@keyframes sp {
+  0%,100% { width:28px; opacity:.3; }
+  50%      { width:48px; opacity:.7; }
+}
+
+/* ─── TL;DR BUTTON ───────────────────────────────────── */
+.tldr-btn {
+  position: absolute; bottom: 52px; left: 52px;
+  z-index: 10;
+  display: flex; align-items: center; gap: 14px;
+  cursor: pointer; border: none; background: none; padding: 0;
+}
+.tldr-circle {
+  position: relative; width: 56px; height: 56px; flex-shrink: 0;
+}
+.tldr-disc {
+  position: absolute; inset: 0; border-radius: 50%;
+  background: rgba(240,236,227,0.08);
+  border: 1.5px solid rgba(240,236,227,0.28);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: background .25s, border-color .25s;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.22),
+    inset 0 -1px 0 rgba(0,0,0,0.18),
+    0 4px 24px rgba(0,0,0,0.3);
+}
+.tldr-btn:hover .tldr-disc {
+  background: rgba(240,236,227,0.15);
+  border-color: rgba(240,236,227,0.55);
+}
+.tldr-play {
+  position: absolute; top: 50%; left: 53%;
+  transform: translate(-50%,-50%);
+  width: 0; height: 0;
+  border-style: solid;
+  border-width: 7px 0 7px 13px;
+  border-color: transparent transparent transparent rgba(240,236,227,0.88);
+}
+.tldr-pause {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  display: none; gap: 4px;
+}
+.tldr-pause span {
+  display: block; width: 3px; height: 14px;
+  background: rgba(240,236,227,0.88); border-radius: 1.5px;
+}
+.tldr-btn.playing .tldr-play  { display: none; }
+.tldr-btn.playing .tldr-pause { display: flex; }
+.tldr-ring {
+  position: absolute; inset: -8px; border-radius: 50%;
+  border: 1.5px solid rgba(240,236,227,0.24);
+  opacity: 0;
+}
+.tldr-btn.playing .tldr-ring  { animation: tldrPulse 2s ease-out infinite; }
+@keyframes tldrPulse {
+  0%   { transform:scale(1); opacity:.45; }
+  100% { transform:scale(1.5); opacity:0; }
+}
+.tldr-progress-wrap {
+  position: absolute; bottom: -1px; left: 4px; right: 4px;
+  height: 2px; border-radius: 999px;
+  background: rgba(240,236,227,0.1); overflow: hidden;
+}
+.tldr-progress-bar {
+  height: 100%; width: 0%;
+  background: rgba(240,236,227,0.55);
+  transition: width .5s linear;
+}
+.tldr-label { display: flex; flex-direction: column; gap: 2px; text-align: left; }
+.tldr-label-top {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--text-40);
+}
+.tldr-label-main {
+  font-family: 'Playfair Display', serif;
+  font-size: 14px; font-weight: 700;
+  color: rgba(240,236,227,0.82); letter-spacing: -.01em;
+}
+
+/* ─── SECTION SHARED ─────────────────────────────────── */
+.section { position: relative; padding: 100px 52px 88px; }
+.section-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--text-40); margin-bottom: 10px;
+}
+.section-hl {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(34px,4vw,54px); font-weight: 700;
+  letter-spacing: -.025em; line-height: 1.02;
+  color: var(--text-100); margin-bottom: 44px;
+}
+
+/* Parallax layer container */
+.parallax-layer { will-change: transform; }
+
+/* ─── BRAND SECTION ──────────────────────────────────── */
+.brand-section { background: var(--bg-2); }
+.brand-intro {
+  max-width: 620px;
+  font-size: 14px; line-height: 1.95;
+  color: var(--text-60); margin-bottom: 60px;
+}
+.brand-intro strong { color: var(--text-100); font-weight: 600; }
+
+/* Brand card grid */
+.brands-grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 16px;
+}
+
+/* Each outer brand-card: perspective host + lift animation */
+.brand-card {
+  perspective: 1100px;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: transform .4s var(--ease-spring), box-shadow .4s var(--ease-spring);
+  /* GSAP initial state */
+  opacity: 0; transform: translateY(56px);
+}
+.brand-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 28px 60px rgba(0,0,0,0.55), 0 6px 16px rgba(0,0,0,0.3);
+}
+.brand-card.flipped { transform: translateY(-6px); }
+
+/* Inner — the actual 3D flip element */
+.card-inner {
+  position: relative; width: 100%;
+  transform-style: preserve-3d;
+  transition: transform .68s var(--ease-in);
+  border-radius: 10px;
+}
+.brand-card.flipped .card-inner { transform: rotateY(180deg); }
+
+/* Front face */
+.card-front {
+  backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  border-radius: 10px; overflow: hidden;
+  display: flex; flex-direction: column;
+  /* Glass border + shine */
+  border: 1px solid var(--glass-border);
+  box-shadow: inset 0 1px 0 var(--glass-shine);
+}
+
+/* Logo image */
+.brand-img {
+  width: 100%; aspect-ratio: 4/3;
+  object-fit: cover; object-position: center; display: block;
+}
+.brand-card.contain .brand-img {
+  object-fit: contain; padding: 15% 13%;
+  /* Shimmer overlay on contain logos */
+  position: relative;
+}
+/* Shine on contain cards */
+.brand-card.contain .card-front::after {
+  content: '';
+  position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255,255,255,0.12) 50%,
+    transparent 60%
+  );
+  animation: cardShimmer 4s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes cardShimmer {
+  0%   { left: -100%; }
+  40%  { left: 120%; }
+  100% { left: 120%; }
+}
+
+/* Label strip */
+.brand-label {
+  background: rgba(14,12,10,0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-top: 1px solid var(--glass-border);
+  padding: 14px 18px;
+}
+.brand-label-years {
+  font-family: 'DM Mono', monospace;
+  font-size: 7.5px; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--text-40); margin-bottom: 3px;
+}
+.brand-label-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px; font-weight: 700;
+  color: var(--text-100); margin-bottom: 2px; line-height: 1.1;
+}
+.brand-label-role {
+  font-family: 'DM Mono', monospace;
+  font-size: 7.5px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--text-60);
+}
+
+/* Back face */
+.card-back {
+  position: absolute; inset: 0;
+  backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  transform: rotateY(180deg);
+  border-radius: 10px;
+  background: rgba(18,14,10,0.96);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    inset 0 1px 0 var(--glass-shine),
+    inset 0 -1px 0 rgba(0,0,0,0.3);
+  display: flex; flex-direction: column;
+  justify-content: center; padding: 26px 24px;
+}
+.card-back-org {
+  font-family: 'DM Mono', monospace;
+  font-size: 8.5px; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--text-40); margin-bottom: 14px;
+}
+.card-back-text {
+  font-size: 13.5px; line-height: 1.75;
+  color: var(--text-100); font-family: 'Manrope', sans-serif;
+  margin-bottom: 20px;
+}
+.card-back-hint {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--text-25);
+  display: flex; align-items: center; gap: 8px; margin-top: auto;
+}
+.card-back-hint::before {
+  content: ''; width: 16px; height: 1px;
+  background: var(--text-25); display: inline-block;
+}
+
+/* Click hint */
+.card-hint {
+  font-family: 'DM Mono', monospace;
+  font-size: 8.5px; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--text-25); text-align: center; margin: 14px 0 0;
+}
+
+/* Capability strip */
+.cap-strip {
+  display: grid; grid-template-columns: repeat(4,1fr);
+  gap: 2px; margin-top: 36px;
+  /* GSAP initial state */
+}
+.cap-cell {
+  background: var(--glass-fill);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--glass-border);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+  padding: 28px 24px;
+  /* GSAP initial state */
+  opacity: 0; transform: translateY(20px);
+  transition: background .3s, border-color .3s;
+}
+.cap-cell:hover {
+  background: rgba(255,255,255,0.07);
+  border-color: rgba(255,255,255,0.14);
+}
+.cap-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 38px; font-weight: 900;
+  color: var(--accent); line-height: 1; margin-bottom: 6px;
+}
+.cap-label {
+  font-size: 11.5px; font-weight: 500; color: var(--text-40); line-height: 1.5;
+}
+
+/* ─── CASE STUDIES ───────────────────────────────────── */
+.work-section { background: var(--bg-3); }
+.section-header {
+  display: flex; align-items: flex-end;
+  justify-content: space-between; margin-bottom: 48px;
+}
+.section-count {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--text-25);
+}
+.cases-grid {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 16px;
+}
+
+/* Case card wrapper — holds perspective */
+.case-card-wrap {
+  perspective: 1100px;
+  opacity: 0; transform: translateY(40px) scale(.96);
+}
+
+/* The card itself — glass surface */
+.case-card {
+  display: flex; flex-direction: column;
+  text-decoration: none;
+  border-radius: 10px; overflow: hidden;
+  background: rgba(20,16,12,0.7);
+  border: 1px solid var(--glass-border);
+  box-shadow: inset 0 1px 0 var(--glass-shine);
+  cursor: pointer;
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition:
+    transform .14s ease,
+    box-shadow .4s var(--ease-spring);
+}
+.case-card:hover {
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.1),
+    0 28px 56px rgba(0,0,0,0.6),
+    0 6px 16px rgba(0,0,0,0.35);
+}
+
+/* Image area */
+.case-img-wrap {
+  position: relative; overflow: hidden;
+  width: 100%; aspect-ratio: 4/3; flex-shrink: 0;
+}
+.case-card img.main-img {
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
+  transition: transform .75s var(--ease-spring), filter .5s;
+  filter: brightness(.76) saturate(.85);
+}
+.case-card:hover img.main-img {
+  transform: scale(1.05);
+  filter: brightness(.9) saturate(1);
+}
+
+/* Magnifying lens */
+.case-lens {
+  position: absolute; width: 144px; height: 144px;
+  border-radius: 50%; pointer-events: none;
+  opacity: 0; transform: translate(-50%,-50%);
+  transition: opacity .2s; z-index: 5;
+  border: 2px solid rgba(255,255,255,0.5);
+  box-shadow:
+    0 0 0 1px rgba(0,0,0,0.15),
+    0 8px 32px rgba(0,0,0,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.2);
+  background-repeat: no-repeat;
+  background-size: 220% 220%;
+}
+.case-img-wrap:hover .case-lens { opacity: 1; }
+
+/* Glass content strip */
+.case-content {
+  position: relative; padding: 20px 24px; flex-shrink: 0;
+  background: rgba(12,10,8,0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid var(--glass-border);
+}
+/* Diagonal light catch */
+.case-content::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    128deg,
+    rgba(255,255,255,0.04) 0%,
+    transparent 55%
+  );
+  pointer-events: none;
+}
+.case-org {
+  font-family: 'DM Mono', monospace;
+  font-size: 8.5px; letter-spacing: .2em;
+  text-transform: uppercase; color: var(--text-40); margin-bottom: 6px;
+}
+.case-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px; font-weight: 700;
+  letter-spacing: -.01em; color: var(--text-100);
+  line-height: 1.1; margin-bottom: 7px;
+  transition: color .25s;
+}
+.case-card:hover .case-title { color: #9ecfff; }
+.case-teaser {
+  font-size: 11px; color: var(--text-60);
+  line-height: 1.68; margin-bottom: 14px;
+}
+.case-cta {
+  font-family: 'DM Mono', monospace;
+  font-size: 8.5px; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--text-40);
+  transition: color .25s;
+  display: flex; align-items: center; gap: 8px;
+}
+.case-cta::before {
+  content: ''; width: 12px; height: 1px;
+  background: currentColor; display: inline-block;
+  transition: width .3s var(--ease-spring);
+}
+.case-card:hover .case-cta { color: #9ecfff; }
+.case-card:hover .case-cta::before { width: 20px; }
+
+/* ─── EXPERIMENTS ────────────────────────────────────── */
+.exp-section { background: var(--bg-4); }
+.exp-grid {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 16px;
+}
+.exp-card {
+  position: relative; overflow: hidden;
+  display: block; text-decoration: none; color: inherit;
+  border-radius: 10px;
+  background: var(--glass-fill);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: inset 0 1px 0 var(--glass-shine);
+  padding: 40px 32px;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition:
+    transform .14s ease,
+    background .3s,
+    border-color .3s,
+    box-shadow .4s var(--ease-spring);
+  /* GSAP initial */
+  opacity: 0; transform: translateX(-28px);
+}
+.exp-card:hover {
+  background: rgba(255,255,255,0.07);
+  border-color: rgba(255,255,255,0.15);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.12),
+    0 20px 48px rgba(0,0,0,0.5),
+    0 4px 12px rgba(0,0,0,0.3);
+}
+/* Top accent line */
+.exp-card::before {
+  content: ''; position: absolute;
+  top: 0; left: 0; right: 0; height: 2px;
+  background: var(--accent);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .5s var(--ease-spring);
+}
+.exp-card:hover::before { transform: scaleX(1); }
+/* Diagonal shine */
+.exp-card::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    132deg,
+    rgba(255,255,255,0.04) 0%,
+    transparent 52%
+  );
+  pointer-events: none;
+}
+.exp-n {
+  position: absolute; top: 28px; right: 28px;
+  font-family: 'Playfair Display', serif;
+  font-size: 52px; font-weight: 900;
+  color: rgba(240,236,227,0.04); line-height: 1;
+}
+.exp-status {
+  display: flex; align-items: center; gap: 7px; margin-bottom: 26px;
+}
+.e-dot { width: 6px; height: 6px; border-radius: 50%; }
+.e-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 8.5px; letter-spacing: .16em; text-transform: uppercase;
+}
+.s-active .e-dot  { background: #22c55e; }
+.s-active .e-label { color: #22c55e; }
+.exp-type {
+  font-family: 'DM Mono', monospace;
+  font-size: 8.5px; letter-spacing: .13em;
+  text-transform: uppercase; color: var(--text-40); margin-bottom: 12px;
+}
+.exp-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px; font-weight: 700;
+  letter-spacing: -.01em; line-height: 1.1;
+  color: var(--text-100); margin-bottom: 12px;
+  transition: color .25s;
+}
+.exp-card:hover .exp-name { color: #6ca8e8; }
+.exp-desc {
+  font-size: 12px; line-height: 1.85;
+  color: var(--text-60); margin-bottom: 22px;
+}
+.exp-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 22px; }
+.exp-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 7.5px; letter-spacing: .1em; text-transform: uppercase;
+  padding: 3px 10px;
+  border: 1px solid rgba(240,236,227,0.1);
+  border-radius: 3px;
+  color: var(--text-40);
+  background: rgba(255,255,255,0.03);
+  transition: border-color .2s, color .2s;
+}
+.exp-card:hover .exp-tag { border-color: rgba(240,236,227,0.18); color: var(--text-60); }
+.exp-link {
+  font-family: 'DM Mono', monospace;
+  font-size: 8.5px; letter-spacing: .13em;
+  text-transform: uppercase; color: var(--accent);
+}
+
+/* ─── ABOUT ──────────────────────────────────────────── */
+.about-section { background: var(--bg-5); }
+.about-inner {
+  max-width: 840px; margin: 0 auto;
+  opacity: 0; transform: translateY(30px);
+}
+.about-copy {
+  font-size: 15px; line-height: 1.95;
+  color: var(--text-60); margin-bottom: 20px;
+}
+.about-copy strong { color: var(--text-100); font-weight: 600; }
+.creds { margin-top: 44px; border-top: 1px solid var(--glass-border); }
+.cred {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 13px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+  transition: background .2s;
+}
+.cred-name { font-size: 12px; color: var(--text-60); font-weight: 500; }
+.cred-yr {
+  font-family: 'DM Mono', monospace;
+  font-size: 8.5px; color: var(--text-40); letter-spacing: .08em;
+}
+
+/* ─── CONTACT ────────────────────────────────────────── */
+.contact-section {
+  background: var(--bg-0);
+  padding: 80px 52px;
+  display: flex; flex-direction: column;
+  align-items: flex-start; gap: 22px;
+  border-top: 1px solid var(--glass-border);
+  opacity: 0;
+}
+.contact-name {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(32px,4vw,58px); font-weight: 700;
+  letter-spacing: -.03em; color: var(--text-100);
+}
+.contact-links { display: flex; flex-direction: column; gap: 12px; }
+.contact-link {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px; color: var(--text-60);
+  text-decoration: none; letter-spacing: .04em;
+  transition: color .2s; cursor: pointer;
+}
+.contact-link:hover { color: #6ca8e8; }
+footer {
+  border-top: 1px solid rgba(255,255,255,0.04);
+  background: var(--bg-0); padding: 22px 52px;
+}
+footer span {
+  font-family: 'DM Mono', monospace;
+  font-size: 8.5px; color: var(--text-25); letter-spacing: .08em;
+}
+
+/* ─── PARALLAX BACKGROUND DIVIDERS ──────────────────────*/
+/* Thin glowing lines between sections to create depth layers */
+.section-seam {
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%, rgba(240,236,227,0.05) 20%,
+    rgba(240,236,227,0.09) 50%,
+    rgba(240,236,227,0.05) 80%, transparent 100%
+  );
+}
+
+/* ─── RESPONSIVE ─────────────────────────────────────── */
+@media(max-width:900px) {
+  .hero-hl { font-size: clamp(40px,10vw,72px); }
+  .site-nav { padding: 16px 20px; }
+  .nav-links { display: none; }
+  .section { padding: 64px 20px 52px; }
+  .brands-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .cap-strip { grid-template-columns: 1fr 1fr; }
+  .cases-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .exp-grid { grid-template-columns: 1fr; }
+  .case-lens { display: none; }
+  .tldr-btn { bottom: 36px; left: 20px; }
+  .contact-section { padding: 60px 20px; }
+  footer { padding: 20px 20px; }
+  #cur { display: none; }
+}
+@media(max-width:580px) {
+  .brands-grid { grid-template-columns: 1fr; }
+  .cases-grid { grid-template-columns: 1fr; }
+  .cap-strip { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+
+<!-- ══ NAV ══════════════════════════════════════════════ -->
+<nav class="site-nav" id="site-nav">
+  <a href="#" class="nav-wordmark">Nick Malham</a>
+  <ul class="nav-links">
+    <li><a href="#overview">Background</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#experiments">Experiments</a></li>
+    <li><a href="#about">About</a></li>
+  </ul>
+</nav>
+
+<!-- ══ HERO ═════════════════════════════════════════════ -->
+<div class="hero" id="hero">
+  <canvas id="fluid-canvas"></canvas>
+  <div class="hero-inner parallax-layer" data-speed="0.3">
+    <h1 class="hero-hl">0 to 1<br>Product &amp;<br>Venture<br><em>Builder.</em></h1>
+    <p class="hero-sub">Medibank &middot; BOQ &middot; Optus &middot; CommBank &middot; Sydney Opera House</p>
+  </div>
+  <button class="tldr-btn" id="tldr-btn" aria-label="Play TL;DR audio summary">
+    <div class="tldr-circle">
+      <div class="tldr-ring"></div>
+      <div class="tldr-disc"></div>
+      <div class="tldr-play"></div>
+      <div class="tldr-pause"><span></span><span></span></div>
+      <div class="tldr-progress-wrap"><div class="tldr-progress-bar" id="tldr-bar"></div></div>
+    </div>
+    <div class="tldr-label">
+      <span class="tldr-label-top">Listen</span>
+      <span class="tldr-label-main">TL;DR &nbsp;45s</span>
+    </div>
+  </button>
+  <div class="scroll-hint"><span class="sl"></span>Scroll<span class="sl"></span></div>
+</div>
+
+<div class="section-seam"></div>
+
+<!-- ══ BRAND SECTION ════════════════════════════════════ -->
+<section class="section brand-section" id="overview">
+  <div class="parallax-layer" data-speed="0.08">
+    <p class="section-label gs-up">Background</p>
+    <h2 class="section-hl gs-up">15 years. Six iconic organisations.</h2>
+    <p class="brand-intro gs-up">Most of my career has been spent building things large organisations need but struggle to create themselves &mdash; new revenue streams, new ventures, and new products that get to market before the structure would normally allow. <strong>The sector changes. The mandate doesn&rsquo;t: zero to one, high ambiguity, commercial accountability.</strong></p>
+  </div>
+
+  <div class="brands-grid">
+
+    <div class="brand-card contain" style="background:#fff;">
+      <div class="card-inner">
+        <div class="card-front">
+          <img class="brand-img" src="logo-medibank.png" alt="Medibank">
+          <div class="brand-label">
+            <div class="brand-label-years">2023 &mdash; Present</div>
+            <div class="brand-label-name">Medibank</div>
+            <div class="brand-label-role">New Ventures + AI Product Lead</div>
+          </div>
+        </div>
+        <div class="card-back">
+          <div class="card-back-org">Medibank &middot; 2023&ndash;Present</div>
+          <div class="card-back-text">Built the Corporate Health product from idea to scale &mdash; opening a new revenue line and customer segment. Defined the enterprise AI product strategy for four million members.</div>
+          <div class="card-back-hint">Click to flip back</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="brand-card contain" style="background:#fff;">
+      <div class="card-inner">
+        <div class="card-front">
+          <img class="brand-img" src="logo-boq.png" alt="Bank of Queensland">
+          <div class="brand-label">
+            <div class="brand-label-years">2018 &mdash; 2023</div>
+            <div class="brand-label-name">Bank of Queensland</div>
+            <div class="brand-label-role">Head of Product Innovation Lab</div>
+          </div>
+        </div>
+        <div class="card-back">
+          <div class="card-back-org">Bank of Queensland &middot; 2018&ndash;2023</div>
+          <div class="card-back-text">Built the Innovation function from the ground up &mdash; rapid pilots into scaled products. Enabled FinTech capability and Virgin Money&rsquo;s transition to a neobank.</div>
+          <div class="card-back-hint">Click to flip back</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="brand-card contain" style="background:#fff;">
+      <div class="card-inner">
+        <div class="card-front">
+          <img class="brand-img" src="logo-optus.png" alt="Optus">
+          <div class="brand-label">
+            <div class="brand-label-years">2015 &mdash; 2018</div>
+            <div class="brand-label-name">Optus</div>
+            <div class="brand-label-role">Associate Director, Innovation</div>
+          </div>
+        </div>
+        <div class="card-back">
+          <div class="card-back-org">Optus &middot; 2015&ndash;2018</div>
+          <div class="card-back-text">Led the Innovation Lab and the creation of Donate Your Data &mdash; a brand-defining product connecting 50,000 disadvantaged students to the internet.</div>
+          <div class="card-back-hint">Click to flip back</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="brand-card contain" style="background:#fff;">
+      <div class="card-inner">
+        <div class="card-front">
+          <img class="brand-img" src="logo-commbank.png" alt="CommBank">
+          <div class="brand-label">
+            <div class="brand-label-years">2014 &mdash; 2015</div>
+            <div class="brand-label-name">CommBank</div>
+            <div class="brand-label-role">Digital Lead, Experimentation</div>
+          </div>
+        </div>
+        <div class="card-back">
+          <div class="card-back-org">CommBank &middot; 2014&ndash;2015</div>
+          <div class="card-back-text">Digitised the bank&rsquo;s highest-revenue product and built its experimentation capability &mdash; scaling to 200+ practitioners. Winner, Retail Banking Best of the Best 2015.</div>
+          <div class="card-back-hint">Click to flip back</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="brand-card contain" style="background:#f2f0ed;">
+      <div class="card-inner">
+        <div class="card-front">
+          <img class="brand-img" src="logo-opera.png" alt="Sydney Opera House">
+          <div class="brand-label">
+            <div class="brand-label-years">2012 &mdash; 2014</div>
+            <div class="brand-label-name">Sydney Opera House</div>
+            <div class="brand-label-role">Senior Digital Innovation</div>
+          </div>
+        </div>
+        <div class="card-back">
+          <div class="card-back-org">Sydney Opera House &middot; 2012&ndash;2014</div>
+          <div class="card-back-text">Built the digital innovation function from scratch &mdash; launching Own Our House and Australia&rsquo;s first live-streamed concerts in partnership with Google.</div>
+          <div class="card-back-hint">Click to flip back</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="brand-card contain" style="background:#fff;">
+      <div class="card-inner">
+        <div class="card-front">
+          <img class="brand-img" src="logo-worldvision.png" alt="World Vision">
+          <div class="brand-label">
+            <div class="brand-label-years">2010 &mdash; 2012</div>
+            <div class="brand-label-name">World Vision</div>
+            <div class="brand-label-role">Digital Product &amp; Innovation</div>
+          </div>
+        </div>
+        <div class="card-back">
+          <div class="card-back-org">World Vision &middot; 2010&ndash;2012</div>
+          <div class="card-back-text">Designed and launched Project Partners &mdash; a digital giving platform that hit 100% of fundraising targets within 90 days and set a new benchmark for donor engagement.</div>
+          <div class="card-back-hint">Click to flip back</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <p class="card-hint">Click any card to learn more</p>
+
+  <div class="cap-strip">
+    <div class="cap-cell">
+      <div class="cap-num">15+</div>
+      <div class="cap-label">Years leading and building corporate innovation</div>
+    </div>
+    <div class="cap-cell">
+      <div class="cap-num">3</div>
+      <div class="cap-label">Innovation and venture functions built from the ground up</div>
+    </div>
+    <div class="cap-cell">
+      <div class="cap-num">$30M+</div>
+      <div class="cap-label">Social value created</div>
+    </div>
+    <div class="cap-cell">
+      <div class="cap-num">3&times;</div>
+      <div class="cap-label">World-first products built</div>
+    </div>
+  </div>
+</section>
+
+<div class="section-seam"></div>
+
+<!-- ══ CASE STUDIES ══════════════════════════════════════ -->
+<section class="section work-section" id="work">
+  <div class="section-header">
+    <div>
+      <p class="section-label gs-up">Selected work</p>
+      <h2 class="section-hl gs-up">Case Studies</h2>
+    </div>
+    <span class="section-count">06 projects</span>
+  </div>
+  <div class="cases-grid">
+
+    <div class="case-card-wrap">
+      <a href="case-donate.html" class="case-card" data-img="donate.png">
+        <div class="case-img-wrap">
+          <img class="main-img" src="donate.png" alt="Donate Your Data">
+          <div class="case-lens"></div>
+        </div>
+        <div class="case-content">
+          <div class="case-org">Optus &middot; 2015&ndash;2018</div>
+          <div class="case-title">Donate Your Data</div>
+          <p class="case-teaser">World-first platform turning unused mobile data into digital equity for 50,000 students.</p>
+          <span class="case-cta">Read case study</span>
+        </div>
+      </a>
+    </div>
+
+    <div class="case-card-wrap">
+      <a href="case-medibank.html" class="case-card" data-img="medibank.png">
+        <div class="case-img-wrap">
+          <img class="main-img" src="medibank.png" alt="Corporate Health Venture">
+          <div class="case-lens"></div>
+        </div>
+        <div class="case-content">
+          <div class="case-org">Medibank &middot; 2023&ndash;Present</div>
+          <div class="case-title">Corporate Health Venture</div>
+          <p class="case-teaser">First hire into a greenfield health venture &mdash; built the vision, team, and product from zero.</p>
+          <span class="case-cta">Read case study</span>
+        </div>
+      </a>
+    </div>
+
+    <div class="case-card-wrap">
+      <a href="case-opera.html" class="case-card" data-img="opera.png">
+        <div class="case-img-wrap">
+          <img class="main-img" src="opera.png" alt="Own Our House">
+          <div class="case-lens"></div>
+        </div>
+        <div class="case-content">
+          <div class="case-org">Sydney Opera House &middot; 2012&ndash;2014</div>
+          <div class="case-title">Own Our House</div>
+          <p class="case-teaser">Landmark digital philanthropy proving ownership beats generosity &mdash; with Google Labs.</p>
+          <span class="case-cta">Read case study</span>
+        </div>
+      </a>
+    </div>
+
+    <div class="case-card-wrap">
+      <a href="case-translate.html" class="case-card" data-img="translate.png">
+        <div class="case-img-wrap">
+          <img class="main-img" src="translate.png" alt="Call Translate">
+          <div class="case-lens"></div>
+        </div>
+        <div class="case-content">
+          <div class="case-org">Optus &middot; 2016&ndash;2017</div>
+          <div class="case-title">Call Translate</div>
+          <p class="case-teaser">World-first AI real-time voice translation on a standard call, built on Google Cloud AI.</p>
+          <span class="case-cta">Read case study</span>
+        </div>
+      </a>
+    </div>
+
+    <div class="case-card-wrap">
+      <a href="case-virginmoney.html" class="case-card" data-img="logo-virginmoney.png">
+        <div class="case-img-wrap">
+          <img class="main-img" src="logo-virginmoney.png" alt="Virgin Money Australia">
+          <div class="case-lens"></div>
+        </div>
+        <div class="case-content">
+          <div class="case-org">BOQ Group &middot; 2018&ndash;2023</div>
+          <div class="case-title">Virgin Money Australia</div>
+          <p class="case-teaser">Partnering with FinTechs to build a digital bank of the future &mdash; neobank concept to market reality.</p>
+          <span class="case-cta">Read case study</span>
+        </div>
+      </a>
+    </div>
+
+    <div class="case-card-wrap">
+      <a href="case-reef.html" class="case-card" data-img="logo-foreverreef.png">
+        <div class="case-img-wrap">
+          <img class="main-img" src="logo-foreverreef.png" alt="Forever Reef Project">
+          <div class="case-lens"></div>
+        </div>
+        <div class="case-content">
+          <div class="case-org">Great Barrier Reef Legacy &middot; 2025&ndash;Present</div>
+          <div class="case-title">Forever Reef Project</div>
+          <p class="case-teaser">Preserving coral biodiversity for generations to come &mdash; board advisory for Australia&rsquo;s most important conservation initiative.</p>
+          <span class="case-cta">Read case study</span>
+        </div>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<div class="section-seam"></div>
+
+<!-- ══ EXPERIMENTS ══════════════════════════════════════ -->
+<section class="section exp-section" id="experiments">
+  <p class="section-label gs-up">Learning by doing</p>
+  <h2 class="section-hl gs-up">Experiments</h2>
+  <div class="exp-grid">
+
+    <a href="https://open.spotify.com/episode/23HkruyfRDwhsycujF3lje" target="_blank" rel="noopener" class="exp-card">
+      <span class="exp-n">01</span>
+      <div class="exp-status s-active"><span class="e-dot"></span><span class="e-label">Live</span></div>
+      <div class="exp-type">Podcast &middot; Content &middot; AI</div>
+      <div class="exp-name">The Deep Dive</div>
+      <p class="exp-desc">Started with a strategic paper on AI product operating models. Used Claude to generate a full transcript, then Google NotebookLM to transform it into a reflective audio case study. Paper to published podcast &mdash; no studio required.</p>
+      <div class="exp-tags"><span class="exp-tag">Claude AI</span><span class="exp-tag">NotebookLM</span><span class="exp-tag">Podcast</span></div>
+      <span class="exp-link">Listen on Spotify &rarr;</span>
+    </a>
+
+    <a href="https://naplan-buddy.lovable.app/" target="_blank" rel="noopener" class="exp-card">
+      <span class="exp-n">02</span>
+      <div class="exp-status s-active"><span class="e-dot"></span><span class="e-label">Active</span></div>
+      <div class="exp-type">Tool &middot; AI &middot; Education</div>
+      <div class="exp-name">NAPLAN Buddy</div>
+      <p class="exp-desc">My daughter Summer wanted a more personalised way to prepare for her first NAPLAN test. Built a Duolingo-style AI learning app &mdash; gamified, bite-sized practice for Year 3 kids. Built using Lovable and Claude AI.</p>
+      <div class="exp-tags"><span class="exp-tag">Lovable</span><span class="exp-tag">Claude AI</span><span class="exp-tag">Education</span></div>
+      <span class="exp-link">Try it &rarr;</span>
+    </a>
+
+    <a href="https://try-cyber-ledger.lovable.app/" target="_blank" rel="noopener" class="exp-card">
+      <span class="exp-n">03</span>
+      <div class="exp-status s-active"><span class="e-dot"></span><span class="e-label">Active</span></div>
+      <div class="exp-type">Tool &middot; Governance &middot; AI</div>
+      <div class="exp-name">Cyber Ledger</div>
+      <p class="exp-desc">Built off the back of board work with Great Barrier Reef Legacy. Needed a practical tool to track and assess cybersecurity risks across an NFP. Built the thing I needed, then made it shareable. Built using Lovable and Claude AI.</p>
+      <div class="exp-tags"><span class="exp-tag">Lovable</span><span class="exp-tag">Claude AI</span><span class="exp-tag">Governance</span></div>
+      <span class="exp-link">View project &rarr;</span>
+    </a>
+
+  </div>
+</section>
+
+<div class="section-seam"></div>
+
+<!-- ══ ABOUT ═════════════════════════════════════════════ -->
+<section class="section about-section" id="about">
+  <div class="about-inner">
+    <p class="section-label">About</p>
+    <p class="about-copy">At Optus, at BOQ, at Medibank &mdash; the brief has always been some version of the same thing: build something that doesn&rsquo;t exist yet, make it commercially viable, and do it faster than the structure would normally allow. The work looks different each time. The approach doesn&rsquo;t.</p>
+    <p class="about-copy">At Optus, under my leadership the team built Donate Your Data &mdash; repositioning the brand away from competing on price entirely by creating community value at a scale competitors couldn&rsquo;t replicate &mdash; and Call Translate, the world&rsquo;s first AI-powered real-time voice translation service, built in partnership with Google Cloud.</p>
+    <p class="about-copy">At BOQ I built the Innovation function from the ground up &mdash; designing the venture pipeline, running structured business experiments with live customers, and scaling validated opportunities into the core business each year, supported by board-level investment cases. At Medibank I established a greenfield corporate health and wellbeing venture from exploration through to market launch, opening an entirely new revenue line and customer segment &mdash; and defined the enterprise AI strategy to help four million members navigate a genuinely complex health system.</p>
+    <p class="about-copy">I work best in ambiguous, zero-to-one spaces &mdash; where the opportunity isn&rsquo;t fully defined yet and someone needs to think strategically, build the case, and make it real. I bring long-term vision, commercial rigour, and the hands-on leadership to see it through.</p>
+    <p class="section-label" style="margin-top:48px;">Executive Education</p>
+    <div class="creds">
+      <div class="cred"><span class="cred-name">Advanced AI Product Leadership &middot; Maven</span><span class="cred-yr">2025</span></div>
+      <div class="cred"><span class="cred-name">Angel Investment Program &middot; Airtree Ventures</span><span class="cred-yr">2023</span></div>
+      <div class="cred"><span class="cred-name">Advanced Product Leadership &middot; Reforge</span><span class="cred-yr">2023</span></div>
+      <div class="cred"><span class="cred-name">Oxford FinTech Program &middot; University of Oxford</span><span class="cred-yr">2020&ndash;21</span></div>
+      <div class="cred"><span class="cred-name">Leading Innovation &middot; Stanford University</span><span class="cred-yr">2018</span></div>
+      <div class="cred"><span class="cred-name">BA Hons Business &amp; Marketing &middot; University of Lancashire</span><span class="cred-yr">1st Class</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CONTACT ════════════════════════════════════════ -->
+<div class="contact-section">
+  <div class="contact-name">Nick Malham</div>
+  <div class="contact-links">
+    <span id="cemail" class="contact-link"></span>
+    <a href="https://linkedin.com/in/nickmalham" target="_blank" class="contact-link">linkedin.com/in/nickmalham</a>
+  </div>
+</div>
+<footer><span>&copy; 2025 Nick Malham</span></footer>
+
+<!-- ══ SCRIPTS ════════════════════════════════════════ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+// ── EMAIL ────────────────────────────────────────────────────
+(function(){
+  var el=document.getElementById('cemail');
+  if(!el)return;
+  var e='nick'+'malham'+'@'+'gmail'+'.com';
+  el.textContent=e;el.style.cursor='pointer';
+  el.onclick=function(){window.location='mai'+'lto:'+e;};
+})();
+
+// ── CURSOR ───────────────────────────────────────────────────
+var cur=document.getElementById('cur');
+document.addEventListener('mousemove',function(e){
+  cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px';
+});
+document.querySelectorAll('a,button,.contact-link,.brand-card,.case-card,.exp-card').forEach(function(el){
+  el.addEventListener('mouseenter',function(){cur.classList.add('h');});
+  el.addEventListener('mouseleave',function(){cur.classList.remove('h');});
+});
+
+// ── NAV SCROLL ───────────────────────────────────────────────
+(function(){
+  var nav=document.getElementById('site-nav');
+  if(!nav)return;
+  window.addEventListener('scroll',function(){
+    nav.classList[window.scrollY>60?'add':'remove']('scrolled');
+  },{passive:true});
+})();
+
+// ── TL;DR PLAYER ─────────────────────────────────────────────
+(function(){
+  var btn=document.getElementById('tldr-btn');
+  var bar=document.getElementById('tldr-bar');
+  if(!btn)return;
+  var audio=new Audio('tldr.mp3');audio.preload='none';
+  audio.addEventListener('timeupdate',function(){
+    if(!audio.duration)return;
+    bar.style.width=(audio.currentTime/audio.duration*100)+'%';
+  });
+  audio.addEventListener('ended',function(){btn.classList.remove('playing');bar.style.width='0%';});
+  btn.addEventListener('click',function(){
+    if(audio.paused){audio.play().catch(function(){});btn.classList.add('playing');}
+    else{audio.pause();btn.classList.remove('playing');}
+  });
+})();
+
+// ── CARD FLIP + SWOOSH ───────────────────────────────────────
+var flipSound=new Audio('flip.mp3');flipSound.preload='auto';
+document.querySelectorAll('.brand-card').forEach(function(card){
+  card.addEventListener('click',function(){
+    flipSound.currentTime=0;flipSound.play().catch(function(){});
+    card.classList.toggle('flipped');
+  });
+});
+
+// ── MAGNIFYING LENS ──────────────────────────────────────────
+document.querySelectorAll('.case-card').forEach(function(card){
+  var lens=card.querySelector('.case-lens');
+  if(!lens)return;
+  var imgSrc=card.getAttribute('data-img');
+  lens.style.backgroundImage='url('+imgSrc+')';
+  lens.style.backgroundSize='220% 220%';
+  var wrap=card.querySelector('.case-img-wrap');
+  if(!wrap)return;
+  wrap.addEventListener('mouseleave',function(){lens.style.opacity='0';});
+  wrap.addEventListener('mousemove',function(e){
+    var r=wrap.getBoundingClientRect();
+    var x=e.clientX-r.left,y=e.clientY-r.top;
+    lens.style.left=x+'px';lens.style.top=y+'px';lens.style.opacity='1';
+    lens.style.backgroundPosition=
+      Math.max(0,Math.min(100,(x/r.width)*200-50))+'% '+
+      Math.max(0,Math.min(100,(y/r.height)*200-50))+'%';
+  });
+});
+
+// ── THREE.JS PARTICLE HERO ────────────────────────────────────
+(function(){
+  var canvas=document.getElementById('fluid-canvas');
+  var isTouch=('ontouchstart' in window||navigator.maxTouchPoints>0);
+  var isSlow=(navigator.connection&&['2g','slow-2g'].includes(navigator.connection.effectiveType));
+  var reduced=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  if(!canvas||!window.THREE||isSlow||reduced){if(canvas)canvas.style.display='none';return;}
+
+  var W=window.innerWidth,H=window.innerHeight;
+  var scene=new THREE.Scene();
+  var camera=new THREE.PerspectiveCamera(60,W/H,.1,1000);
+  camera.position.z=5;
+  var renderer=new THREE.WebGLRenderer({canvas:canvas,alpha:true,antialias:false});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,1.5));
+  renderer.setSize(W,H);
+  renderer.setClearColor(0x000000,0);
+
+  // Layer 1 — warm white particles
+  var N=isTouch?100:260;
+  var g=new THREE.BufferGeometry();
+  var pos=new Float32Array(N*3);var spd=new Float32Array(N*3);
+  for(var i=0;i<N;i++){
+    pos[i*3]=(Math.random()-.5)*16;
+    pos[i*3+1]=(Math.random()-.5)*9;
+    pos[i*3+2]=(Math.random()-.5)*7;
+    spd[i*3]=(Math.random()-.5)*.0025;
+    spd[i*3+1]=(Math.random()-.5)*.0018;
+    spd[i*3+2]=(Math.random()-.5)*.001;
+  }
+  g.setAttribute('position',new THREE.BufferAttribute(pos,3));
+  var m=new THREE.PointsMaterial({color:0xf0ece3,size:.038,transparent:true,opacity:.48,sizeAttenuation:true});
+
+  // Layer 2 — cool blue accent particles
+  var N2=50;
+  var g2=new THREE.BufferGeometry();
+  var pos2=new Float32Array(N2*3);
+  for(var j=0;j<N2;j++){
+    pos2[j*3]=(Math.random()-.5)*18;
+    pos2[j*3+1]=(Math.random()-.5)*10;
+    pos2[j*3+2]=(Math.random()-.5)*5;
+  }
+  g2.setAttribute('position',new THREE.BufferAttribute(pos2,3));
+  var m2=new THREE.PointsMaterial({color:0x3b7fd4,size:.07,transparent:true,opacity:.2,sizeAttenuation:true});
+
+  var pts=new THREE.Points(g,m);
+  var pts2=new THREE.Points(g2,m2);
+  scene.add(pts);scene.add(pts2);
+
+  var mx=0,my=0,tmx=0,tmy=0;
+  var heroEl=document.getElementById('hero');
+  heroEl.addEventListener('mousemove',function(e){
+    var r=heroEl.getBoundingClientRect();
+    mx=((e.clientX-r.left)/r.width-.5)*2;
+    my=((e.clientY-r.top)/r.height-.5)*2;
+  });
+  heroEl.addEventListener('mouseleave',function(){mx=0;my=0;});
+
+  var t=0;
+  function animate(){
+    requestAnimationFrame(animate);t+=.007;
+    var pa=g.attributes.position.array;
+    for(var k=0;k<N;k++){
+      pa[k*3]+=spd[k*3];pa[k*3+1]+=spd[k*3+1];pa[k*3+2]+=spd[k*3+2];
+      if(pa[k*3]>8)pa[k*3]=-8;if(pa[k*3]<-8)pa[k*3]=8;
+      if(pa[k*3+1]>4.5)pa[k*3+1]=-4.5;if(pa[k*3+1]<-4.5)pa[k*3+1]=4.5;
+    }
+    g.attributes.position.needsUpdate=true;
+    pts.rotation.y=Math.sin(t*.16)*.055;pts.rotation.x=Math.cos(t*.1)*.035;
+    pts2.rotation.y=Math.sin(t*.12)*.04;pts2.rotation.z=Math.cos(t*.09)*.02;
+    tmx+=(mx-tmx)*.038;tmy+=(my-tmy)*.038;
+    camera.rotation.y=-tmx*.055;camera.rotation.x=tmy*.038;
+    renderer.render(scene,camera);
+  }
+  animate();
+  window.addEventListener('resize',function(){
+    W=window.innerWidth;H=window.innerHeight;
+    camera.aspect=W/H;camera.updateProjectionMatrix();renderer.setSize(W,H);
+  });
+})();
+
+// ── GSAP SCROLL + PARALLAX ────────────────────────────────────
+(function(){
+  if(typeof gsap==='undefined'||typeof ScrollTrigger==='undefined')return;
+  gsap.registerPlugin(ScrollTrigger);
+
+  var reduced=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+  // Make everything visible immediately if reduced motion
+  if(reduced){
+    document.querySelectorAll('.gs-up,.brand-card,.cap-cell,.case-card-wrap,.exp-card,.about-inner,.contact-section').forEach(function(el){
+      el.style.opacity='1';el.style.transform='none';
+    });
+    return;
+  }
+
+  // ── Section label + headline fade-ups ──
+  document.querySelectorAll('.gs-up').forEach(function(el){
+    gsap.from(el,{opacity:0,y:36,duration:.95,ease:'power3.out',
+      scrollTrigger:{trigger:el,start:'top 88%',toggleActions:'play none none none'}});
+  });
+
+  // ── Brand cards stagger ──
+  gsap.to('.brands-grid .brand-card',{
+    opacity:1,y:0,duration:.8,ease:'power3.out',stagger:.075,
+    scrollTrigger:{trigger:'.brands-grid',start:'top 82%',toggleActions:'play none none none'}
+  });
+
+  // ── Cap strip stagger ──
+  gsap.to('.cap-cell',{
+    opacity:1,y:0,duration:.7,ease:'power2.out',stagger:.08,
+    scrollTrigger:{trigger:'.cap-strip',start:'top 86%',toggleActions:'play none none none'}
+  });
+
+  // ── Case cards stagger ──
+  gsap.to('.cases-grid .case-card-wrap',{
+    opacity:1,y:0,scale:1,duration:.85,ease:'power3.out',stagger:.07,
+    scrollTrigger:{trigger:'.cases-grid',start:'top 82%',toggleActions:'play none none none'}
+  });
+
+  // ── Experiment cards slide from left ──
+  gsap.to('.exp-grid .exp-card',{
+    opacity:1,x:0,duration:.8,ease:'power3.out',stagger:.1,
+    scrollTrigger:{trigger:'.exp-grid',start:'top 82%',toggleActions:'play none none none'}
+  });
+
+  // ── About block ──
+  gsap.to('.about-inner',{
+    opacity:1,y:0,duration:1.1,ease:'power2.out',
+    scrollTrigger:{trigger:'.about-inner',start:'top 84%',toggleActions:'play none none none'}
+  });
+
+  // ── Contact ──
+  gsap.to('.contact-section',{
+    opacity:1,duration:.9,ease:'power2.out',
+    scrollTrigger:{trigger:'.contact-section',start:'top 90%',toggleActions:'play none none none'}
+  });
+
+  // ── Parallax layers ──
+  // Subtle vertical parallax on branded text blocks as you scroll
+  document.querySelectorAll('.parallax-layer').forEach(function(el){
+    var speed = parseFloat(el.getAttribute('data-speed')||'0.1');
+    gsap.to(el,{
+      yPercent: speed * -30,
+      ease:'none',
+      scrollTrigger:{
+        trigger:el.closest('section')||el.parentElement,
+        start:'top bottom',
+        end:'bottom top',
+        scrub:true
+      }
+    });
+  });
+
+  // ── Section seams fade in ──
+  document.querySelectorAll('.section-seam').forEach(function(el){
+    gsap.from(el,{scaleX:0,transformOrigin:'left center',duration:1.2,ease:'power2.out',
+      scrollTrigger:{trigger:el,start:'top 95%',toggleActions:'play none none none'}});
+  });
+
+})();
+
+// ── UNIFIED CURSOR TILT ───────────────────────────────────────
+// Same glass-depth tilt system applied to brand cards, case cards, exp cards
+(function(){
+  if('ontouchstart' in window||navigator.maxTouchPoints>0)return;
+  var ease=0.12,recovery=0.55;
+
+  // Brand cards — tilt the card-inner (preserves flip)
+  document.querySelectorAll('.brand-card').forEach(function(card){
+    var inner=card.querySelector('.card-inner');if(!inner)return;
+    card.addEventListener('mousemove',function(e){
+      if(card.classList.contains('flipped'))return;
+      var r=card.getBoundingClientRect();
+      var x=(e.clientX-r.left)/r.width-.5;
+      var y=(e.clientY-r.top)/r.height-.5;
+      inner.style.transform='rotateX('+(-y*8)+'deg) rotateY('+(x*8)+'deg) translateZ(6px)';
+      inner.style.transition='transform '+ease+'s ease';
+    });
+    card.addEventListener('mouseleave',function(){
+      if(card.classList.contains('flipped'))return;
+      inner.style.transform='rotateX(0) rotateY(0) translateZ(0)';
+      inner.style.transition='transform '+recovery+'s cubic-bezier(0.23,1,0.32,1)';
+    });
+  });
+
+  // Case cards — tilt the whole card
+  document.querySelectorAll('.case-card').forEach(function(card){
+    card.addEventListener('mousemove',function(e){
+      var r=card.getBoundingClientRect();
+      var x=(e.clientX-r.left)/r.width-.5;
+      var y=(e.clientY-r.top)/r.height-.5;
+      card.style.transform='rotateX('+(-y*6)+'deg) rotateY('+(x*6)+'deg) translateZ(10px) scale(1.01)';
+      card.style.transition='transform '+ease+'s ease';
+    });
+    card.addEventListener('mouseleave',function(){
+      card.style.transform='rotateX(0) rotateY(0) translateZ(0) scale(1)';
+      card.style.transition='transform '+recovery+'s cubic-bezier(0.23,1,0.32,1)';
+    });
+  });
+
+  // Experiment cards — tilt the whole card
+  document.querySelectorAll('.exp-card').forEach(function(card){
+    card.addEventListener('mousemove',function(e){
+      var r=card.getBoundingClientRect();
+      var x=(e.clientX-r.left)/r.width-.5;
+      var y=(e.clientY-r.top)/r.height-.5;
+      card.style.transform='rotateX('+(-y*5)+'deg) rotateY('+(x*5)+'deg) translateZ(8px)';
+      card.style.transition='transform '+ease+'s ease';
+    });
+    card.addEventListener('mouseleave',function(){
+      card.style.transform='rotateX(0) rotateY(0) translateZ(0)';
+      card.style.transition='transform '+recovery+'s cubic-bezier(0.23,1,0.32,1)';
+    });
+  });
+
+  // Capability cells — subtle tilt
+  document.querySelectorAll('.cap-cell').forEach(function(cell){
+    cell.addEventListener('mousemove',function(e){
+      var r=cell.getBoundingClientRect();
+      var x=(e.clientX-r.left)/r.width-.5;
+      var y=(e.clientY-r.top)/r.height-.5;
+      cell.style.transform='rotateX('+(-y*4)+'deg) rotateY('+(x*4)+'deg) translateZ(4px)';
+      cell.style.transition='transform '+ease+'s ease';
+    });
+    cell.addEventListener('mouseleave',function(){
+      cell.style.transform='rotateX(0) rotateY(0) translateZ(0)';
+      cell.style.transition='transform '+recovery+'s cubic-bezier(0.23,1,0.32,1)';
+    });
+  });
+})();
+</script>
+</body>
+</html>
