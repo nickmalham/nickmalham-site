@@ -48,6 +48,102 @@ body{background:#0e0c0a;color:#f0ece3;font-family:'Manrope',sans-serif;overflow-
   .nav-links-right{display:none;}
 }
 
+
+/* ── TL;DR AUDIO BUTTON ──────────────────────────────── */
+.tldr-btn{
+  position:absolute;
+  bottom:52px;left:48px;
+  z-index:10;
+  display:flex;align-items:center;gap:12px;
+  cursor:pointer;border:none;background:none;padding:0;
+}
+.tldr-circle{
+  position:relative;
+  width:52px;height:52px;flex-shrink:0;
+}
+/* Glass disc */
+.tldr-disc{
+  position:absolute;inset:0;border-radius:50%;
+  background:rgba(240,236,227,0.1);
+  border:1.5px solid rgba(240,236,227,0.35);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  transition:background .25s, border-color .25s;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.2),
+    0 4px 24px rgba(0,0,0,0.25);
+}
+.tldr-btn:hover .tldr-disc{
+  background:rgba(240,236,227,0.18);
+  border-color:rgba(240,236,227,0.6);
+}
+/* Play icon */
+.tldr-play{
+  position:absolute;top:50%;left:52%;
+  transform:translate(-50%,-50%);
+  width:0;height:0;
+  border-style:solid;
+  border-width:7px 0 7px 12px;
+  border-color:transparent transparent transparent rgba(240,236,227,0.9);
+  transition:border-color .25s;
+}
+/* Pause icon (two bars) — shown when playing */
+.tldr-pause{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  display:none;
+  gap:4px;
+}
+.tldr-pause span{
+  display:block;width:3px;height:14px;
+  background:rgba(240,236,227,0.9);border-radius:1px;
+}
+.tldr-btn.playing .tldr-play{display:none;}
+.tldr-btn.playing .tldr-pause{display:flex;}
+/* Pulse ring while playing */
+.tldr-ring{
+  position:absolute;inset:-6px;border-radius:50%;
+  border:1.5px solid rgba(240,236,227,0.3);
+  opacity:0;
+  animation:none;
+}
+.tldr-btn.playing .tldr-ring{
+  animation:tldrPulse 2s ease-out infinite;
+}
+@keyframes tldrPulse{
+  0%{transform:scale(1);opacity:.5;}
+  100%{transform:scale(1.45);opacity:0;}
+}
+/* Label */
+.tldr-label{
+  display:flex;flex-direction:column;gap:2px;
+  text-align:left;
+}
+.tldr-label-top{
+  font-family:'DM Mono',monospace;font-size:9px;
+  letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(240,236,227,.45);
+}
+.tldr-label-main{
+  font-family:'Playfair Display',serif;font-size:14px;
+  font-weight:700;color:rgba(240,236,227,.88);
+  letter-spacing:-.01em;
+}
+/* Progress bar */
+.tldr-progress-wrap{
+  position:absolute;bottom:0;left:0;right:0;
+  height:2px;border-radius:0 0 999px 999px;
+  background:rgba(240,236,227,.12);overflow:hidden;
+}
+.tldr-progress-bar{
+  height:100%;width:0%;
+  background:rgba(240,236,227,.6);
+  transition:width .5s linear;
+}
+@media(max-width:900px){
+  .tldr-btn{bottom:40px;left:24px;}
+}
+
 /* HERO */
 .hero{position:relative;width:100%;height:100vh;overflow:hidden;background:#0e0c0a;}
 
@@ -389,6 +485,22 @@ footer span{font-family:'DM Mono',monospace;font-size:9px;color:rgba(247,244,239
     </h1>
     <p class="hero-sub">Medibank &middot; BOQ &middot; Optus &middot; CommBank &middot; Sydney Opera House</p>
   </div>
+
+  <!-- TL;DR Audio Button -->
+  <button class="tldr-btn" id="tldr-btn" aria-label="Play TL;DR audio summary">
+    <div class="tldr-circle">
+      <div class="tldr-ring"></div>
+      <div class="tldr-disc"></div>
+      <div class="tldr-play"></div>
+      <div class="tldr-pause"><span></span><span></span></div>
+      <div class="tldr-progress-wrap"><div class="tldr-progress-bar" id="tldr-bar"></div></div>
+    </div>
+    <div class="tldr-label">
+      <span class="tldr-label-top">Listen</span>
+      <span class="tldr-label-main">TL;DR &nbsp;45s</span>
+    </div>
+  </button>
+
   <div class="scroll-hint"><span class="sl"></span>Scroll<span class="sl"></span></div>
 </div>
 
@@ -693,6 +805,37 @@ footer span{font-family:'DM Mono',monospace;font-size:9px;color:rgba(247,244,239
 </div><!-- /.site-body -->
 
 <script>
+
+
+// ── TL;DR AUDIO PLAYER ───────────────────────────────────────
+(function(){
+  var btn  = document.getElementById('tldr-btn');
+  var bar  = document.getElementById('tldr-bar');
+  if(!btn) return;
+  var audio = new Audio('tldr.mp3');
+  audio.preload = 'none';
+
+  audio.addEventListener('timeupdate', function(){
+    if(!audio.duration) return;
+    var pct = (audio.currentTime / audio.duration) * 100;
+    bar.style.width = pct + '%';
+  });
+
+  audio.addEventListener('ended', function(){
+    btn.classList.remove('playing');
+    bar.style.width = '0%';
+  });
+
+  btn.addEventListener('click', function(){
+    if(audio.paused){
+      audio.play().catch(function(){});
+      btn.classList.add('playing');
+    } else {
+      audio.pause();
+      btn.classList.remove('playing');
+    }
+  });
+})();
 
 // ── NAV SCROLL BEHAVIOUR ─────────────────────────────────────
 (function(){
