@@ -75,36 +75,104 @@ body{background:#0e0c0a;color:#f0ece3;font-family:'Manrope',sans-serif;overflow-
 .brand-intro-text strong{color:#1c1916;font-weight:600;}
 
 /* Brand cards */
-.brands-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;}
+
+/* ── BRAND CARDS — 3D FLIP ───────────────────────────── */
+.brands-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding:4px 0;}
+
 .brand-card{
-  position:relative;overflow:hidden;
-  display:flex;flex-direction:column;
-  cursor:none;
-  background:#fff;
+  position:relative;
+  cursor:pointer;
+  perspective:1200px;
+  transition:transform .35s cubic-bezier(.23,1,.32,1),
+             box-shadow .35s cubic-bezier(.23,1,.32,1);
+  border-radius:6px;
 }
-/* No gradient overlay — image stays fully punchy */
-.brand-card::after{ content:none; }
-/* Logo image — square crop, full width */
-.brand-img-wrap{
-  position:relative;overflow:hidden;
-  width:100%;aspect-ratio:4/3;flex-shrink:0;
+.brand-card:hover{
+  transform:translateY(-5px);
+  box-shadow:0 18px 44px rgba(28,25,22,.14), 0 4px 10px rgba(28,25,22,.07);
 }
-.brand-bg-img{
-  width:100%;height:100%;
+.brand-card.flipped{transform:translateY(-5px);}
+.brand-card.flipped:hover{transform:translateY(-5px);}
+
+/* The flipping inner wrapper */
+.card-inner{
+  position:relative;
+  width:100%;
+  transform-style:preserve-3d;
+  transition:transform .65s cubic-bezier(.4,0,.2,1);
+  border-radius:6px;
+}
+.brand-card.flipped .card-inner{transform:rotateY(180deg);}
+
+/* Front face */
+.card-front{
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+  border-radius:6px;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+}
+
+/* Back face */
+.card-back{
+  position:absolute;
+  inset:0;
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+  transform:rotateY(180deg);
+  border-radius:6px;
+  background:#1c1916;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:24px;
+  overflow:hidden;
+}
+.card-back-org{
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.18em;
+  text-transform:uppercase;color:rgba(240,236,227,.5);margin-bottom:14px;
+}
+.card-back-text{
+  font-size:13px;line-height:1.72;color:#f0ece3;font-weight:400;
+  font-family:'Manrope',sans-serif;margin-bottom:18px;
+}
+.card-back-hint{
+  font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.16em;
+  text-transform:uppercase;color:rgba(240,236,227,.32);
+  display:flex;align-items:center;gap:8px;margin-top:auto;
+}
+.card-back-hint::before{
+  content:'';width:18px;height:1px;
+  background:rgba(240,236,227,.25);display:inline-block;
+}
+
+/* Logo image — fills card entirely */
+.brand-img{
+  width:100%;aspect-ratio:4/3;
   object-fit:cover;object-position:center;
   display:block;
-  transition:transform .7s cubic-bezier(.23,1,.32,1);
 }
-.brand-card:hover .brand-bg-img{transform:scale(1.05);}
-/* Solid label strip below image */
-.brand-bottom{
+/* Logos on white/light bg — contained with padding */
+.brand-card.contain .brand-img{
+  object-fit:contain;
+  padding:16% 14%;
+  background:inherit;
+}
+/* Bottom label strip */
+.brand-label{
   background:#1c1916;
-  padding:14px 18px;
-  flex-shrink:0;
+  padding:13px 18px;
 }
-.brand-years{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:rgba(240,236,227,.6);margin-bottom:4px;}
-.brand-name{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:#f0ece3;margin-bottom:2px;line-height:1.15;}
-.brand-role{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.09em;text-transform:uppercase;color:rgba(240,236,227,.75);}
+.brand-label-years{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:rgba(240,236,227,.5);margin-bottom:3px;}
+.brand-label-name{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:#f0ece3;margin-bottom:2px;line-height:1.1;}
+.brand-label-role{font-family:'DM Mono',monospace;font-size:7.5px;letter-spacing:.09em;text-transform:uppercase;color:rgba(240,236,227,.6);}
+
+/* BOQ and World Vision — white bg needs a border */
+.brand-card.bordered .card-front{
+  border:1px solid rgba(28,25,22,.1);
+  box-sizing:border-box;
+}
 
 /* Capability strip */
 .cap-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;margin-top:3px;}
@@ -120,7 +188,7 @@ body{background:#0e0c0a;color:#f0ece3;font-family:'Manrope',sans-serif;overflow-
 .case-card{
   position:relative;overflow:hidden;display:flex;
   flex-direction:column;text-decoration:none;
-  background:#1a1a1a;cursor:none;
+  background:#d4cfc6;cursor:none;
 }
 .case-img-wrap{
   position:relative;overflow:hidden;
@@ -292,63 +360,118 @@ footer span{font-family:'DM Mono',monospace;font-size:9px;color:rgba(247,244,239
       <p class="brand-intro-text">Most of my career has been spent building things large organisations need but struggle to create themselves &mdash; new revenue streams, new ventures, and new products that get to market before the structure would normally allow. <strong>The sector changes. The mandate doesn't: zero to one, high ambiguity, commercial accountability.</strong></p>
     </div>
 
-    <div class="brands-grid reveal">
+        <div class="brands-grid reveal">
 
-      <div class="brand-card">
-        <div class="brand-img-wrap"><img class="brand-bg-img" src="logo-medibank.png" alt="Medibank"></div>
-        <div class="brand-bottom">
-          <div class="brand-years">2023 &mdash; Present</div>
-          <div class="brand-name">Medibank</div>
-          <div class="brand-role">New Ventures + AI Product Lead</div>
+      <div class="brand-card contain bordered" style="background:#fff;">
+        <div class="card-inner">
+          <div class="card-front">
+            <img class="brand-img" src="logo-medibank.png" alt="Medibank">
+            <div class="brand-label">
+              <div class="brand-label-years">2023 — Present</div>
+              <div class="brand-label-name">Medibank</div>
+              <div class="brand-label-role">New Ventures + AI Product Lead</div>
+            </div>
+          </div>
+          <div class="card-back">
+            <div class="card-back-org">Medibank · 2023–Present</div>
+            <div class="card-back-text">Built the Corporate Health product from idea to scale — opening a new revenue line and customer segment. Defined the enterprise AI product strategy for four million members.</div>
+            <div class="card-back-hint">Click to flip back</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="brand-card contain bordered" style="background:#fff;">
+        <div class="card-inner">
+          <div class="card-front">
+            <img class="brand-img" src="logo-boq.png" alt="Bank of Queensland">
+            <div class="brand-label">
+              <div class="brand-label-years">2018 — 2023</div>
+              <div class="brand-label-name">Bank of Queensland</div>
+              <div class="brand-label-role">Head of Product Innovation Lab</div>
+            </div>
+          </div>
+          <div class="card-back">
+            <div class="card-back-org">Bank of Queensland · 2018–2023</div>
+            <div class="card-back-text">Built the Innovation function from the ground up — rapid pilots into scaled products. Enabled FinTech capability and Virgin Money's transition to a neobank.</div>
+            <div class="card-back-hint">Click to flip back</div>
+          </div>
         </div>
       </div>
 
       <div class="brand-card">
-        <div class="brand-img-wrap"><img class="brand-bg-img" src="logo-boq.png" alt="Bank of Queensland"></div>
-        <div class="brand-bottom">
-          <div class="brand-years">2018 &mdash; 2023</div>
-          <div class="brand-name">Bank of Queensland</div>
-          <div class="brand-role">Head of Product Innovation Lab</div>
+        <div class="card-inner">
+          <div class="card-front">
+            <img class="brand-img" src="logo-optus.png" alt="Optus">
+            <div class="brand-label">
+              <div class="brand-label-years">2015 — 2018</div>
+              <div class="brand-label-name">Optus</div>
+              <div class="brand-label-role">Associate Director, Innovation</div>
+            </div>
+          </div>
+          <div class="card-back">
+            <div class="card-back-org">Optus · 2015–2018</div>
+            <div class="card-back-text">Led the Innovation Lab and the creation of Donate Your Data — a brand-defining product connecting 50,000 disadvantaged students to the internet.</div>
+            <div class="card-back-hint">Click to flip back</div>
+          </div>
         </div>
       </div>
 
-      <div class="brand-card">
-        <div class="brand-img-wrap"><img class="brand-bg-img" src="logo-optus.png" alt="Optus"></div>
-        <div class="brand-bottom">
-          <div class="brand-years">2015 &mdash; 2018</div>
-          <div class="brand-name">Optus</div>
-          <div class="brand-role">Associate Director, Innovation</div>
+      <div class="brand-card contain bordered" style="background:#fff;">
+        <div class="card-inner">
+          <div class="card-front">
+            <img class="brand-img" src="logo-commbank.png" alt="CommBank">
+            <div class="brand-label">
+              <div class="brand-label-years">2014 — 2015</div>
+              <div class="brand-label-name">CommBank</div>
+              <div class="brand-label-role">Digital Lead, Experimentation</div>
+            </div>
+          </div>
+          <div class="card-back">
+            <div class="card-back-org">CommBank · 2014–2015</div>
+            <div class="card-back-text">Digitised the bank's highest-revenue product and built its experimentation capability — scaling to 200+ practitioners. Winner, Retail Banking Best of the Best 2015.</div>
+            <div class="card-back-hint">Click to flip back</div>
+          </div>
         </div>
       </div>
 
-      <div class="brand-card">
-        <div class="brand-img-wrap"><img class="brand-bg-img" src="logo-commbank.png" alt="CommBank"></div>
-        <div class="brand-bottom">
-          <div class="brand-years">2014 &mdash; 2015</div>
-          <div class="brand-name">CommBank</div>
-          <div class="brand-role">Digital Lead, Experimentation</div>
+      <div class="brand-card contain bordered" style="background:#f2f0ed;">
+        <div class="card-inner">
+          <div class="card-front">
+            <img class="brand-img" src="logo-opera.png" alt="Sydney Opera House">
+            <div class="brand-label">
+              <div class="brand-label-years">2012 — 2014</div>
+              <div class="brand-label-name">Sydney Opera House</div>
+              <div class="brand-label-role">Senior Digital Innovation</div>
+            </div>
+          </div>
+          <div class="card-back">
+            <div class="card-back-org">Sydney Opera House · 2012–2014</div>
+            <div class="card-back-text">Built the digital innovation function from scratch — launching Own Our House and Australia's first live-streamed concerts in partnership with Google.</div>
+            <div class="card-back-hint">Click to flip back</div>
+          </div>
         </div>
       </div>
 
-      <div class="brand-card">
-        <div class="brand-img-wrap"><img class="brand-bg-img" src="logo-opera.png" alt="Sydney Opera House"></div>
-        <div class="brand-bottom">
-          <div class="brand-years">2012 &mdash; 2014</div>
-          <div class="brand-name">Sydney Opera House</div>
-          <div class="brand-role">Senior Digital Innovation</div>
-        </div>
-      </div>
-
-      <div class="brand-card">
-        <div class="brand-img-wrap"><img class="brand-bg-img" src="logo-worldvision.png" alt="World Vision"></div>
-        <div class="brand-bottom">
-          <div class="brand-years">2010 &mdash; 2012</div>
-          <div class="brand-name">World Vision</div>
-          <div class="brand-role">Digital Product &amp; Innovation</div>
+      <div class="brand-card contain bordered" style="background:#fff;">
+        <div class="card-inner">
+          <div class="card-front">
+            <img class="brand-img" src="logo-worldvision.png" alt="World Vision">
+            <div class="brand-label">
+              <div class="brand-label-years">2010 — 2012</div>
+              <div class="brand-label-name">World Vision</div>
+              <div class="brand-label-role">Digital Product & Innovation</div>
+            </div>
+          </div>
+          <div class="card-back">
+            <div class="card-back-org">World Vision · 2010–2012</div>
+            <div class="card-back-text">Designed and launched Project Partners — a digital giving platform that hit 100% of fundraising targets within 90 days and set a new benchmark for donor engagement.</div>
+            <div class="card-back-hint">Click to flip back</div>
+          </div>
         </div>
       </div>
 
     </div>
+
 
     <div class="cap-strip reveal">
       <div class="cap-cell"><div class="cap-num">15+</div><div class="cap-label">Years leading and building corporate innovation</div></div>
@@ -365,7 +488,7 @@ footer span{font-family:'DM Mono',monospace;font-size:9px;color:rgba(247,244,239
         <p class="section-label">Selected work</p>
         <h2 class="section-hl">Case Studies</h2>
       </div>
-      <span style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(28,25,22,.48)">04 projects</span>
+      <span style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(28,25,22,.48)">06 projects</span>
     </div>
     <div class="cases-grid reveal">
 
@@ -417,6 +540,33 @@ footer span{font-family:'DM Mono',monospace;font-size:9px;color:rgba(247,244,239
           <div class="case-org">Optus &middot; 2016&ndash;2017</div>
           <div class="case-title">Call Translate</div>
           <p class="case-teaser">World-first AI real-time voice translation on a standard call, built on Google Cloud AI.</p>
+          <span class="case-cta">Read case study &rarr;</span>
+        </div>
+      </a>
+
+    
+      <a href="case-virginmoney.html" class="case-card" data-img="logo-virginmoney.png">
+        <div class="case-img-wrap">
+          <img class="main-img" src="logo-virginmoney.png" alt="Virgin Money">
+          <div class="case-lens"></div>
+        </div>
+        <div class="case-content">
+          <div class="case-org">BOQ Group &middot; 2018&ndash;2023</div>
+          <div class="case-title">Virgin Money Australia</div>
+          <p class="case-teaser">Partnering with FinTechs to build a digital bank of the future — from neobank concept to market reality.</p>
+          <span class="case-cta">Read case study &rarr;</span>
+        </div>
+      </a>
+
+      <a href="case-reef.html" class="case-card" data-img="logo-foreverreef.png">
+        <div class="case-img-wrap">
+          <img class="main-img" src="logo-foreverreef.png" alt="Forever Reef Project">
+          <div class="case-lens"></div>
+        </div>
+        <div class="case-content">
+          <div class="case-org">Great Barrier Reef Legacy &middot; 2025&ndash;Present</div>
+          <div class="case-title">Forever Reef Project</div>
+          <p class="case-teaser">Preserving coral biodiversity for generations to come — board advisory role for one of Australia's most important conservation initiatives.</p>
           <span class="case-cta">Read case study &rarr;</span>
         </div>
       </a>
@@ -509,6 +659,18 @@ footer span{font-family:'DM Mono',monospace;font-size:9px;color:rgba(247,244,239
   el.style.cursor = 'pointer';
   el.onclick = function(){ window.location = 'mai'+'lto:'+e; };
 })();
+
+// ── CARD FLIP ────────────────────────────────────────────────
+document.querySelectorAll('.brand-card').forEach(function(card){
+  card.addEventListener('click', function(){
+    card.classList.toggle('flipped');
+  });
+  // Prevent flip toggle on mobile tap of link-type elements
+  card.addEventListener('touchend', function(e){
+    e.preventDefault();
+    card.classList.toggle('flipped');
+  });
+});
 
 // ── CURSOR ────────────────────────────────────────────────────
 var cur = document.getElementById('cur');
