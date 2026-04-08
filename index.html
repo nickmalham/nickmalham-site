@@ -717,14 +717,19 @@ footer span{font-family:'DM Mono',monospace;font-size:9px;color:rgba(247,244,239
   el.onclick = function(){ window.location = 'mai'+'lto:'+e; };
 })();
 
-// ── CARD FLIP ────────────────────────────────────────────────
+// ── CARD FLIP + SWOOSH SOUND ─────────────────────────────────
+var flipSound = new Audio('flip.mp3');
+flipSound.preload = 'auto';
 document.querySelectorAll('.brand-card').forEach(function(card){
   card.addEventListener('click', function(){
+    flipSound.currentTime = 0;
+    flipSound.play().catch(function(){});
     card.classList.toggle('flipped');
   });
-  // Prevent flip toggle on mobile tap of link-type elements
   card.addEventListener('touchend', function(e){
     e.preventDefault();
+    flipSound.currentTime = 0;
+    flipSound.play().catch(function(){});
     card.classList.toggle('flipped');
   });
 });
