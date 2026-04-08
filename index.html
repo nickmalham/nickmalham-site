@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nick Malham — 0 to 1 Product & Venture Builder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Manrope:wght@300;400;500;600&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: #0e0c0a;
+    color: #f0ece3;
+    font-family: 'Manrope', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* ── CURSOR ── */
+  #cursor {
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    width: 8px; height: 8px;
+    background: rgba(240,236,227,0.7);
+    border-radius: 50%;
+    transition: width 0.4s cubic-bezier(.23,1,.32,1),
+                height 0.4s cubic-bezier(.23,1,.32,1),
+                background 0.3s;
+    mix-blend-mode: difference;
+  }
+  #cursor.hovered { width: 48px; height: 48px; background: rgba(240,236,227,0.15); }
+
+  /* ── HERO CONTAINER ── */
+  .hero-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    background: #0e0c0a;
+  }
+
+  /* The source layer — rendered offscreen then captured */
+  #hero-source {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    z-index: 0;
+    /* Visible only before WebGL initialises */
+    opacity: 1;
+  }
+
+  /* WebGL output sits on top */
+  #fluid-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    opacity: 0;
+    transition: opacity 1.2s ease;
+  }
+  #fluid-canvas.ready { opacity: 1; }
+
+  /* ── NAV ── */
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 28px 52px;
+    position: relative;
+    z-index: 1;
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #f0ece3;
+    text-decoration: none;
+    letter-spacing: -0.01em;
+  }
+  .nav-links {
+    display: flex;
+    gap: 36px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(240,236,227,0.4);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: rgba(240,236,227,0.85); }
+
+  /* ── HERO CONTENT ── */
+  .hero-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 48px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(240,236,227,0.3);
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .hero-eyebrow::before,
+  .hero-eyebrow::after {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 1px;
+    background: rgba(240,236,227,0.15);
+  }
+
+  .hero-hl {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(52px, 7.5vw, 108px);
+    font-weight: 900;
+    line-height: 0.92;
+    letter-spacing: -0.04em;
+    color: #f0ece3;
+    margin-bottom: 36px;
+  }
+  .hero-hl em {
+    font-style: italic;
+    color: rgba(240,236,227,0.35);
+  }
+  .hero-hl .amp {
+    font-style: italic;
+    color: rgba(240,236,227,0.22);
+  }
+
+  .hero-sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: rgba(240,236,227,0.28);
+    text-transform: uppercase;
+  }
+
+  .hero-scroll-hint {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(240,236,227,0.2);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 1;
+  }
+  .scroll-line {
+    width: 32px;
+    height: 1px;
+    background: rgba(240,236,227,0.12);
+    animation: scrollPulse 2.5s ease-in-out infinite;
+  }
+  @keyframes scrollPulse {
+    0%, 100% { width: 32px; opacity: 0.5; }
+    50% { width: 56px; opacity: 1; }
+  }
+
+  /* ── REST OF SITE ── */
+  .site-body {
+    background: #f7f4ef;
+    color: #1c1916;
+    position: relative;
+    z-index: 10;
+  }
+
+  /* Brand section */
+  .brand-section {
+    padding: 80px 48px;
+    background: #fff;
+    border-top: 1px solid rgba(28,25,22,.06);
+  }
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(28,25,22,.32);
+    margin-bottom: 10px;
+  }
+  .section-hl {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(34px,4vw,52px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    color: #1c1916;
+    margin-bottom: 56px;
+  }
+  .brand-intro-text {
+    max-width: 640px;
+    font-size: 14px;
+    line-height: 1.9;
+    color: rgba(28,25,22,.55);
+    margin-bottom: 56px;
+  }
+  .brand-intro-text strong { color: #1c1916; font-weight: 600; }
+
+  .brands-grid {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 3px;
+  }
+  .brand-card {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 4/3;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 24px;
+    cursor: none;
+  }
+  .brand-bg {
+    position: absolute; inset: 0; z-index: 0;
+    transition: transform 0.7s cubic-bezier(.23,1,.32,1);
+  }
+  .brand-card:hover .brand-bg { transform: scale(1.04); }
+  .brand-card::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,.78) 0%, rgba(0,0,0,.04) 55%);
+    z-index: 1;
+  }
+  .brand-logo-wrap {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -64%);
+    z-index: 2;
+  }
+  .brand-bottom { position: relative; z-index: 2; }
+  .brand-years {
+    font-family: 'DM Mono', monospace;
+    font-size: 8px; letter-spacing: .12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.3); margin-bottom: 6px;
+  }
+  .brand-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px; font-weight: 700;
+    color: #fff; margin-bottom: 3px; line-height: 1.1;
+  }
+  .brand-role {
+    font-family: 'DM Mono', monospace;
+    font-size: 8px; letter-spacing: .1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.45);
+  }
+  .cba-name { color: #1c1916 !important; }
+  .cba-role { color: rgba(28,25,22,.5) !important; }
+
+  .cap-strip {
+    display: grid; grid-template-columns: repeat(4,1fr); gap: 3px; margin-top: 3px;
+  }
+  .cap-cell { background: #f7f4ef; padding: 28px; }
+  .cap-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px; font-weight: 900;
+    color: #2563a8; line-height: 1; margin-bottom: 6px;
+  }
+  .cap-label { font-size: 12px; font-weight: 500; color: rgba(28,25,22,.4); }
+
+  /* Work */
+  .work-section { padding: 80px 48px; background: #f7f4ef; border-top: 1px solid rgba(28,25,22,.06); }
+  .section-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 48px; }
+  .cases-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; }
+  .case-card {
+    position: relative; overflow: hidden;
+    display: block; text-decoration: none;
+    aspect-ratio: 4/3; background: #d4cfc6;
+    cursor: none;
+  }
+  .case-card img.main-img {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; display: block;
+    transition: transform 0.7s cubic-bezier(.23,1,.32,1), filter .5s;
+    filter: brightness(.65) saturate(.8);
+  }
+  .case-card:hover img.main-img { transform: scale(1.05); filter: brightness(.75) saturate(1); }
+  .case-lens {
+    position: absolute; width: 130px; height: 130px;
+    border-radius: 50%; pointer-events: none;
+    opacity: 0; transform: translate(-50%,-50%);
+    transition: opacity .25s; z-index: 5;
+    border: 2px solid rgba(255,255,255,.4);
+    box-shadow: 0 0 0 1px rgba(0,0,0,.08), 0 8px 40px rgba(0,0,0,.25);
+    overflow: hidden;
+  }
+  .case-card:hover .case-lens { opacity: 1; }
+  .case-lens img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: brightness(1.15) saturate(1.4); }
+  .case-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(15,12,9,.88) 0%, rgba(15,12,9,.04) 55%);
+    z-index: 2;
+  }
+  .case-content { position: absolute; bottom: 0; left: 0; right: 0; padding: 28px 30px; z-index: 4; }
+  .case-org {
+    font-family: 'DM Mono', monospace; font-size: 9px;
+    letter-spacing: .2em; text-transform: uppercase;
+    color: rgba(255,255,255,.4); margin-bottom: 6px;
+  }
+  .case-title {
+    font-family: 'Playfair Display', serif; font-size: 20px;
+    font-weight: 700; letter-spacing: -.01em; color: #fff;
+    line-height: 1.1; margin-bottom: 8px; transition: color .25s;
+  }
+  .case-card:hover .case-title { color: #9ecfff; }
+  .case-teaser { font-size: 11px; color: rgba(255,255,255,.5); line-height: 1.6; margin-bottom: 14px; max-width: 300px; }
+  .case-cta {
+    font-family: 'DM Mono', monospace; font-size: 9px;
+    letter-spacing: .16em; text-transform: uppercase;
+    color: rgba(255,255,255,.35); transition: color .25s;
+  }
+  .case-card:hover .case-cta { color: #9ecfff; }
+
+  /* Experiments */
+  .exp-section { padding: 80px 48px; background: #fff; border-top: 1px solid rgba(28,25,22,.06); }
+  .exp-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 3px; }
+  .exp-card {
+    background: #fff; padding: 40px 32px;
+    text-decoration: none; color: inherit;
+    display: block; position: relative; overflow: hidden;
+    transition: background .25s; cursor: none;
+  }
+  .exp-card:hover { background: #f7f4ef; }
+  .exp-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: #2563a8; transform: scaleX(0); transform-origin: left;
+    transition: transform .45s cubic-bezier(.23,1,.32,1);
+  }
+  .exp-card:hover::before { transform: scaleX(1); }
+  .exp-n {
+    position: absolute; top: 32px; right: 32px;
+    font-family: 'Playfair Display', serif; font-size: 48px; font-weight: 900;
+    color: rgba(28,25,22,.04); line-height: 1;
+  }
+  .exp-status { display: flex; align-items: center; gap: 7px; margin-bottom: 24px; }
+  .e-dot { width: 6px; height: 6px; border-radius: 50%; }
+  .e-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: .16em; text-transform: uppercase; }
+  .s-active .e-dot { background: #22c55e; } .s-active .e-label { color: #22c55e; }
+  .s-building .e-dot { background: #2563a8; } .s-building .e-label { color: #2563a8; }
+  .s-template .e-dot { background: rgba(28,25,22,.22); } .s-template .e-label { color: rgba(28,25,22,.38); }
+  .exp-type { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: .13em; text-transform: uppercase; color: rgba(28,25,22,.28); margin-bottom: 12px; }
+  .exp-name { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; letter-spacing: -.01em; line-height: 1.1; color: #1c1916; margin-bottom: 12px; transition: color .25s; }
+  .exp-card:hover .exp-name { color: #2563a8; }
+  .exp-desc { font-size: 12px; line-height: 1.8; color: rgba(28,25,22,.48); margin-bottom: 20px; }
+  .exp-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 20px; }
+  .exp-tag { font-family: 'DM Mono', monospace; font-size: 8px; letter-spacing: .1em; text-transform: uppercase; padding: 3px 9px; border: 1px solid rgba(28,25,22,.1); color: rgba(28,25,22,.35); border-radius: 2px; }
+  .exp-link { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: .13em; text-transform: uppercase; color: #2563a8; }
+
+  /* About */
+  .about-section { border-top: 1px solid rgba(28,25,22,.06); display: grid; grid-template-columns: 1fr 1fr; }
+  .about-img { position: relative; overflow: hidden; min-height: 520px; }
+  .about-img img { width: 100%; height: 100%; object-fit: cover; display: block; filter: saturate(.75); }
+  .about-text { padding: 80px 56px; display: flex; flex-direction: column; justify-content: center; background: #f7f4ef; }
+  .about-copy { font-size: 14px; line-height: 1.9; color: rgba(28,25,22,.58); margin-bottom: 18px; }
+  .about-copy strong { color: #1c1916; font-weight: 600; }
+  .about-copy em { color: #2563a8; font-style: normal; }
+  .creds { margin-top: 36px; border-top: 1px solid rgba(28,25,22,.07); }
+  .cred { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(28,25,22,.05); }
+  .cred-name { font-size: 12px; color: rgba(28,25,22,.5); font-weight: 500; }
+  .cred-yr { font-family: 'DM Mono', monospace; font-size: 9px; color: rgba(28,25,22,.28); letter-spacing: .08em; }
+
+  /* CTA */
+  .cta-section { border-top: 1px solid rgba(28,25,22,.06); background: #1c1916; padding: 96px 48px; display: flex; align-items: center; justify-content: space-between; gap: 40px; }
+  .cta-hl { font-family: 'Playfair Display', serif; font-size: clamp(40px,5.5vw,76px); font-weight: 700; letter-spacing: -.03em; line-height: .96; color: #f7f4ef; }
+  .cta-hl em { font-style: italic; color: #6ca8e8; }
+  .cta-btn { flex-shrink: 0; display: inline-block; background: #2563a8; color: #fff; padding: 18px 40px; font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; text-decoration: none; transition: background .2s, transform .3s cubic-bezier(.23,1,.32,1), box-shadow .3s; }
+  .cta-btn:hover { background: #3a7bd5; transform: translateY(-3px); box-shadow: 0 12px 36px rgba(37,99,168,.4); }
+
+  footer { border-top: 1px solid rgba(247,244,239,.07); background: #1c1916; padding: 26px 48px; display: flex; align-items: center; justify-content: space-between; }
+  .footer-logo { font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 700; color: rgba(247,244,239,.5); text-decoration: none; }
+  .footer-links { display: flex; gap: 24px; list-style: none; }
+  .footer-links a { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: .13em; text-transform: uppercase; color: rgba(247,244,239,.25); text-decoration: none; transition: color .2s; }
+  .footer-links a:hover { color: #6ca8e8; }
+  .footer-copy { font-family: 'DM Mono', monospace; font-size: 9px; color: rgba(247,244,239,.18); letter-spacing: .07em; }
+
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s cubic-bezier(.23,1,.32,1); }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  @media(max-width:900px) {
+    nav { padding: 18px 20px; }
+    .hero-hl { font-size: clamp(40px, 10vw, 72px); }
+    .brand-section, .work-section, .exp-section { padding: 60px 20px; }
+    .brands-grid { grid-template-columns: 1fr; }
+    .cap-strip { grid-template-columns: 1fr 1fr; }
+    .cases-grid { grid-template-columns: 1fr; }
+    .exp-grid { grid-template-columns: 1fr; }
+    .about-section { grid-template-columns: 1fr; }
+    .about-text { padding: 48px 24px; }
+    .cta-section { flex-direction: column; padding: 60px 24px; }
+    footer { flex-direction: column; gap: 16px; text-align: center; }
+    #cursor { display: none; }
+    #fluid-canvas { display: none; }
+    #hero-source { opacity: 1 !important; }
+  }
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+
+<!-- ═══════════════════════════════════
+     HERO — fluid distortion wrapper
+═══════════════════════════════════ -->
+<div class="hero-wrapper">
+
+  <!-- Source layer: real DOM that gets captured as texture -->
+  <div id="hero-source">
+    <nav>
+      <a href="#" class="nav-logo">Nick Malham</a>
+      <ul class="nav-links">
+        <li><a href="#work">Work</a></li>
+        <li><a href="#experiments">Experiments</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="mailto:nickmalham@gmail.com">Contact</a></li>
+      </ul>
+    </nav>
+
+    <div class="hero-content">
+      <p class="hero-eyebrow">Brisbane, Australia</p>
+      <h1 class="hero-hl">
+        0 to 1<br>
+        Product <span class="amp">&</span><br>
+        Venture<br>
+        <em>Builder.</em>
+      </h1>
+      <p class="hero-sub">Medibank · BOQ · Optus · CommBank · Sydney Opera House</p>
+    </div>
+
+    <div class="hero-scroll-hint">
+      <span class="scroll-line"></span>
+      Scroll
+      <span class="scroll-line"></span>
+    </div>
+  </div>
+
+  <!-- WebGL canvas — rendered on top -->
+  <canvas id="fluid-canvas"></canvas>
+</div>
+
+
+<!-- ═══════════════════════════════════
+     REST OF SITE
+═══════════════════════════════════ -->
+<div class="site-body">
+
+  <!-- BRAND OVERVIEW -->
+  <section class="brand-section" id="overview">
+    <div class="reveal">
+      <p class="section-label">Background</p>
+      <h2 class="section-hl">15 years. Six iconic organisations.</h2>
+      <p class="brand-intro-text">
+        I'm the person organisations bring in when they need to move faster than their structure allows — to build new revenue streams, stand up AI-native products, and launch ventures from scratch. <strong>The sector changes. The mandate doesn't: zero to one, high ambiguity, commercial accountability.</strong>
+      </p>
+    </div>
+
+    <div class="brands-grid reveal">
+
+      <div class="brand-card">
+        <div class="brand-bg" style="background:linear-gradient(140deg,#E4002B,#8f0018)"></div>
+        <div class="brand-logo-wrap">
+          <svg viewBox="0 0 190 44" width="190" height="44" fill="none">
+            <text x="0" y="36" font-family="Georgia,serif" font-size="36" font-weight="700" fill="white" letter-spacing="-1">Medibank</text>
+          </svg>
+        </div>
+        <div class="brand-bottom">
+          <div class="brand-years">2023 — Present</div>
+          <div class="brand-name">Medibank</div>
+          <div class="brand-role">New Ventures + AI Product Lead</div>
+        </div>
+      </div>
+
+      <div class="brand-card">
+        <div class="brand-bg" style="background:linear-gradient(140deg,#003087,#001550)"></div>
+        <div class="brand-logo-wrap">
+          <svg viewBox="0 0 200 64" width="200" height="64" fill="none">
+            <circle cx="30" cy="32" r="26" fill="none" stroke="white" stroke-width="2.5" opacity=".5"/>
+            <text x="30" y="38" font-family="Georgia,serif" font-size="16" font-weight="700" fill="white" text-anchor="middle" opacity=".9">BOQ</text>
+            <text x="70" y="26" font-family="Georgia,serif" font-size="15" font-weight="400" fill="white" opacity=".85">Bank of</text>
+            <text x="70" y="48" font-family="Georgia,serif" font-size="15" font-weight="400" fill="white" opacity=".85">Queensland</text>
+          </svg>
+        </div>
+        <div class="brand-bottom">
+          <div class="brand-years">2018 — 2023</div>
+          <div class="brand-name">Bank of Queensland</div>
+          <div class="brand-role">Head of Product Innovation Lab</div>
+        </div>
+      </div>
+
+      <div class="brand-card">
+        <div class="brand-bg" style="background:linear-gradient(140deg,#00A3AD,#005e65)"></div>
+        <div class="brand-logo-wrap">
+          <svg viewBox="0 0 160 52" width="160" height="52" fill="none">
+            <ellipse cx="28" cy="26" rx="22" ry="18" fill="white" opacity=".12"/>
+            <ellipse cx="28" cy="26" rx="14" ry="11" fill="white" opacity=".2"/>
+            <ellipse cx="28" cy="26" rx="7" ry="5.5" fill="white" opacity=".28"/>
+            <text x="62" y="34" font-family="Georgia,serif" font-size="28" font-weight="700" fill="white" letter-spacing="-0.5">Optus</text>
+          </svg>
+        </div>
+        <div class="brand-bottom">
+          <div class="brand-years">2015 — 2018</div>
+          <div class="brand-name">Optus</div>
+          <div class="brand-role">Associate Director, Innovation</div>
+        </div>
+      </div>
+
+      <div class="brand-card">
+        <div class="brand-bg" style="background:linear-gradient(140deg,#FFD000,#c9a200)"></div>
+        <div class="brand-logo-wrap">
+          <svg viewBox="0 0 180 60" width="180" height="60" fill="none">
+            <polygon points="30,4 54,30 30,56 6,30" fill="rgba(0,0,0,.1)"/>
+            <polygon points="30,12 46,30 30,48 14,30" fill="rgba(0,0,0,.18)"/>
+            <text x="68" y="26" font-family="Georgia,serif" font-size="20" font-weight="700" fill="#1c1916">Comm</text>
+            <text x="68" y="50" font-family="Georgia,serif" font-size="20" font-weight="700" fill="#1c1916">Bank</text>
+          </svg>
+        </div>
+        <div class="brand-bottom">
+          <div class="brand-years">2014 — 2015</div>
+          <div class="brand-name cba-name">CommBank</div>
+          <div class="brand-role cba-role">Digital Lead, Experimentation</div>
+        </div>
+      </div>
+
+      <div class="brand-card">
+        <div class="brand-bg" style="background:linear-gradient(140deg,#0d2b4e,#1a4a7a)"></div>
+        <div class="brand-logo-wrap">
+          <svg viewBox="0 0 180 80" width="180" height="80" fill="none">
+            <path d="M14 72 Q22 40 30 18 Q34 38 38 72Z" fill="white" opacity=".28"/>
+            <path d="M36 72 Q46 30 56 8 Q60 32 64 72Z" fill="white" opacity=".48"/>
+            <path d="M62 72 Q70 35 78 14 Q82 38 86 72Z" fill="white" opacity=".62"/>
+            <path d="M84 72 Q90 42 96 24 Q99 46 102 72Z" fill="white" opacity=".42"/>
+            <path d="M100 72 Q104 50 108 36 Q110 54 114 72Z" fill="white" opacity=".26"/>
+            <text x="90" y="64" font-family="Georgia,serif" font-size="9" font-weight="400" fill="white" opacity=".6" text-anchor="middle" letter-spacing="2">SYDNEY OPERA HOUSE</text>
+          </svg>
+        </div>
+        <div class="brand-bottom">
+          <div class="brand-years">2012 — 2014</div>
+          <div class="brand-name">Sydney Opera House</div>
+          <div class="brand-role">Senior Digital Innovation</div>
+        </div>
+      </div>
+
+      <div class="brand-card">
+        <div class="brand-bg" style="background:linear-gradient(140deg,#E8401C,#a02a0e)"></div>
+        <div class="brand-logo-wrap">
+          <svg viewBox="0 0 180 64" width="180" height="64" fill="none">
+            <circle cx="30" cy="32" r="24" fill="none" stroke="white" stroke-width="2" opacity=".48"/>
+            <ellipse cx="30" cy="32" rx="11" ry="24" fill="none" stroke="white" stroke-width="1.5" opacity=".36"/>
+            <line x1="6" y1="32" x2="54" y2="32" stroke="white" stroke-width="1.5" opacity=".32"/>
+            <line x1="8" y1="20" x2="52" y2="20" stroke="white" stroke-width="1" opacity=".18"/>
+            <line x1="8" y1="44" x2="52" y2="44" stroke="white" stroke-width="1" opacity=".18"/>
+            <text x="68" y="27" font-family="Georgia,serif" font-size="18" font-weight="700" fill="white">World</text>
+            <text x="68" y="50" font-family="Georgia,serif" font-size="18" font-weight="700" fill="white">Vision</text>
+          </svg>
+        </div>
+        <div class="brand-bottom">
+          <div class="brand-years">2010 — 2012</div>
+          <div class="brand-name">World Vision</div>
+          <div class="brand-role">Digital Product & Innovation</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="cap-strip reveal">
+      <div class="cap-cell"><div class="cap-num">15+</div><div class="cap-label">Years building</div></div>
+      <div class="cap-cell"><div class="cap-num">6</div><div class="cap-label">Iconic organisations</div></div>
+      <div class="cap-cell"><div class="cap-num">$30M+</div><div class="cap-label">Social value created</div></div>
+      <div class="cap-cell"><div class="cap-num">3×</div><div class="cap-label">World-first products</div></div>
+    </div>
+  </section>
+
+  <!-- WORK -->
+  <section class="work-section" id="work">
+    <div class="section-header reveal">
+      <div>
+        <p class="section-label">Selected work</p>
+        <h2 class="section-hl">Case Studies</h2>
+      </div>
+      <span style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(28,25,22,.28)">04 projects</span>
+    </div>
+    <div class="cases-grid reveal">
+
+      <a href="case-donate.html" class="case-card">
+        <img class="main-img" src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=900&auto=format&fit=crop&q=80" alt="Donate Your Data">
+        <div class="case-lens"><img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=900&auto=format&fit=crop&q=80" alt=""></div>
+        <div class="case-overlay"></div>
+        <div class="case-content">
+          <div class="case-org">Optus · 2015–2018</div>
+          <div class="case-title">Donate Your Data</div>
+          <p class="case-teaser">World-first platform turning unused mobile data into digital equity for 50,000 students.</p>
+          <span class="case-cta">Read case study →</span>
+        </div>
+      </a>
+
+      <a href="case-medibank.html" class="case-card">
+        <img class="main-img" src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=900&auto=format&fit=crop&q=80" alt="Corporate Health Venture">
+        <div class="case-lens"><img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=900&auto=format&fit=crop&q=80" alt=""></div>
+        <div class="case-overlay"></div>
+        <div class="case-content">
+          <div class="case-org">Medibank · 2023–Present</div>
+          <div class="case-title">Corporate Health Venture</div>
+          <p class="case-teaser">First hire into a greenfield health venture — built the vision, team, and product from zero.</p>
+          <span class="case-cta">Read case study →</span>
+        </div>
+      </a>
+
+      <a href="case-opera.html" class="case-card">
+        <img class="main-img" src="https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?w=900&auto=format&fit=crop&q=80" alt="Sydney Opera House">
+        <div class="case-lens"><img src="https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?w=900&auto=format&fit=crop&q=80" alt=""></div>
+        <div class="case-overlay"></div>
+        <div class="case-content">
+          <div class="case-org">Sydney Opera House · 2012–2014</div>
+          <div class="case-title">Own Our House</div>
+          <p class="case-teaser">Landmark digital philanthropy proving ownership beats generosity — with Google Labs.</p>
+          <span class="case-cta">Read case study →</span>
+        </div>
+      </a>
+
+      <a href="case-translate.html" class="case-card">
+        <img class="main-img" src="https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=900&auto=format&fit=crop&q=80" alt="Call Translate AI">
+        <div class="case-lens"><img src="https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=900&auto=format&fit=crop&q=80" alt=""></div>
+        <div class="case-overlay"></div>
+        <div class="case-content">
+          <div class="case-org">Optus · 2016–2017</div>
+          <div class="case-title">Call Translate</div>
+          <p class="case-teaser">World-first AI real-time voice translation on a standard call, built on Google Cloud AI.</p>
+          <span class="case-cta">Read case study →</span>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- EXPERIMENTS -->
+  <section class="exp-section" id="experiments">
+    <div class="section-header reveal">
+      <div>
+        <p class="section-label">Learning by doing</p>
+        <h2 class="section-hl">Experiments</h2>
+      </div>
+    </div>
+    <div class="exp-grid reveal">
+      <a href="#" class="exp-card">
+        <span class="exp-n">01</span>
+        <div class="exp-status s-active"><span class="e-dot"></span><span class="e-label">Live</span></div>
+        <div class="exp-type">Podcast · Content · AI</div>
+        <div class="exp-name">The Deep Dive</div>
+        <p class="exp-desc">Strategic paper on AI product operating models — converted via Claude transcript and Google NotebookLM into an audio case study. Paper to podcast, no studio required.</p>
+        <div class="exp-tags"><span class="exp-tag">AI</span><span class="exp-tag">Content</span><span class="exp-tag">Podcast</span></div>
+        <span class="exp-link">Listen →</span>
+      </a>
+      <a href="#" class="exp-card">
+        <span class="exp-n">02</span>
+        <div class="exp-status s-active"><span class="e-dot"></span><span class="e-label">Active</span></div>
+        <div class="exp-type">Tool · AI · Education</div>
+        <div class="exp-name">NAPLAN Buddy</div>
+        <p class="exp-desc">My daughter Summer wanted a more personalised way to prepare for her first NAPLAN. Built a Duolingo-style AI learning app — gamified, bite-sized practice for Year 3 kids.</p>
+        <div class="exp-tags"><span class="exp-tag">AI</span><span class="exp-tag">Education</span><span class="exp-tag">Family</span></div>
+        <span class="exp-link">View experiment →</span>
+      </a>
+      <a href="#" class="exp-card">
+        <span class="exp-n">03</span>
+        <div class="exp-status s-active"><span class="e-dot"></span><span class="e-label">Active</span></div>
+        <div class="exp-type">Tool · Governance · AI</div>
+        <div class="exp-name">Cyber Ledger</div>
+        <p class="exp-desc">Built off board work with Great Barrier Reef Legacy. Needed a tool to track cybersecurity risks across an NFP. Built what I needed, then made it shareable.</p>
+        <div class="exp-tags"><span class="exp-tag">AI</span><span class="exp-tag">Governance</span><span class="exp-tag">NFP</span></div>
+        <span class="exp-link">View experiment →</span>
+      </a>
+      <a href="#" class="exp-card">
+        <span class="exp-n">04</span>
+        <div class="exp-status s-template"><span class="e-dot"></span><span class="e-label">In progress</span></div>
+        <div class="exp-type">Canvas · AI · Productivity</div>
+        <div class="exp-name">CV Reviewer Canvas</div>
+        <p class="exp-desc">AI-powered canvas for evaluating CVs against a role brief. Built because I needed it. Currently in progress.</p>
+        <div class="exp-tags"><span class="exp-tag">AI</span><span class="exp-tag">Productivity</span><span class="exp-tag">Canvas</span></div>
+        <span class="exp-link">Coming soon</span>
+      </a>
+      <a href="#" class="exp-card">
+        <span class="exp-n">05</span>
+        <div class="exp-status s-building"><span class="e-dot"></span><span class="e-label">Building</span></div>
+        <div class="exp-type">Build in public · Web</div>
+        <div class="exp-name">This Website</div>
+        <p class="exp-desc">Learning to ship by actually shipping. Built with AI assistance from zero coding experience. Documenting every decision as a case study in non-technical product building.</p>
+        <div class="exp-tags"><span class="exp-tag">AI</span><span class="exp-tag">Build in public</span><span class="exp-tag">Vercel</span></div>
+        <span class="exp-link">Read the build log →</span>
+      </a>
+      <a href="#" class="exp-card">
+        <span class="exp-n">06</span>
+        <div class="exp-status s-active"><span class="e-dot"></span><span class="e-label">Published</span></div>
+        <div class="exp-type">Paper · Thought leadership</div>
+        <div class="exp-name">Unlocking the Product Pipeline</div>
+        <p class="exp-desc">AI has collapsed delivery. Discovery remains on a pre-AI model. The gap between them is where product teams lose. Source material for The Deep Dive.</p>
+        <div class="exp-tags"><span class="exp-tag">AI</span><span class="exp-tag">Product</span><span class="exp-tag">Strategy</span></div>
+        <span class="exp-link">Read the paper →</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about-section" id="about">
+    <div class="about-img">
+      <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=900&auto=format&fit=crop&q=80" alt="Nick Malham">
+    </div>
+    <div class="about-text reveal">
+      <p class="section-label">The person</p>
+      <p class="about-copy">I'm <strong>Nick Malham</strong> — a product and venture leader based in Brisbane who builds things that <em>didn't exist before</em>. 15 years across Medibank, BOQ, Optus, CommBank, and the Sydney Opera House — building new revenue streams, launching AI-native products, and standing up innovation capabilities from scratch.</p>
+      <p class="about-copy">Outside work, I coach girls' football with the Southside Eagles, sit on the advisory board of <strong>Great Barrier Reef Legacy</strong>, and I'm learning to ship software for the first time at 41. I believe the best way to understand something is to build it.</p>
+      <div class="creds">
+        <div class="cred"><span class="cred-name">Advanced AI Product Leadership · Maven</span><span class="cred-yr">2025</span></div>
+        <div class="cred"><span class="cred-name">Angel Investment · Airtree Ventures</span><span class="cred-yr">2023</span></div>
+        <div class="cred"><span class="cred-name">Oxford FinTech Program · University of Oxford</span><span class="cred-yr">2020–21</span></div>
+        <div class="cred"><span class="cred-name">Leading Innovation · Stanford University</span><span class="cred-yr">2018</span></div>
+        <div class="cred"><span class="cred-name">BA Hons Business & Marketing · University of Lancashire</span><span class="cred-yr">1st Class</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <div class="cta-section reveal">
+    <div class="cta-hl">Let's build<br><em>something.</em></div>
+    <a href="mailto:nickmalham@gmail.com" class="cta-btn">Get in touch</a>
+  </div>
+
+  <footer>
+    <a href="#" class="footer-logo">Nick Malham</a>
+    <ul class="footer-links">
+      <li><a href="https://linkedin.com/in/nickmalham" target="_blank">LinkedIn</a></li>
+      <li><a href="#experiments">Experiments</a></li>
+      <li><a href="#work">Work</a></li>
+      <li><a href="mailto:nickmalham@gmail.com">Email</a></li>
+    </ul>
+    <span class="footer-copy">© 2025 · Brisbane, AU</span>
+  </footer>
+
+</div><!-- /.site-body -->
+
+
+<!-- ═══════════════════════════════════════════════════
+     FLUID SIMULATION — WebGL pixel displacement
+═══════════════════════════════════════════════════ -->
+<script>
+(function() {
+
+  // ── CURSOR ──────────────────────────────────
+  const cur = document.getElementById('cursor');
+  let MX = window.innerWidth / 2, MY = window.innerHeight / 2;
+  document.addEventListener('mousemove', e => {
+    MX = e.clientX; MY = e.clientY;
+    cur.style.left = MX + 'px'; cur.style.top = MY + 'px';
+  });
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => cur.classList.add('hovered'));
+    el.addEventListener('mouseleave', () => cur.classList.remove('hovered'));
+  });
+
+  // ── SCROLL REVEAL ────────────────────────────
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.07 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  // ── MAGNIFY LENS ─────────────────────────────
+  document.querySelectorAll('.case-card').forEach(card => {
+    const lens = card.querySelector('.case-lens');
+    const lensImg = lens ? lens.querySelector('img') : null;
+    card.addEventListener('mouseenter', () => { cur.classList.remove('hovered'); });
+    card.addEventListener('mouseleave', () => { if (lens) lens.style.opacity = '0'; });
+    card.addEventListener('mousemove', e => {
+      if (!lens) return;
+      const r = card.getBoundingClientRect();
+      const x = e.clientX - r.left, y = e.clientY - r.top;
+      lens.style.left = x + 'px'; lens.style.top = y + 'px'; lens.style.opacity = '1';
+      if (lensImg) {
+        lensImg.style.objectPosition = `${50 - (x/r.width - 0.5) * 20}% ${50 - (y/r.height - 0.5) * 20}%`;
+        lensImg.style.transform = 'scale(1.5)';
+      }
+    });
+  });
+
+  // ── FLUID DISTORTION ─────────────────────────
+  const canvas = document.getElementById('fluid-canvas');
+  const heroSource = document.getElementById('hero-source');
+  const gl = canvas.getContext('webgl', { alpha: false, antialias: false });
+  if (!gl) return; // fallback: source layer stays visible
+
+  // Vertex shader — full-screen quad
+  const VS = `
+    attribute vec2 a_pos;
+    varying vec2 v_uv;
+    void main() {
+      v_uv = a_pos * 0.5 + 0.5;
+      v_uv.y = 1.0 - v_uv.y;
+      gl_Position = vec4(a_pos, 0.0, 1.0);
+    }
+  `;
+
+  // Fragment shader — samples scene texture displaced by velocity field
+  const FS = `
+    precision highp float;
+    varying vec2 v_uv;
+    uniform sampler2D u_scene;
+    uniform sampler2D u_velocity;
+    uniform float u_time;
+    uniform vec2 u_resolution;
+
+    void main() {
+      // Sample velocity field
+      vec4 vel = texture2D(u_velocity, v_uv);
+      // vel.rg = velocity, vel.b = age/intensity
+
+      // Displacement: velocity warps the UV lookup
+      float strength = 0.018;
+      vec2 displaced = v_uv + vel.rg * strength;
+
+      // Clamp to avoid edge bleeding
+      displaced = clamp(displaced, 0.002, 0.998);
+
+      vec4 color = texture2D(u_scene, displaced);
+
+      // Very subtle chromatic aberration along velocity direction
+      float ca = 0.004 * length(vel.rg);
+      vec2 dir = normalize(vel.rg + 0.001);
+      float r = texture2D(u_scene, displaced + dir * ca).r;
+      float b = texture2D(u_scene, displaced - dir * ca).b;
+      color.r = r;
+      color.b = b;
+
+      gl_FragColor = color;
+    }
+  `;
+
+  // Velocity update shader — advances the fluid simulation
+  const VEL_VS = `
+    attribute vec2 a_pos;
+    varying vec2 v_uv;
+    void main() {
+      v_uv = a_pos * 0.5 + 0.5;
+      gl_Position = vec4(a_pos, 0.0, 1.0);
+    }
+  `;
+
+  const VEL_FS = `
+    precision highp float;
+    varying vec2 v_uv;
+    uniform sampler2D u_prev;
+    uniform vec2 u_mouse;       // normalised 0..1
+    uniform vec2 u_mouse_vel;   // mouse delta normalised
+    uniform float u_aspect;
+    uniform float u_dt;
+    uniform float u_radius;     // splat radius
+    uniform float u_force;
+
+    void main() {
+      vec4 prev = texture2D(u_prev, v_uv);
+
+      // Decay: slow — 3-4 second half life
+      // decay factor per frame at ~60fps: e^(-dt * k)
+      // want ~3.5s halflife: k = ln(2)/3.5 ≈ 0.198
+      float decay = exp(-u_dt * 0.2);
+      vec2 vel = prev.rg * decay;
+
+      // Splat mouse velocity into field
+      vec2 diff = v_uv - u_mouse;
+      diff.x *= u_aspect;
+      float dist = length(diff);
+      float splat = exp(-dist * dist / (u_radius * u_radius));
+      vel += u_mouse_vel * splat * u_force;
+
+      // Soft clamp
+      float mag = length(vel);
+      if (mag > 0.5) vel = vel / mag * 0.5;
+
+      gl_FragColor = vec4(vel, 0.0, 1.0);
+    }
+  `;
+
+  function compileShader(src, type) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
+      console.error(gl.getShaderInfoLog(s));
+      return null;
+    }
+    return s;
+  }
+
+  function makeProgram(vs, fs) {
+    const p = gl.createProgram();
+    gl.attachShader(p, compileShader(vs, gl.VERTEX_SHADER));
+    gl.attachShader(p, compileShader(fs, gl.FRAGMENT_SHADER));
+    gl.linkProgram(p);
+    return p;
+  }
+
+  const renderProg = makeProgram(VS, FS);
+  const velProg = makeProgram(VEL_VS, VEL_FS);
+
+  // Full-screen quad
+  const quad = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, quad);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+
+  function bindQuad(prog) {
+    const loc = gl.getAttribLocation(prog, 'a_pos');
+    gl.bindBuffer(gl.ARRAY_BUFFER, quad);
+    gl.enableVertexAttribArray(loc);
+    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+  }
+
+  // Velocity FBOs — ping pong
+  const SIM_W = 256, SIM_H = 256;
+
+  function makeTexFBO(w, h, data) {
+    const tex = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, tex);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, w, h, 0, gl.RGBA, gl.UNSIGNED_BYTE, data || null);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    const fbo = gl.createFramebuffer();
+    gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0);
+    return { tex, fbo };
+  }
+
+  let velA = makeTexFBO(SIM_W, SIM_H);
+  let velB = makeTexFBO(SIM_W, SIM_H);
+
+  // Scene texture — rasterised from hero DOM
+  const sceneTex = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, sceneTex);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+  let sceneReady = false;
+  let W = 0, H = 0;
+
+  function resize() {
+    W = canvas.offsetWidth;
+    H = canvas.offsetHeight;
+    canvas.width = W;
+    canvas.height = H;
+  }
+  resize();
+  window.addEventListener('resize', () => { resize(); captureScene(); });
+
+  // Capture the hero DOM into a canvas texture via html2canvas-lite approach
+  // We use a 2D canvas + drawImage of a foreignObject SVG — supported in all modern browsers
+  function captureScene() {
+    if (W === 0 || H === 0) return;
+
+    const offscreen = document.createElement('canvas');
+    offscreen.width = W;
+    offscreen.height = H;
+    const ctx2d = offscreen.getContext('2d');
+
+    // Render background first
+    ctx2d.fillStyle = '#0e0c0a';
+    ctx2d.fillRect(0, 0, W, H);
+
+    // Serialise hero DOM as SVG foreignObject
+    const src = heroSource.cloneNode(true);
+    src.style.position = 'relative';
+    src.style.width = W + 'px';
+    src.style.height = H + 'px';
+    src.style.opacity = '1';
+    src.style.background = '#0e0c0a';
+
+    const svgStr = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">
+        <foreignObject width="100%" height="100%">
+          <div xmlns="http://www.w3.org/1999/xhtml"
+               style="width:${W}px;height:${H}px;overflow:hidden;background:#0e0c0a;">
+            ${src.outerHTML}
+          </div>
+        </foreignObject>
+      </svg>`;
+
+    const blob = new Blob([svgStr], { type: 'image/svg+xml' });
+    const url = URL.createObjectURL(blob);
+    const img = new Image();
+    img.onload = function () {
+      ctx2d.drawImage(img, 0, 0);
+      URL.revokeObjectURL(url);
+
+      gl.bindTexture(gl.TEXTURE_2D, sceneTex);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, offscreen);
+      sceneReady = true;
+
+      // Fade canvas in
+      canvas.classList.add('ready');
+    };
+    img.onerror = function() {
+      // SVG capture failed (cross-origin fonts etc) — fallback: draw text directly
+      ctx2d.fillStyle = '#0e0c0a';
+      ctx2d.fillRect(0, 0, W, H);
+
+      // Nav
+      ctx2d.fillStyle = 'rgba(240,236,227,0.85)';
+      ctx2d.font = '700 16px Georgia, serif';
+      ctx2d.fillText('Nick Malham', 52, 48);
+
+      ctx2d.fillStyle = 'rgba(240,236,227,0.38)';
+      ctx2d.font = '400 10px monospace';
+      ['Work', 'Experiments', 'About', 'Contact'].forEach((link, i) => {
+        const tw = ctx2d.measureText(link).width;
+        ctx2d.fillText(link, W - 52 - (3 - i) * 110, 48);
+      });
+
+      // Eyebrow
+      ctx2d.fillStyle = 'rgba(240,236,227,0.28)';
+      ctx2d.font = '400 10px monospace';
+      ctx2d.textAlign = 'center';
+      ctx2d.fillText('Brisbane, Australia', W / 2, H / 2 - 160);
+
+      // Main headline
+      const lineH = H < 700 ? 70 : 96;
+      const fontSize = Math.min(96, W * 0.12);
+      ctx2d.fillStyle = 'rgba(240,236,227,0.9)';
+      ctx2d.font = `900 ${fontSize}px Georgia, serif`;
+      ctx2d.fillText('0 to 1', W / 2, H / 2 - lineH * 1.1);
+
+      ctx2d.fillStyle = 'rgba(240,236,227,0.88)';
+      ctx2d.font = `700 ${fontSize}px Georgia, serif`;
+      ctx2d.fillText('Product &', W / 2, H / 2 - lineH * 0.05);
+
+      ctx2d.fillText('Venture', W / 2, H / 2 + lineH * 1.0);
+
+      ctx2d.fillStyle = 'rgba(240,236,227,0.32)';
+      ctx2d.font = `italic 700 ${fontSize}px Georgia, serif`;
+      ctx2d.fillText('Builder.', W / 2, H / 2 + lineH * 2.1);
+
+      // Sub
+      ctx2d.fillStyle = 'rgba(240,236,227,0.2)';
+      ctx2d.font = '400 11px monospace';
+      ctx2d.fillText('Medibank · BOQ · Optus · CommBank · Sydney Opera House', W / 2, H - 60);
+
+      ctx2d.textAlign = 'left';
+
+      gl.bindTexture(gl.TEXTURE_2D, sceneTex);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, offscreen);
+      sceneReady = true;
+      canvas.classList.add('ready');
+
+      URL.revokeObjectURL(url);
+    };
+    img.src = url;
+  }
+
+  // Wait for fonts then capture
+  document.fonts.ready.then(() => {
+    setTimeout(captureScene, 200);
+  });
+
+  // ── MOUSE TRACKING ──
+  let mouseNorm = { x: 0.5, y: 0.5 };
+  let prevMouseNorm = { x: 0.5, y: 0.5 };
+  let mouseVel = { x: 0, y: 0 };
+  let isOverHero = false;
+
+  const heroWrapper = document.querySelector('.hero-wrapper');
+  heroWrapper.addEventListener('mousemove', e => {
+    const r = heroWrapper.getBoundingClientRect();
+    const nx = (e.clientX - r.left) / r.width;
+    const ny = (e.clientY - r.top) / r.height;
+    mouseVel.x = (nx - mouseNorm.x) * 6;
+    mouseVel.y = (ny - mouseNorm.y) * 6;
+    mouseNorm.x = nx;
+    mouseNorm.y = ny;
+    isOverHero = true;
+  });
+  heroWrapper.addEventListener('mouseleave', () => { isOverHero = false; });
+
+  // ── RENDER LOOP ──
+  let last = performance.now();
+  let t = 0;
+
+  function loop(now) {
+    requestAnimationFrame(loop);
+    if (!sceneReady) return;
+
+    const dt = Math.min((now - last) / 1000, 0.05);
+    last = now;
+    t += dt;
+
+    const aspect = W / H;
+
+    // Gentle ambient drift when no mouse — very subtle
+    let ambientVX = 0, ambientVY = 0;
+    if (!isOverHero) {
+      ambientVX = Math.sin(t * 0.18) * 0.0008;
+      ambientVY = Math.cos(t * 0.13) * 0.0006;
+    }
+
+    // ── Update velocity field ──
+    gl.bindFramebuffer(gl.FRAMEBUFFER, velB.fbo);
+    gl.viewport(0, 0, SIM_W, SIM_H);
+    gl.useProgram(velProg);
+    bindQuad(velProg);
+
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, velA.tex);
+    gl.uniform1i(gl.getUniformLocation(velProg, 'u_prev'), 0);
+    gl.uniform2f(gl.getUniformLocation(velProg, 'u_mouse'), mouseNorm.x, mouseNorm.y);
+    gl.uniform2f(gl.getUniformLocation(velProg, 'u_mouse_vel'),
+      isOverHero ? mouseVel.x : ambientVX,
+      isOverHero ? mouseVel.y : ambientVY
+    );
+    gl.uniform1f(gl.getUniformLocation(velProg, 'u_aspect'), aspect);
+    gl.uniform1f(gl.getUniformLocation(velProg, 'u_dt'), dt);
+    gl.uniform1f(gl.getUniformLocation(velProg, 'u_radius'), 0.09);
+    gl.uniform1f(gl.getUniformLocation(velProg, 'u_force'), isOverHero ? 1.0 : 0.3);
+
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
+    // Ping-pong
+    [velA, velB] = [velB, velA];
+
+    // Dampen mouse velocity each frame
+    mouseVel.x *= 0.82;
+    mouseVel.y *= 0.82;
+
+    // ── Render distorted scene ──
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    gl.viewport(0, 0, W, H);
+    gl.useProgram(renderProg);
+    bindQuad(renderProg);
+
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, sceneTex);
+    gl.uniform1i(gl.getUniformLocation(renderProg, 'u_scene'), 0);
+
+    gl.activeTexture(gl.TEXTURE1);
+    gl.bindTexture(gl.TEXTURE_2D, velA.tex);
+    gl.uniform1i(gl.getUniformLocation(renderProg, 'u_velocity'), 1);
+
+    gl.uniform1f(gl.getUniformLocation(renderProg, 'u_time'), t);
+    gl.uniform2f(gl.getUniformLocation(renderProg, 'u_resolution'), W, H);
+
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+  }
+
+  requestAnimationFrame(loop);
+
+})();
+</script>
+
+</body>
+</html>
