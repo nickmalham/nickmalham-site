@@ -69,42 +69,48 @@ body{background:#0e0c0a;color:#f0ece3;font-family:'Manrope',sans-serif;overflow-
 
 /* SECTIONS */
 .brand-section{padding:80px 48px;background:#fff;border-top:1px solid rgba(28,25,22,.06);}
-.section-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:rgba(28,25,22,.32);margin-bottom:10px;}
+.section-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:rgba(28,25,22,.68);margin-bottom:10px;}
 .section-hl{font-family:'Playfair Display',serif;font-size:clamp(34px,4vw,52px);font-weight:700;letter-spacing:-.02em;line-height:1.05;color:#1c1916;margin-bottom:40px;}
-.brand-intro-text{max-width:640px;font-size:14px;line-height:1.9;color:rgba(28,25,22,.55);margin-bottom:56px;}
+.brand-intro-text{max-width:640px;font-size:14px;line-height:1.9;color:rgba(28,25,22,.72);margin-bottom:56px;}
 .brand-intro-text strong{color:#1c1916;font-weight:600;}
 
 /* Brand cards */
 .brands-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;}
 .brand-card{
-  position:relative;overflow:hidden;aspect-ratio:4/3;
-  display:flex;flex-direction:column;justify-content:flex-end;
-  padding:24px;cursor:none;
-  transition:transform .1s;
+  position:relative;overflow:hidden;
+  display:flex;flex-direction:column;
+  cursor:none;
+  background:#fff;
 }
-/* Gradient overlay — dark at bottom for text legibility */
-.brand-card::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(to top,rgba(0,0,0,.82) 0%,rgba(0,0,0,.0) 50%);
-  z-index:1;
+/* No gradient overlay — image stays fully punchy */
+.brand-card::after{ content:none; }
+/* Logo image — square crop, full width */
+.brand-img-wrap{
+  position:relative;overflow:hidden;
+  width:100%;aspect-ratio:4/3;flex-shrink:0;
 }
-/* Logo image fills entire card */
 .brand-bg-img{
-  position:absolute;inset:0;width:100%;height:100%;
+  width:100%;height:100%;
   object-fit:cover;object-position:center;
+  display:block;
   transition:transform .7s cubic-bezier(.23,1,.32,1);
 }
 .brand-card:hover .brand-bg-img{transform:scale(1.05);}
-.brand-bottom{position:relative;z-index:2;}
-.brand-years{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.38);margin-bottom:5px;}
-.brand-name{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:#fff;margin-bottom:3px;line-height:1.15;}
-.brand-role{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.5);}
+/* Solid label strip below image */
+.brand-bottom{
+  background:#1c1916;
+  padding:14px 18px;
+  flex-shrink:0;
+}
+.brand-years{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:rgba(240,236,227,.6);margin-bottom:4px;}
+.brand-name{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:#f0ece3;margin-bottom:2px;line-height:1.15;}
+.brand-role{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.09em;text-transform:uppercase;color:rgba(240,236,227,.75);}
 
 /* Capability strip */
 .cap-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;margin-top:3px;}
 .cap-cell{background:#f7f4ef;padding:28px;}
 .cap-num{font-family:'Playfair Display',serif;font-size:36px;font-weight:900;color:#2563a8;line-height:1;margin-bottom:6px;}
-.cap-label{font-size:12px;font-weight:500;color:rgba(28,25,22,.4);}
+.cap-label{font-size:12px;font-weight:500;color:rgba(28,25,22,.7);}
 
 /* Work */
 .work-section{border-top:1px solid rgba(28,25,22,.06);padding:80px 48px;}
@@ -112,44 +118,50 @@ body{background:#0e0c0a;color:#f0ece3;font-family:'Manrope',sans-serif;overflow-
 .cases-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px;}
 
 .case-card{
-  position:relative;overflow:hidden;display:block;text-decoration:none;
-  aspect-ratio:4/3;background:#1a1a1a;cursor:none;
+  position:relative;overflow:hidden;display:flex;
+  flex-direction:column;text-decoration:none;
+  background:#1a1a1a;cursor:none;
+}
+.case-img-wrap{
+  position:relative;overflow:hidden;
+  width:100%;aspect-ratio:4/3;flex-shrink:0;
 }
 .case-card img.main-img{
-  position:absolute;inset:0;width:100%;height:100%;
+  width:100%;height:100%;
   object-fit:cover;display:block;
   transition:transform .7s cubic-bezier(.23,1,.32,1),filter .5s;
-  filter:brightness(.65) saturate(.8);
+  filter:brightness(.82) saturate(.9);
 }
-.case-card:hover img.main-img{transform:scale(1.05);filter:brightness(.78) saturate(1);}
+.case-card:hover img.main-img{transform:scale(1.05);filter:brightness(.95) saturate(1.05);}
 
-/* Magnifying lens — uses background-image + background-position for true magnification */
+/* Magnifying lens */
 .case-lens{
   position:absolute;
   width:140px;height:140px;border-radius:50%;
   pointer-events:none;opacity:0;
   transform:translate(-50%,-50%);
   transition:opacity .2s;z-index:5;
-  border:2px solid rgba(255,255,255,.55);
-  box-shadow:0 0 0 1px rgba(0,0,0,.15),0 8px 32px rgba(0,0,0,.4);
+  border:2px solid rgba(255,255,255,.6);
+  box-shadow:0 0 0 1px rgba(0,0,0,.15),0 8px 32px rgba(0,0,0,.35);
   background-repeat:no-repeat;
-  /* background-image and background-size set per-card in HTML */
-  background-size:200% 200%; /* 2x zoom */
-  /* background-position set via JS */
+  background-size:220% 220%;
 }
-.case-card:hover .case-lens{opacity:1;}
+.case-img-wrap:hover .case-lens{opacity:1;}
 
-.case-overlay{
-  position:absolute;inset:0;
-  background:linear-gradient(to top,rgba(12,10,8,.9) 0%,rgba(12,10,8,.04) 55%);
-  z-index:2;
+/* No overlay gradient — image stays punchy */
+.case-overlay{ display:none; }
+
+/* Solid dark strip below image */
+.case-content{
+  background:#1c1916;
+  padding:20px 24px;
+  flex-shrink:0;
 }
-.case-content{position:absolute;bottom:0;left:0;right:0;padding:28px 30px;z-index:4;}
-.case-org{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.38);margin-bottom:6px;}
-.case-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;letter-spacing:-.01em;color:#fff;line-height:1.1;margin-bottom:8px;transition:color .25s;}
+.case-org{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(240,236,227,.65);margin-bottom:6px;}
+.case-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;letter-spacing:-.01em;color:#f0ece3;line-height:1.1;margin-bottom:8px;transition:color .25s;}
 .case-card:hover .case-title{color:#9ecfff;}
-.case-teaser{font-size:11px;color:rgba(255,255,255,.5);line-height:1.6;margin-bottom:14px;max-width:300px;}
-.case-cta{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.32);transition:color .25s;}
+.case-teaser{font-size:12px;color:rgba(240,236,227,.78);line-height:1.65;margin-bottom:12px;}
+.case-cta{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:rgba(240,236,227,.6);transition:color .25s;}
 .case-card:hover .case-cta{color:#9ecfff;}
 
 /* Experiments */
@@ -165,10 +177,10 @@ body{background:#0e0c0a;color:#f0ece3;font-family:'Manrope',sans-serif;overflow-
 .e-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.16em;text-transform:uppercase;}
 .s-active .e-dot{background:#22c55e;} .s-active .e-label{color:#22c55e;}
 .s-building .e-dot{background:#2563a8;} .s-building .e-label{color:#2563a8;}
-.exp-type{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:rgba(28,25,22,.28);margin-bottom:12px;}
+.exp-type{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:rgba(28,25,22,.55);margin-bottom:12px;}
 .exp-name{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;letter-spacing:-.01em;line-height:1.1;color:#1c1916;margin-bottom:12px;transition:color .25s;}
 .exp-card:hover .exp-name{color:#2563a8;}
-.exp-desc{font-size:12px;line-height:1.8;color:rgba(28,25,22,.48);margin-bottom:20px;}
+.exp-desc{font-size:12px;line-height:1.8;color:#3d3a36;margin-bottom:20px;}
 .exp-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:20px;}
 .exp-tag{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border:1px solid rgba(28,25,22,.1);color:rgba(28,25,22,.35);border-radius:2px;}
 .exp-link{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:#2563a8;}
@@ -176,30 +188,41 @@ body{background:#0e0c0a;color:#f0ece3;font-family:'Manrope',sans-serif;overflow-
 /* About */
 .about-section{border-top:1px solid rgba(28,25,22,.06);background:#f7f4ef;}
 .about-text{padding:80px 56px;max-width:860px;margin:0 auto;}
-.about-copy{font-size:15px;line-height:1.9;color:rgba(28,25,22,.62);margin-bottom:20px;}
+.about-copy{font-size:15px;line-height:1.9;color:rgba(28,25,22,.75);margin-bottom:20px;}
 .about-copy strong{color:#1c1916;font-weight:600;}
 .about-copy em{color:#2563a8;font-style:normal;}
 .creds{margin-top:40px;border-top:1px solid rgba(28,25,22,.07);}
 .cred{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid rgba(28,25,22,.05);}
-.cred-name{font-size:12px;color:rgba(28,25,22,.5);font-weight:500;}
-.cred-yr{font-family:'DM Mono',monospace;font-size:9px;color:rgba(28,25,22,.28);letter-spacing:.08em;}
+.cred-name{font-size:12px;color:rgba(28,25,22,.68);font-weight:500;}
+.cred-yr{font-family:'DM Mono',monospace;font-size:9px;color:rgba(28,25,22,.48);letter-spacing:.08em;}
 
 /* Contact */
 .contact-section{border-top:1px solid rgba(28,25,22,.06);background:#1c1916;padding:64px 48px;display:flex;flex-direction:column;align-items:flex-start;gap:20px;}
 .contact-name{font-family:'Playfair Display',serif;font-size:clamp(32px,4vw,56px);font-weight:700;letter-spacing:-.03em;color:#f7f4ef;}
 .contact-links{display:flex;flex-direction:column;gap:10px;}
-.contact-link{font-family:'DM Mono',monospace;font-size:13px;color:rgba(247,244,239,.55);text-decoration:none;letter-spacing:.04em;transition:color .2s;cursor:none;}
+.contact-link{font-family:'DM Mono',monospace;font-size:13px;color:rgba(247,244,239,.75);text-decoration:none;letter-spacing:.04em;transition:color .2s;cursor:none;}
 .contact-link:hover{color:#6ca8e8;}
 
 footer{border-top:1px solid rgba(247,244,239,.06);background:#1c1916;padding:22px 48px;}
-footer span{font-family:'DM Mono',monospace;font-size:9px;color:rgba(247,244,239,.18);letter-spacing:.07em;}
+footer span{font-family:'DM Mono',monospace;font-size:9px;color:rgba(247,244,239,.38);letter-spacing:.07em;}
 
 /* Scroll reveal */
 .reveal{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s cubic-bezier(.23,1,.32,1);}
 .reveal.visible{opacity:1;transform:none;}
 
+/* Mobile hero — disable fluid filter, use ambient gradient instead */
 @media(max-width:900px){
   .hero-hl{font-size:clamp(40px,10vw,72px);}
+  .hero-inner{filter:none !important;}
+  .hero::before{
+    content:'';position:absolute;inset:0;z-index:0;
+    background:radial-gradient(ellipse 80% 60% at 50% 50%,rgba(37,99,168,.18) 0%,transparent 70%);
+    animation:mobileGlow 6s ease-in-out infinite alternate;
+  }
+  @keyframes mobileGlow{
+    0%{opacity:.5;transform:scale(1);}
+    100%{opacity:1;transform:scale(1.06);}
+  }
   .brand-section,.work-section,.exp-section{padding:60px 20px;}
   .brands-grid{grid-template-columns:1fr 1fr;}
   .cap-strip{grid-template-columns:1fr 1fr;}
@@ -213,6 +236,7 @@ footer span{font-family:'DM Mono',monospace;font-size:9px;color:rgba(247,244,239
 }
 @media(max-width:600px){
   .brands-grid{grid-template-columns:1fr;}
+  .cap-strip{grid-template-columns:1fr 1fr;}
 }
 </style>
 </head>
@@ -265,13 +289,13 @@ footer span{font-family:'DM Mono',monospace;font-size:9px;color:rgba(247,244,239
     <div class="reveal">
       <p class="section-label">Background</p>
       <h2 class="section-hl">15 years. Six iconic organisations.</h2>
-      <p class="brand-intro-text">I'm the person organisations bring in when they need to move faster than their structure allows &mdash; to build new revenue streams, stand up AI-native products, and launch ventures from scratch. <strong>The sector changes. The mandate doesn't: zero to one, high ambiguity, commercial accountability.</strong></p>
+      <p class="brand-intro-text">Most of my career has been spent building things large organisations need but struggle to create themselves &mdash; new revenue streams, new ventures, and new products that get to market before the structure would normally allow. <strong>The sector changes. The mandate doesn't: zero to one, high ambiguity, commercial accountability.</strong></p>
     </div>
 
     <div class="brands-grid reveal">
 
       <div class="brand-card">
-        <img class="brand-bg-img" src="logo-medibank.png" alt="Medibank">
+        <div class="brand-img-wrap"><img class="brand-bg-img" src="logo-medibank.png" alt="Medibank"></div>
         <div class="brand-bottom">
           <div class="brand-years">2023 &mdash; Present</div>
           <div class="brand-name">Medibank</div>
@@ -280,7 +304,7 @@ footer span{font-family:'DM Mono',monospace;font-size:9px;color:rgba(247,244,239
       </div>
 
       <div class="brand-card">
-        <img class="brand-bg-img" src="logo-boq.png" alt="Bank of Queensland">
+        <div class="brand-img-wrap"><img class="brand-bg-img" src="logo-boq.png" alt="Bank of Queensland"></div>
         <div class="brand-bottom">
           <div class="brand-years">2018 &mdash; 2023</div>
           <div class="brand-name">Bank of Queensland</div>
@@ -289,7 +313,7 @@ footer span{font-family:'DM Mono',monospace;font-size:9px;color:rgba(247,244,239
       </div>
 
       <div class="brand-card">
-        <img class="brand-bg-img" src="logo-optus.png" alt="Optus">
+        <div class="brand-img-wrap"><img class="brand-bg-img" src="logo-optus.png" alt="Optus"></div>
         <div class="brand-bottom">
           <div class="brand-years">2015 &mdash; 2018</div>
           <div class="brand-name">Optus</div>
@@ -298,7 +322,7 @@ footer span{font-family:'DM Mono',monospace;font-size:9px;color:rgba(247,244,239
       </div>
 
       <div class="brand-card">
-        <img class="brand-bg-img" src="logo-commbank.png" alt="CommBank">
+        <div class="brand-img-wrap"><img class="brand-bg-img" src="logo-commbank.png" alt="CommBank"></div>
         <div class="brand-bottom">
           <div class="brand-years">2014 &mdash; 2015</div>
           <div class="brand-name">CommBank</div>
@@ -307,7 +331,7 @@ footer span{font-family:'DM Mono',monospace;font-size:9px;color:rgba(247,244,239
       </div>
 
       <div class="brand-card">
-        <img class="brand-bg-img" src="logo-opera.png" alt="Sydney Opera House">
+        <div class="brand-img-wrap"><img class="brand-bg-img" src="logo-opera.png" alt="Sydney Opera House"></div>
         <div class="brand-bottom">
           <div class="brand-years">2012 &mdash; 2014</div>
           <div class="brand-name">Sydney Opera House</div>
@@ -316,7 +340,7 @@ footer span{font-family:'DM Mono',monospace;font-size:9px;color:rgba(247,244,239
       </div>
 
       <div class="brand-card">
-        <img class="brand-bg-img" src="logo-worldvision.png" alt="World Vision">
+        <div class="brand-img-wrap"><img class="brand-bg-img" src="logo-worldvision.png" alt="World Vision"></div>
         <div class="brand-bottom">
           <div class="brand-years">2010 &mdash; 2012</div>
           <div class="brand-name">World Vision</div>
@@ -328,7 +352,7 @@ footer span{font-family:'DM Mono',monospace;font-size:9px;color:rgba(247,244,239
 
     <div class="cap-strip reveal">
       <div class="cap-cell"><div class="cap-num">15+</div><div class="cap-label">Years leading and building corporate innovation</div></div>
-      <div class="cap-cell"><div class="cap-num">6</div><div class="cap-label">Product and corporate innovation across six iconic organisations</div></div>
+      <div class="cap-cell"><div class="cap-num">3</div><div class="cap-label">Innovation and venture functions built from the ground up</div></div>
       <div class="cap-cell"><div class="cap-num">$30M+</div><div class="cap-label">Social value created</div></div>
       <div class="cap-cell"><div class="cap-num">3x</div><div class="cap-label">World-first products built</div></div>
     </div>
@@ -341,15 +365,16 @@ footer span{font-family:'DM Mono',monospace;font-size:9px;color:rgba(247,244,239
         <p class="section-label">Selected work</p>
         <h2 class="section-hl">Case Studies</h2>
       </div>
-      <span style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(28,25,22,.28)">04 projects</span>
+      <span style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(28,25,22,.48)">04 projects</span>
     </div>
     <div class="cases-grid reveal">
 
       <a href="case-donate.html" class="case-card" data-img="donate.png">
+      <div class="case-img-wrap">
         <img class="main-img" src="donate.png" alt="Donate Your Data">
         <div class="case-lens"></div>
-        <div class="case-overlay"></div>
-        <div class="case-content">
+      </div>
+      <div class="case-content">
           <div class="case-org">Optus &middot; 2015&ndash;2018</div>
           <div class="case-title">Donate Your Data</div>
           <p class="case-teaser">World-first platform turning unused mobile data into digital equity for 50,000 students.</p>
@@ -358,10 +383,11 @@ footer span{font-family:'DM Mono',monospace;font-size:9px;color:rgba(247,244,239
       </a>
 
       <a href="case-medibank.html" class="case-card" data-img="medibank.png">
+      <div class="case-img-wrap">
         <img class="main-img" src="medibank.png" alt="Corporate Health Venture">
         <div class="case-lens"></div>
-        <div class="case-overlay"></div>
-        <div class="case-content">
+      </div>
+      <div class="case-content">
           <div class="case-org">Medibank &middot; 2023&ndash;Present</div>
           <div class="case-title">Corporate Health Venture</div>
           <p class="case-teaser">First hire into a greenfield health venture &mdash; built the vision, team, and product from zero.</p>
@@ -370,10 +396,11 @@ footer span{font-family:'DM Mono',monospace;font-size:9px;color:rgba(247,244,239
       </a>
 
       <a href="case-opera.html" class="case-card" data-img="opera.png">
+      <div class="case-img-wrap">
         <img class="main-img" src="opera.png" alt="Own Our House">
         <div class="case-lens"></div>
-        <div class="case-overlay"></div>
-        <div class="case-content">
+      </div>
+      <div class="case-content">
           <div class="case-org">Sydney Opera House &middot; 2012&ndash;2014</div>
           <div class="case-title">Own Our House</div>
           <p class="case-teaser">Landmark digital philanthropy proving ownership beats generosity &mdash; with Google Labs.</p>
@@ -382,10 +409,11 @@ footer span{font-family:'DM Mono',monospace;font-size:9px;color:rgba(247,244,239
       </a>
 
       <a href="case-translate.html" class="case-card" data-img="translate.png">
+      <div class="case-img-wrap">
         <img class="main-img" src="translate.png" alt="Call Translate">
         <div class="case-lens"></div>
-        <div class="case-overlay"></div>
-        <div class="case-content">
+      </div>
+      <div class="case-content">
           <div class="case-org">Optus &middot; 2016&ndash;2017</div>
           <div class="case-title">Call Translate</div>
           <p class="case-teaser">World-first AI real-time voice translation on a standard call, built on Google Cloud AI.</p>
@@ -406,34 +434,34 @@ footer span{font-family:'DM Mono',monospace;font-size:9px;color:rgba(247,244,239
     </div>
     <div class="exp-grid reveal">
 
-      <a href="#" class="exp-card">
+      <a href="https://open.spotify.com/episode/23HkruyfRDwhsycujF3lje" target="_blank" rel="noopener" class="exp-card">
         <span class="exp-n">01</span>
         <div class="exp-status s-active"><span class="e-dot"></span><span class="e-label">Live</span></div>
         <div class="exp-type">Podcast &middot; Content &middot; AI</div>
         <div class="exp-name">The Deep Dive</div>
-        <p class="exp-desc">Strategic paper on AI product operating models &mdash; converted via Claude transcript and Google NotebookLM into an audio case study. Paper to podcast, no studio required.</p>
-        <div class="exp-tags"><span class="exp-tag">AI</span><span class="exp-tag">Content</span><span class="exp-tag">Podcast</span></div>
-        <span class="exp-link">Listen &rarr;</span>
+        <p class="exp-desc">Started with a strategic paper on AI product operating models. Used Claude to generate a full transcript, then Google NotebookLM to transform it into a reflective audio case study. Paper to published podcast &mdash; no recording studio required.</p>
+        <div class="exp-tags"><span class="exp-tag">Claude AI</span><span class="exp-tag">NotebookLM</span><span class="exp-tag">Podcast</span></div>
+        <span class="exp-link">Listen on Spotify &rarr;</span>
       </a>
 
-      <a href="#" class="exp-card">
+      <a href="https://naplan-buddy.lovable.app/" target="_blank" rel="noopener" class="exp-card">
         <span class="exp-n">02</span>
         <div class="exp-status s-active"><span class="e-dot"></span><span class="e-label">Active</span></div>
         <div class="exp-type">Tool &middot; AI &middot; Education</div>
         <div class="exp-name">NAPLAN Buddy</div>
-        <p class="exp-desc">My daughter Summer wanted a more personalised way to prepare for her first NAPLAN test. Built a Duolingo-style AI learning app &mdash; gamified, bite-sized practice for Year 3 kids.</p>
-        <div class="exp-tags"><span class="exp-tag">AI</span><span class="exp-tag">Education</span><span class="exp-tag">Family</span></div>
-        <span class="exp-link">View experiment &rarr;</span>
+        <p class="exp-desc">My daughter Summer wanted a more personalised way to prepare for her first NAPLAN test. Built a Duolingo-style AI learning app &mdash; gamified, bite-sized practice for Year 3 kids. Built using Lovable and Claude AI.</p>
+        <div class="exp-tags"><span class="exp-tag">Lovable</span><span class="exp-tag">Claude AI</span><span class="exp-tag">Education</span></div>
+        <span class="exp-link">Try it &rarr;</span>
       </a>
 
-      <a href="#" class="exp-card">
+      <a href="https://try-cyber-ledger.lovable.app/" target="_blank" rel="noopener" class="exp-card">
         <span class="exp-n">03</span>
         <div class="exp-status s-active"><span class="e-dot"></span><span class="e-label">Active</span></div>
         <div class="exp-type">Tool &middot; Governance &middot; AI</div>
         <div class="exp-name">Cyber Ledger</div>
-        <p class="exp-desc">Built off board work with Great Barrier Reef Legacy. Needed a tool to track cybersecurity risks across an NFP. Built what I needed, then made it shareable.</p>
-        <div class="exp-tags"><span class="exp-tag">AI</span><span class="exp-tag">Governance</span><span class="exp-tag">NFP</span></div>
-        <span class="exp-link">View experiment &rarr;</span>
+        <p class="exp-desc">Built off the back of board work with Great Barrier Reef Legacy. Needed a practical tool to track and assess cybersecurity risks across an NFP. Built the thing I needed, then made it shareable. Built using Lovable and Claude AI.</p>
+        <div class="exp-tags"><span class="exp-tag">Lovable</span><span class="exp-tag">Claude AI</span><span class="exp-tag">Governance</span></div>
+        <span class="exp-link">View project &rarr;</span>
       </a>
 
     </div>
@@ -442,7 +470,7 @@ footer span{font-family:'DM Mono',monospace;font-size:9px;color:rgba(247,244,239
   <!-- ABOUT -->
   <section class="about-section" id="about">
     <div class="about-text reveal">
-      <p class="about-copy">Most of my career has been spent building the things large, complex organisations need but can't easily create themselves &mdash; new revenue streams, emerging business lines, and ventures that do something genuinely different before anyone else gets there.</p>
+      <p class="about-copy">At Optus, at BOQ, at Medibank &mdash; the brief has always been some version of the same thing: build something that doesn't exist yet, make it commercially viable, and do it faster than the structure would normally allow. The work looks different each time. The approach doesn't.</p>
       <p class="about-copy">I have led this work across some of Australia's most recognised organisations. At Optus, under my leadership the team built Donate Your Data &mdash; repositioning the brand away from competing on price entirely by creating community value at a scale competitors couldn't replicate &mdash; and Call Translate, the world's first AI-powered real-time voice translation service, built in partnership with Google Cloud.</p>
       <p class="about-copy">At BOQ I built the Innovation function from the ground up &mdash; designing the venture pipeline, running structured business experiments with live customers, and scaling validated opportunities into the core business each year, supported by board-level investment cases. At Medibank I established a greenfield corporate health and wellbeing venture from exploration through to market launch, opening an entirely new revenue line and customer segment &mdash; and defined the enterprise AI strategy to help four million members navigate a genuinely complex health system.</p>
       <p class="about-copy">I work best in ambiguous, zero-to-one spaces &mdash; where the opportunity isn't fully defined yet and someone needs to think strategically, build the case, and make it real. I bring long-term vision, commercial rigour, and the hands-on leadership to see it through.</p>
@@ -510,8 +538,10 @@ document.querySelectorAll('.case-card').forEach(function(card){
   // background-size 200% = 2x magnification
   lens.style.backgroundSize = '200% 200%';
 
-  card.addEventListener('mouseleave',function(){ lens.style.opacity='0'; });
-  card.addEventListener('mousemove',function(e){
+  var wrap = card.querySelector('.case-img-wrap');
+  if(wrap){
+  wrap.addEventListener('mouseleave',function(){ lens.style.opacity='0'; });
+  wrap.addEventListener('mousemove',function(e){
     var r = card.getBoundingClientRect();
     var x = e.clientX - r.left;
     var y = e.clientY - r.top;
@@ -532,11 +562,14 @@ document.querySelectorAll('.case-card').forEach(function(card){
     bgX = Math.max(0, Math.min(100, bgX));
     bgY = Math.max(0, Math.min(100, bgY));
     lens.style.backgroundPosition = bgX+'% '+bgY+'%';
-  });
+    });
+  }
 });
 
-// ── FLUID DISTORTION — SVG feTurbulence driven by mouse ───────
+// ── FLUID DISTORTION — desktop only ──────────────────────────
 (function(){
+  // Skip on touch devices — they don't have mousemove
+  if('ontouchstart' in window || navigator.maxTouchPoints > 0) return;
   var turb = document.getElementById('turb');
   var disp = document.getElementById('disp');
   var hero = document.getElementById('hero');
