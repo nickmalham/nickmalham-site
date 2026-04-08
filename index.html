@@ -15,6 +15,39 @@ body{background:#0e0c0a;color:#f0ece3;font-family:'Manrope',sans-serif;overflow-
 #cur{position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);width:10px;height:10px;background:rgba(240,236,227,.8);border-radius:50%;transition:width .3s,height .3s;mix-blend-mode:difference;}
 #cur.h{width:52px;height:52px;background:rgba(240,236,227,.1);}
 
+
+/* ── NAV WORDMARK ─────────────────────────────────── */
+.site-nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:22px 48px;
+  background:rgba(14,12,10,0);
+  transition:background .4s ease;
+}
+.site-nav.scrolled{
+  background:rgba(14,12,10,0.88);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+}
+.nav-wordmark{
+  font-family:'Playfair Display',serif;
+  font-size:18px;font-weight:700;
+  letter-spacing:-0.02em;color:#f0ece3;
+  text-decoration:none;transition:opacity .2s;
+}
+.nav-wordmark:hover{opacity:.72;}
+.nav-links-right{display:flex;gap:32px;list-style:none;}
+.nav-links-right a{
+  font-family:'DM Mono',monospace;font-size:10px;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:rgba(240,236,227,.48);text-decoration:none;transition:color .2s;
+}
+.nav-links-right a:hover{color:#f0ece3;}
+@media(max-width:900px){
+  .site-nav{padding:16px 20px;}
+  .nav-links-right{display:none;}
+}
+
 /* HERO */
 .hero{position:relative;width:100%;height:100vh;overflow:hidden;background:#0e0c0a;}
 
@@ -336,6 +369,16 @@ footer span{font-family:'DM Mono',monospace;font-size:9px;color:rgba(247,244,239
 </svg>
 
 <!-- ══ HERO ══ -->
+<nav class="site-nav" id="site-nav">
+  <a href="#" class="nav-wordmark">Nick Malham</a>
+  <ul class="nav-links-right">
+    <li><a href="#overview">Background</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#experiments">Experiments</a></li>
+    <li><a href="#about">About</a></li>
+  </ul>
+</nav>
+
 <div class="hero" id="hero">
   <div class="hero-inner">
     <h1 class="hero-hl">
@@ -650,6 +693,20 @@ footer span{font-family:'DM Mono',monospace;font-size:9px;color:rgba(247,244,239
 </div><!-- /.site-body -->
 
 <script>
+
+// ── NAV SCROLL BEHAVIOUR ─────────────────────────────────────
+(function(){
+  var nav = document.getElementById('site-nav');
+  if(!nav) return;
+  window.addEventListener('scroll', function(){
+    if(window.scrollY > 60){
+      nav.classList.add('scrolled');
+    } else {
+      nav.classList.remove('scrolled');
+    }
+  }, {passive: true});
+})();
+
 // ── EMAIL (Cloudflare-safe assembly) ──────────────────────────
 (function(){
   var el = document.getElementById('cemail');
