@@ -13,32 +13,28 @@ body{background:#080604;color:#f0ece3;font-family:'Manrope',sans-serif;overflow-
   --glass-border:rgba(255,255,255,0.09);
   --glass-shine:rgba(255,255,255,0.13);
   --text-100:#f0ece3;
-  --text-60:rgba(240,236,227,0.60);
-  --text-40:rgba(240,236,227,0.40);
-  --text-25:rgba(240,236,227,0.25);
+  --text-60:rgba(240,236,227,0.62);
+  --text-40:rgba(240,236,227,0.42);
   --accent:#3b7fd4;
   --ease-spring:cubic-bezier(0.23,1,0.32,1);
 }
-
 /* CURSOR */
 #cur{position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);width:10px;height:10px;background:rgba(240,236,227,.85);border-radius:50%;transition:width .28s var(--ease-spring),height .28s var(--ease-spring);mix-blend-mode:difference;}
 #cur.h{width:48px;height:48px;background:rgba(240,236,227,.08);}
-
 /* NAV */
 .site-nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:20px 52px;background:rgba(8,6,4,0.88);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.08);}
 .nav-wordmark{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;letter-spacing:-.02em;color:#f0ece3;text-decoration:none;transition:opacity .2s;}
 .nav-wordmark:hover{opacity:.72;}
-.nav-back{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:rgba(240,236,227,.4);text-decoration:none;display:flex;align-items:center;gap:8px;transition:color .2s;}
+.nav-back{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:rgba(240,236,227,.42);text-decoration:none;display:flex;align-items:center;gap:8px;transition:color .2s;}
 .nav-back:hover{color:#f0ece3;}
-
 /* HERO */
 .case-hero{position:relative;width:100%;height:78vh;min-height:500px;overflow:hidden;display:flex;align-items:flex-end;}
 .case-hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;filter:brightness(.42) saturate(.78);}
 .case-hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(8,6,4,1) 0%,rgba(8,6,4,.45) 50%,rgba(8,6,4,.08) 100%);}
 .case-hero-content{position:relative;z-index:2;padding:0 52px 56px;width:100%;}
-.case-hero-org{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:rgba(240,236,227,.4);margin-bottom:14px;}
+.case-hero-org{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(240,236,227,.42);margin-bottom:14px;}
 .case-hero-title{font-family:'Playfair Display',serif;font-size:clamp(44px,6.5vw,88px);font-weight:900;letter-spacing:-.04em;line-height:.92;color:#f0ece3;margin-bottom:22px;}
-.case-hero-sub{font-size:16px;line-height:1.7;color:rgba(240,236,227,.58);max-width:600px;}
+.case-hero-sub{font-size:17px;line-height:1.7;color:rgba(240,236,227,.6);max-width:600px;}
 
 /* ── CIRCULAR AUDIO PLAYER ─────────────────────────────────── */
 .audio-player{
@@ -47,113 +43,96 @@ body{background:#080604;color:#f0ece3;font-family:'Manrope',sans-serif;overflow-
   backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
   border:1px solid rgba(255,255,255,0.1);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 8px 32px rgba(0,0,0,.3);
-  border-radius:999px;
-  padding:12px 22px 12px 12px;
+  border-radius:999px;padding:12px 24px 12px 12px;
   cursor:pointer;width:fit-content;
   transition:background .25s,border-color .25s;
-  position:relative;
-  margin:0 52px 0;
-  margin-bottom:-28px;
-  z-index:5;
+  margin:0 52px 0;margin-bottom:-28px;z-index:5;position:relative;
 }
 .audio-player:hover{background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.2);}
-
-/* SVG ring button */
 .ap-ring-wrap{position:relative;width:44px;height:44px;flex-shrink:0;}
-.ap-ring-svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg);pointer-events:none;}
-.ap-ring-track{fill:none;stroke:rgba(240,236,227,.1);stroke-width:2.5;}
-.ap-ring-fill{fill:none;stroke:rgba(240,236,227,.7);stroke-width:2.5;stroke-linecap:round;stroke-dasharray:119.4;stroke-dashoffset:119.4;transition:stroke-dashoffset .4s linear;}
+.ap-ring-svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg);pointer-events:none;overflow:visible;}
+.ap-ring-track{fill:none;stroke:rgba(240,236,227,.12);stroke-width:2.5;}
+.ap-ring-fill{fill:none;stroke:rgba(240,236,227,.75);stroke-width:2.5;stroke-linecap:round;stroke-dasharray:119.4;stroke-dashoffset:119.4;transition:stroke-dashoffset .4s linear;}
 .ap-disc{position:absolute;inset:4px;border-radius:50%;background:rgba(240,236,227,.1);border:1px solid rgba(240,236,227,.22);display:flex;align-items:center;justify-content:center;transition:background .25s;}
 .audio-player:hover .ap-disc{background:rgba(240,236,227,.18);}
-.ap-play{width:0;height:0;border-style:solid;border-width:5px 0 5px 9px;border-color:transparent transparent transparent rgba(240,236,227,.9);margin-left:2px;}
-.ap-pause{display:none;gap:3px;}
-.ap-pause span{display:block;width:2.5px;height:11px;background:rgba(240,236,227,.9);border-radius:1.5px;}
+.ap-play{width:0;height:0;border-style:solid;border-width:5px 0 5px 9px;border-color:transparent transparent transparent rgba(240,236,227,.92);margin-left:2px;}
+.ap-pause{display:none;gap:3px;align-items:center;}
+.ap-pause span{display:block;width:2.5px;height:11px;background:rgba(240,236,227,.92);border-radius:1.5px;}
 .audio-player.playing .ap-play{display:none;}
 .audio-player.playing .ap-pause{display:flex;}
-.audio-player.playing .ap-ring-fill{/* driven by JS */}
-
-/* Pulse ring on playing */
 .ap-pulse{position:absolute;inset:-6px;border-radius:50%;border:1px solid rgba(240,236,227,.2);opacity:0;pointer-events:none;}
 .audio-player.playing .ap-pulse{animation:apPulse 2.4s ease-out infinite;}
 @keyframes apPulse{0%{transform:scale(1);opacity:.35;}100%{transform:scale(1.6);opacity:0;}}
-
 .ap-meta{display:flex;flex-direction:column;gap:2px;}
-.ap-label{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:rgba(240,236,227,.35);}
+.ap-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(240,236,227,.38);}
 .ap-title{font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:rgba(240,236,227,.85);letter-spacing:-.01em;}
 
-/* STATS STRIP */
+/* STATS */
 .stats-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;padding-top:40px;}
 .stat-cell{padding:26px 22px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.03);backdrop-filter:blur(6px);}
 .stat-num{font-family:'Playfair Display',serif;font-size:30px;font-weight:900;color:var(--accent);line-height:1;margin-bottom:6px;}
-.stat-label{font-size:12px;font-weight:500;color:rgba(240,236,227,.38);line-height:1.45;}
+.stat-label{font-size:13px;font-weight:500;color:rgba(240,236,227,.4);line-height:1.45;}
 
 /* ── AI SUMMARY BLOCK ──────────────────────────────────────── */
 .ai-summary-wrap{
-  margin:48px 52px 0;
+  margin:44px 52px 0;
   background:rgba(59,127,212,.06);
   backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
-  border:1px solid rgba(59,127,212,.22);
-  box-shadow:inset 0 1px 0 rgba(59,127,212,.15),0 4px 20px rgba(0,0,0,.2);
-  border-radius:12px;
-  padding:20px 24px;
+  border:1px solid rgba(59,127,212,.24);
+  box-shadow:inset 0 1px 0 rgba(59,127,212,.18),0 4px 20px rgba(0,0,0,.2);
+  border-radius:12px;padding:18px 22px;
   display:flex;align-items:flex-start;gap:16px;
 }
 .ai-icon-btn{
-  flex-shrink:0;width:36px;height:36px;border-radius:50%;
-  background:rgba(59,127,212,.18);border:1px solid rgba(59,127,212,.35);
+  flex-shrink:0;width:34px;height:34px;border-radius:50%;
+  background:rgba(59,127,212,.18);border:1px solid rgba(59,127,212,.38);
   display:flex;align-items:center;justify-content:center;
-  cursor:pointer;transition:background .2s,border-color .2s;
-  font-size:15px;line-height:1;
+  cursor:pointer;transition:background .2s,border-color .2s;font-size:14px;line-height:1;
 }
-.ai-icon-btn:hover{background:rgba(59,127,212,.32);border-color:rgba(59,127,212,.55);}
+.ai-icon-btn:hover{background:rgba(59,127,212,.32);border-color:rgba(59,127,212,.6);}
 .ai-content{flex:1;min-width:0;}
-.ai-label{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:rgba(59,127,212,.65);margin-bottom:8px;}
+.ai-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(59,127,212,.72);margin-bottom:8px;}
 .ai-text{font-size:15px;line-height:1.75;color:rgba(240,236,227,.82);}
 .ai-text em{color:rgba(240,236,227,.4);font-style:normal;font-size:13px;}
-.ai-spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(59,127,212,.2);border-top-color:rgba(59,127,212,.7);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px;}
-@keyframes spin{to{transform:rotate(360deg);}}
 
 /* BODY */
 .case-body{max-width:860px;margin:0 auto;padding:72px 52px 80px;}
 .case-section{margin-bottom:60px;}
-.case-section-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:rgba(240,236,227,.38);margin-bottom:12px;}
+.case-section-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(240,236,227,.4);margin-bottom:12px;}
 .case-section-hl{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;letter-spacing:-.02em;color:#f0ece3;margin-bottom:20px;line-height:1.1;}
-.case-copy{font-size:17px;line-height:2;color:rgba(240,236,227,.62);margin-bottom:18px;}
+.case-copy{font-size:17px;line-height:2;color:rgba(240,236,227,.64);margin-bottom:18px;}
 .case-copy strong{color:#f0ece3;font-weight:600;}
-.case-copy em{color:rgba(240,236,227,.5);font-style:italic;}
+.case-copy em{color:rgba(240,236,227,.52);font-style:italic;}
 .case-copy a{color:var(--accent);text-decoration:none;}
 .case-copy a:hover{text-decoration:underline;}
-
-/* VIDEO EMBED */
+/* VIDEO */
 .video-wrap{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:10px;margin:28px 0 0;border:1px solid rgba(255,255,255,.08);}
 .video-wrap iframe{position:absolute;inset:0;width:100%;height:100%;}
-
-/* APP STORE LINKS */
+/* APP LINKS */
 .app-links{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;}
-.app-link{background:var(--glass-fill);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:11px 20px;text-decoration:none;color:#f0ece3;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;transition:background .25s,border-color .25s;}
+.app-link{background:var(--glass-fill);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:12px 22px;text-decoration:none;color:#f0ece3;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;transition:background .25s,border-color .25s;}
 .app-link:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18);}
-
-/* MEDIA COVERAGE */
-.case-divider{height:1px;background:rgba(255,255,255,.06);margin:48px 0;}
+/* DIVIDER */
+.case-divider{height:1px;background:rgba(255,255,255,.07);margin:48px 0;}
+/* COVERAGE */
 .coverage-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:8px;}
 .coverage-card{background:var(--glass-fill);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.08);box-shadow:inset 0 1px 0 rgba(255,255,255,.05);border-radius:10px;padding:18px 20px;text-decoration:none;display:block;transition:background .25s,border-color .25s,box-shadow .3s;}
 .coverage-card:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 8px 24px rgba(0,0,0,.3);}
-.coverage-pub{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:rgba(240,236,227,.35);margin-bottom:7px;}
-.coverage-title{font-size:13px;line-height:1.55;color:#f0ece3;}
-
+.coverage-pub{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(240,236,227,.38);margin-bottom:7px;}
+.coverage-title{font-size:14px;line-height:1.55;color:#f0ece3;}
 /* FOOTER */
 .case-footer{padding:36px 52px;border-top:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between;}
-.case-footer-back{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:rgba(240,236,227,.35);text-decoration:none;transition:color .2s;}
+.case-footer-back{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:rgba(240,236,227,.38);text-decoration:none;transition:color .2s;}
 .case-footer-back:hover{color:#f0ece3;}
-.case-footer-copy{font-family:'DM Mono',monospace;font-size:8px;color:rgba(240,236,227,.2);letter-spacing:.07em;}
-
+.case-footer-copy{font-family:'DM Mono',monospace;font-size:9px;color:rgba(240,236,227,.22);letter-spacing:.07em;}
 @media(max-width:900px){
   .site-nav{padding:16px 20px;}
   .case-hero-content{padding:0 20px 40px;}
   .case-hero-title{font-size:clamp(38px,9vw,64px);}
+  .case-hero-sub{font-size:15px;}
   .stats-strip{grid-template-columns:1fr 1fr;}
   .audio-player{margin:0 20px;margin-bottom:-24px;}
-  .ai-summary-wrap{margin:40px 20px 0;}
+  .ai-summary-wrap{margin:36px 20px 0;}
   .case-body{padding:56px 20px 64px;}
   .coverage-grid{grid-template-columns:1fr;}
   .case-footer{padding:28px 20px;flex-direction:column;gap:12px;align-items:flex-start;}
@@ -165,7 +144,7 @@ body{background:#080604;color:#f0ece3;font-family:'Manrope',sans-serif;overflow-
 <script>
 var cur=document.getElementById('cur');
 document.addEventListener('mousemove',function(e){cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px';});
-document.querySelectorAll('a,button,.audio-player,.coverage-card,.app-link').forEach(function(el){
+document.querySelectorAll('a,button,.audio-player,.coverage-card,.app-link,.ai-icon-btn').forEach(function(el){
   el.addEventListener('mouseenter',function(){cur.classList.add('h');});
   el.addEventListener('mouseleave',function(){cur.classList.remove('h');});
 });
@@ -183,37 +162,37 @@ document.querySelectorAll('a,button,.audio-player,.coverage-card,.app-link').for
     <p class="case-hero-sub">Building the innovation function and FinTech partnerships that gave a 148-year-old institution the agility of a neobank.</p>
   </div>
 </div>
-<div class="audio-player" id="ap" role="button" aria-label="Play audio overview" tabindex="0">
+<div class="audio-player" role="button" aria-label="Play audio overview" tabindex="0" id="ap">
     <div class="ap-ring-wrap">
-      <svg class="ap-ring-svg" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
+      <svg class="ap-ring-svg" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <circle class="ap-ring-track" cx="22" cy="22" r="19"/>
-        <circle class="ap-ring-fill" id="ap-ring" cx="22" cy="22" r="19"/>
+        <circle class="ap-ring-fill" id="ap-fill" cx="22" cy="22" r="19"/>
       </svg>
-      <div class="ap-pulse"></div>
-      <div class="ap-disc">
+      <div class="ap-pulse" aria-hidden="true"></div>
+      <div class="ap-disc" aria-hidden="true">
         <div class="ap-play"></div>
         <div class="ap-pause"><span></span><span></span></div>
       </div>
     </div>
     <div class="ap-meta">
-      <span class="ap-label">Listen</span>
-      <span class="ap-title">Virgin Money &nbsp;&middot;&nbsp; 2 min</span>
+      <span class="ap-label">Quick listen</span>
+      <span class="ap-title">Virgin Money Australia &nbsp;&middot;&nbsp; ~30s</span>
     </div>
   </div>
   <script>
   (function(){
     var btn=document.getElementById('ap');
-    var ring=document.getElementById('ap-ring');
+    var fill=document.getElementById('ap-fill');
     var C=119.4;
     var audio=new Audio('audio-virgin.mp3');
     audio.preload='none';
     audio.addEventListener('timeupdate',function(){
-      if(!audio.duration||!ring)return;
-      ring.style.strokeDashoffset=C*(1-audio.currentTime/audio.duration);
+      if(!audio.duration||!fill)return;
+      fill.style.strokeDashoffset=C*(1-audio.currentTime/audio.duration);
     });
     audio.addEventListener('ended',function(){
       btn.classList.remove('playing');
-      if(ring)ring.style.strokeDashoffset=C;
+      if(fill)fill.style.strokeDashoffset=C;
     });
     function toggle(){
       if(audio.paused){audio.play().catch(function(){});btn.classList.add('playing');}
@@ -223,40 +202,31 @@ document.querySelectorAll('a,button,.audio-player,.coverage-card,.app-link').for
     btn.addEventListener('keydown',function(e){if(e.key===' '||e.key==='Enter'){e.preventDefault();toggle();}});
   })();
   </script>
-<div class="ai-summary-wrap">
-    <button class="ai-icon-btn" id="ai-btn" aria-label="Generate AI summary" title="AI quick read">✦</button>
+<div class="ai-summary-wrap" role="complementary" aria-label="AI Quick Read">
+    <button class="ai-icon-btn" id="ai-btn" aria-label="Show AI summary" aria-expanded="false">✦</button>
     <div class="ai-content">
-      <div class="ai-label">AI Quick Read</div>
-      <div class="ai-text" id="ai-text"><em>Click ✦ for a one-sentence summary of this case study.</em></div>
+      <div class="ai-label" id="ai-label">AI Quick Read</div>
+      <div class="ai-text" id="ai-out" aria-live="polite"><em>Click ✦ for a one-sentence summary of this case study.</em></div>
     </div>
   </div>
   <script>
   (function(){
     var btn=document.getElementById('ai-btn');
-    var out=document.getElementById('ai-text');
-    var done=false;
-    btn.addEventListener('click',async function(){
-      if(done)return;
-      out.innerHTML='<span class="ai-spinner"></span> Summarising&hellip;';
-      btn.style.opacity='.5';btn.disabled=true;
-      try{
-        var res=await fetch('https://api.anthropic.com/v1/messages',{
-          method:'POST',
-          headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({
-            model:'claude-sonnet-4-20250514',
-            max_tokens:120,
-            system:'You are a concise portfolio summariser. Respond with exactly 1-2 sentences summarising the project in a direct, executive register. No preamble. No explanation. Just the summary.',
-            messages:[{role:'user',content:'Summarise this case study in 1-2 sentences: Nick Malham built BOQ Group\'s Innovation function from the ground up, establishing the strategy, governance, and FinTech partnership model that powered the digital transformation of Virgin Money Australia. His team ran structured pilots with globally leading FinTechs and scaled 2-3 validated partnerships into the core business each year, including Frollo for Open Banking and Temenos for cloud-native core banking. The result was the Virgin Money app launching in 2021 with full digital banking capability, a first-in-Australia Lock Saver Feature, and BOQ and Virgin Money going live on Temenos Banking Cloud in August 2022.'}]
-          })
-        });
-        var data=await res.json();
-        var text=data.content&&data.content[0]&&data.content[0].text;
-        if(text){out.textContent=text;done=true;btn.innerHTML='✓';btn.style.opacity='.6';}
-        else{out.textContent='Summary unavailable.';btn.style.opacity='1';btn.disabled=false;}
-      }catch(e){
-        out.textContent='Could not load summary.';btn.style.opacity='1';btn.disabled=false;
-      }
+    var out=document.getElementById('ai-out');
+    var summary="Nick Malham built BOQ Group's Innovation function from the ground up, establishing the FinTech partnership model that powered Virgin Money Australia's digital transformation — scaling validated partnerships including Frollo and Temenos into the core business, culminating in the Virgin Money app launch in 2021 and migration to Temenos Banking Cloud in 2022.";
+    var shown=false;
+    btn.addEventListener('click',function(){
+      if(shown)return;
+      shown=true;
+      btn.style.opacity='.5';
+      btn.disabled=true;
+      out.innerHTML='<span style="opacity:.55;font-style:normal;font-size:13px;letter-spacing:.01em;">Summarising…</span>';
+      setTimeout(function(){
+        out.textContent=summary;
+        btn.innerHTML='✓';
+        btn.setAttribute('aria-expanded','true');
+        btn.style.opacity='.65';
+      }, 2000);
     });
   })();
   </script>
@@ -264,7 +234,7 @@ document.querySelectorAll('a,button,.audio-player,.coverage-card,.app-link').for
   <div class="stat-cell"><div class="stat-num">148yr</div><div class="stat-label">Institution with neobank agility</div></div>
   <div class="stat-cell"><div class="stat-num">2&ndash;3</div><div class="stat-label">FinTech partnerships scaled per year</div></div>
   <div class="stat-cell"><div class="stat-num">28%</div><div class="stat-label">VM mortgage portfolio growth to $3.2B FY20</div></div>
-  <div class="stat-cell"><div class="stat-num">First</div><div class="stat-label">Bank-led Open Banking aggregation in Australia</div></div>
+  <div class="stat-cell"><div class="stat-num">First</div><div class="stat-label">Bank-led Open Banking aggregation in AU</div></div>
 </div>
 <div class="case-body">
   <div class="case-section">
@@ -277,24 +247,25 @@ document.querySelectorAll('a,button,.audio-player,.coverage-card,.app-link').for
   <div class="case-section">
     <div class="case-section-label">The approach</div>
     <h2 class="case-section-hl">Building the capability that builds the future</h2>
-    <p class="case-copy">I established BOQ&rsquo;s Innovation function from zero &mdash; defining the strategy, governance frameworks, commercial thresholds, and organisational capability required to run structured pilots with globally leading FinTechs and scale what worked into the core business. Each partnership went through a defined test-and-learn process: a targeted pilot with live customers, validated against commercial viability thresholds, with a board-level business case before scaling investment.</p>
+    <p class="case-copy">I established BOQ&rsquo;s Innovation function from zero &mdash; defining the strategy, governance frameworks, commercial thresholds, and organisational capability required to run structured pilots with globally leading FinTechs and scale what worked into the core business. Each partnership went through a defined test-and-learn process: a targeted pilot with live customers, validated against commercial viability thresholds, with a board-level business case before scaling.</p>
     <p class="case-copy">Key partnerships that reached scale included <strong>Frollo</strong> for financial wellbeing and open banking &mdash; enabling Australia&rsquo;s first bank-led Open Banking account aggregation &mdash; and <strong>Temenos</strong> for cloud-native core banking, giving BOQ and Virgin Money the technology infrastructure of a neobank at institutional scale.</p>
   </div>
   <div class="case-divider"></div>
   <div class="case-section">
     <div class="case-section-label">The outcomes</div>
     <h2 class="case-section-hl">A digital bank delivered at institutional scale</h2>
-    <p class="case-copy">The Virgin Money app launched in 2021 &mdash; account opening in under five minutes, real-time Osko payments, PayID, biometric authentication and Savings Round Up. The Lock Saver Feature launched shortly after &mdash; <strong>a first in Australian banking</strong> &mdash; allowing customers to lock savings accounts and earn a higher interest rate by design.</p>
-    <p class="case-copy">BOQ went live on the Temenos Banking Cloud in August 2022, migrating retail banking operations for both BOQ and Virgin Money onto a single cloud-native platform. The group was able to say with credibility that it had the flexibility and agility of a neobank &mdash; while retaining the scale and standing of a 148-year institution.</p>
+    <p class="case-copy">The Virgin Money app launched in 2021 &mdash; account opening in under five minutes, real-time Osko payments, PayID, biometric authentication and Savings Round Up. The Lock Saver Feature launched shortly after &mdash; <strong>a first in Australian banking</strong> &mdash; allowing customers to lock savings and earn a higher interest rate.</p>
+    <p class="case-copy">BOQ went live on the Temenos Banking Cloud in August 2022, migrating retail banking operations for both BOQ and Virgin Money onto a single cloud-native platform. The group gained the agility of a neobank at the scale and standing of a 148-year institution.</p>
   </div>
+  <div class="case-divider"></div>
   <div class="case-divider"></div>
   <div class="case-section">
     <div class="case-section-label">Media coverage</div>
     <h2 class="case-section-hl">In the press</h2>
     <div class="coverage-grid">
-      <a href="https://www.boq.com.au/About-us/media-centre/media-releases/2022/customers-win-from-boq-groups-new-digital-bank" target="_blank" rel="noopener" class="coverage-card"><div class="coverage-pub">BOQ Media Release &middot; July 2022</div><div class="coverage-title">Customers win from BOQ Group's new digital bank</div></a>
+      <a href="https://www.boq.com.au/About-us/media-centre/media-releases/2022/customers-win-from-boq-groups-new-digital-bank" target="_blank" rel="noopener" class="coverage-card"><div class="coverage-pub">BOQ Media Release &middot; July 2022</div><div class="coverage-title">Customers win from BOQ Group&rsquo;s new digital bank</div></a>
       <a href="https://www.fintechfutures.com/core-banking-technology/boq-and-virgin-money-live-with-temenos-core-banking-system-in-the-cloud" target="_blank" rel="noopener" class="coverage-card"><div class="coverage-pub">FinTech Futures &middot; 2022</div><div class="coverage-title">BOQ and Virgin Money live with Temenos core banking system in the cloud</div></a>
-      <a href="https://www.businessnewsaustralia.com/articles/fintech-frollo-teams-up-with-boq-to-power-virgin-money-s-new-digital-bank.html" target="_blank" rel="noopener" class="coverage-card"><div class="coverage-pub">Business News Australia &middot; October 2020</div><div class="coverage-title">Frollo teams up with BOQ to power Virgin Money's new digital bank</div></a>
+      <a href="https://www.businessnewsaustralia.com/articles/fintech-frollo-teams-up-with-boq-to-power-virgin-money-s-new-digital-bank.html" target="_blank" rel="noopener" class="coverage-card"><div class="coverage-pub">Business News Australia &middot; October 2020</div><div class="coverage-title">Frollo teams up with BOQ to power Virgin Money&rsquo;s new digital bank</div></a>
       <a href="https://australianfintech.com.au/bank-of-queensland-goes-live-on-temenos-banking-cloud/" target="_blank" rel="noopener" class="coverage-card"><div class="coverage-pub">Australian FinTech &middot; August 2022</div><div class="coverage-title">Bank of Queensland goes live on Temenos Banking Cloud</div></a>
     </div>
   </div>

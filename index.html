@@ -211,6 +211,28 @@ body {
   opacity: 0;
 }
 .tldr-btn.playing .tldr-ring  { animation: tldrPulse 2s ease-out infinite; }
+/* Hero progress ring SVG — overlays the disc */
+.tldr-ring-svg {
+  position: absolute; inset: -4px;
+  width: calc(100% + 8px); height: calc(100% + 8px);
+  transform: rotate(-90deg);
+  pointer-events: none; z-index: 6;
+  overflow: visible;
+}
+.tldr-ring-track {
+  fill: none;
+  stroke: rgba(240,236,227,0.14);
+  stroke-width: 2.5;
+}
+.tldr-ring-fill {
+  fill: none;
+  stroke: rgba(240,236,227,0.78);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-dasharray: 138.2;
+  stroke-dashoffset: 138.2;
+  transition: stroke-dashoffset 0.4s linear;
+}
 @keyframes tldrPulse {
   0%   { transform:scale(1); opacity:.45; }
   100% { transform:scale(1.5); opacity:0; }
@@ -248,7 +270,7 @@ body {
 .brand-section { background: var(--bg-2); }
 .brand-intro {
   max-width: 620px;
-  font-size: 14px; line-height: 1.95;
+  font-size: 16px; line-height: 2;
   color: var(--text-60); margin-bottom: 60px;
 }
 .brand-intro strong { color: var(--text-100); font-weight: 600; }
@@ -300,22 +322,18 @@ body {
   object-fit: cover; object-position: center; display: block;
 }
 .brand-card.contain .brand-img {
-  object-fit: contain; padding: 15% 13%;
+  object-fit: contain;
+  padding: 15% 13%;
   opacity: .82;
   transition: opacity .3s;
-  /* Shimmer overlay on contain logos */
   position: relative;
 }
-/* iOS liquid glass on contain logo cards */
+.brand-card.contain:hover .brand-img { opacity: 1; }
+/* Frosted glass on contain logo cards */
 .brand-card.contain .card-front {
-  background: rgba(252,250,248,0.93);
-  backdrop-filter: blur(10px) saturate(1.4);
-  -webkit-backdrop-filter: blur(10px) saturate(1.4);
-  box-shadow:
-    0 2px 20px rgba(0,0,0,.3),
-    inset 0 1.5px 0 rgba(255,255,255,.9),
-    inset 0 -1px 0 rgba(0,0,0,.06),
-    0 0 0 1px rgba(255,255,255,.18);
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
 }
 /* Shine on contain cards */
 .brand-card.contain .card-front::after {
@@ -346,7 +364,7 @@ body {
 }
 .brand-label-years {
   font-family: 'DM Mono', monospace;
-  font-size: 7.5px; letter-spacing: .14em;
+  font-size: 10px; letter-spacing: .1em;
   text-transform: uppercase; color: var(--text-40); margin-bottom: 3px;
 }
 .brand-label-name {
@@ -356,7 +374,7 @@ body {
 }
 .brand-label-role {
   font-family: 'DM Mono', monospace;
-  font-size: 7.5px; letter-spacing: .1em;
+  font-size: 11px; letter-spacing: .06em;
   text-transform: uppercase; color: var(--text-60);
 }
 
@@ -382,7 +400,7 @@ body {
   text-transform: uppercase; color: var(--text-40); margin-bottom: 14px;
 }
 .card-back-text {
-  font-size: 13.5px; line-height: 1.75;
+  font-size: 15px; line-height: 1.8;
   color: var(--text-100); font-family: 'Manrope', sans-serif;
   margin-bottom: 20px;
 }
@@ -431,7 +449,7 @@ body {
   color: var(--accent); line-height: 1; margin-bottom: 6px;
 }
 .cap-label {
-  font-size: 11.5px; font-weight: 500; color: var(--text-40); line-height: 1.5;
+  font-size: 14px; font-weight: 500; color: var(--text-40); line-height: 1.5;
 }
 
 /* ─── CASE STUDIES ───────────────────────────────────── */
@@ -531,7 +549,7 @@ body {
 }
 .case-org {
   font-family: 'DM Mono', monospace;
-  font-size: 8.5px; letter-spacing: .2em;
+  font-size: 11px; letter-spacing: .14em;
   text-transform: uppercase; color: var(--text-40); margin-bottom: 6px;
 }
 .case-title {
@@ -543,8 +561,8 @@ body {
 }
 .case-card:hover .case-title { color: #9ecfff; }
 .case-teaser {
-  font-size: 11px; color: var(--text-60);
-  line-height: 1.68; margin-bottom: 14px;
+  font-size: 14px; color: var(--text-60);
+  line-height: 1.72; margin-bottom: 14px;
 }
 .case-cta {
   font-family: 'DM Mono', monospace;
@@ -634,7 +652,7 @@ body {
 .s-active .e-label { color: #22c55e; }
 .exp-type {
   font-family: 'DM Mono', monospace;
-  font-size: 8.5px; letter-spacing: .13em;
+  font-size: 11px; letter-spacing: .1em;
   text-transform: uppercase; color: var(--text-40); margin-bottom: 12px;
 }
 .exp-name {
@@ -646,7 +664,7 @@ body {
 }
 .exp-card:hover .exp-name { color: #6ca8e8; }
 .exp-desc {
-  font-size: 12px; line-height: 1.85;
+  font-size: 15px; line-height: 1.85;
   color: var(--text-60); margin-bottom: 22px;
 }
 .exp-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 22px; }
@@ -663,7 +681,7 @@ body {
 .exp-card:hover .exp-tag { border-color: rgba(240,236,227,0.18); color: var(--text-60); }
 .exp-link {
   font-family: 'DM Mono', monospace;
-  font-size: 8.5px; letter-spacing: .13em;
+  font-size: 12px; letter-spacing: .1em;
   text-transform: uppercase; color: var(--accent);
 }
 
@@ -684,7 +702,7 @@ body {
   padding: 13px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
   transition: background .2s;
 }
-.cred-name { font-size: 12px; color: var(--text-60); font-weight: 500; }
+.cred-name { font-size: 15px; color: var(--text-60); font-weight: 500; }
 .cred-yr {
   font-family: 'DM Mono', monospace;
   font-size: 8.5px; color: var(--text-40); letter-spacing: .08em;
@@ -707,8 +725,8 @@ body {
 .contact-links { display: flex; flex-direction: column; gap: 12px; }
 .contact-link {
   font-family: 'DM Mono', monospace;
-  font-size: 13px; color: var(--text-60);
-  text-decoration: none; letter-spacing: .04em;
+  font-size: 16px; color: var(--text-60);
+  text-decoration: none; letter-spacing: .03em;
   transition: color .2s; cursor: pointer;
 }
 .contact-link:hover { color: #6ca8e8; }
@@ -796,18 +814,18 @@ footer span {
 .how-card-n {
   font-family: 'Playfair Display', serif;
   font-size: 28px; font-weight: 900;
-  color: rgba(59,127,212,0.18); line-height: 1;
+  color: rgba(59,127,212,0.55); line-height: 1;
   margin-bottom: 14px;
 }
 .how-card-title {
   font-family: 'Playfair Display', serif;
-  font-size: 13.5px; font-weight: 700;
+  font-size: 15px; font-weight: 700;
   color: var(--text-100); letter-spacing: -.01em;
   line-height: 1.2; margin-bottom: 8px;
 }
 .how-card-desc {
-  font-size: 12px; line-height: 1.7;
-  color: var(--text-40); font-weight: 400;
+  font-size: 14px; line-height: 1.75;
+  color: rgba(240,236,227,0.58); font-weight: 400;
 }
 
 /* Podcast bridge block */
@@ -827,7 +845,7 @@ footer span {
   color: var(--text-100); margin-bottom: 10px;
 }
 .how-bridge-sub {
-  font-size: 14px; color: var(--text-40); line-height: 1.65;
+  font-size: 16px; color: rgba(240,236,227,0.55); line-height: 1.7;
   max-width: 520px; margin: 0 auto;
 }
 
@@ -889,9 +907,9 @@ footer span {
       <div class="tldr-disc"></div>
       <div class="tldr-play"></div>
       <div class="tldr-pause"><span></span><span></span></div>
-      <svg class="tldr-ring-progress" viewBox="0 0 62 62" xmlns="http://www.w3.org/2000/svg">
-        <circle class="tldr-ring-track" cx="31" cy="31" r="26"/>
-        <circle class="tldr-ring-fill" id="tldr-ring" cx="31" cy="31" r="26"/>
+      <svg class="tldr-ring-svg" viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle class="tldr-ring-track" cx="28" cy="28" r="22"/>
+        <circle class="tldr-ring-fill" id="tldr-progress" cx="28" cy="28" r="22"/>
       </svg>
     </div>
     <div class="tldr-label">
@@ -1055,27 +1073,27 @@ footer span {
 
   <div class="how-grid">
     <div class="how-card">
-      <div class="how-card-n">01</div>
+      <div class="how-card-n" aria-hidden="true">01</div>
       <div class="how-card-title">Outcomes over output</div>
       <div class="how-card-desc">Teams accountable for solving real problems, not shipping features on a roadmap.</div>
     </div>
     <div class="how-card">
-      <div class="how-card-n">02</div>
+      <div class="how-card-n" aria-hidden="true">02</div>
       <div class="how-card-title">Continuous discovery</div>
       <div class="how-card-desc">Customer insight flows into the team weekly. Decisions are grounded in evidence, not assumption.</div>
     </div>
     <div class="how-card">
-      <div class="how-card-n">03</div>
+      <div class="how-card-n" aria-hidden="true">03</div>
       <div class="how-card-title">Empowered squads</div>
       <div class="how-card-desc">Small, cross-functional teams with genuine ownership &mdash; not feature factories running a delivery queue.</div>
     </div>
     <div class="how-card">
-      <div class="how-card-n">04</div>
+      <div class="how-card-n" aria-hidden="true">04</div>
       <div class="how-card-title">Validate before you build</div>
       <div class="how-card-desc">Test assumptions early. Kill things confidently. Preserve capital and credibility for what actually works.</div>
     </div>
     <div class="how-card">
-      <div class="how-card-n">05</div>
+      <div class="how-card-n" aria-hidden="true">05</div>
       <div class="how-card-title">AI in the room</div>
       <div class="how-card-desc">AI is now embedded in discovery, delivery, and decision-making. The operating model has changed permanently.</div>
     </div>
@@ -1313,8 +1331,8 @@ document.querySelectorAll('a,button,.contact-link,.brand-card,.case-card,.exp-ca
   var btn=document.getElementById('tldr-btn');
   if(!btn)return;
   var audio=new Audio('site-overview.mp3');audio.preload='none';
-  var ring=document.getElementById('tldr-ring');
-  var CIRCUMFERENCE=163.4;
+  var ring=document.getElementById('tldr-progress');
+  var CIRCUMFERENCE=138.2;
   audio.addEventListener('timeupdate',function(){
     if(!audio.duration||!ring)return;
     var pct=audio.currentTime/audio.duration;
@@ -1333,9 +1351,21 @@ document.querySelectorAll('a,button,.contact-link,.brand-card,.case-card,.exp-ca
 // ── CARD FLIP + SWOOSH ───────────────────────────────────────
 var flipSound=new Audio('flip.mp3');flipSound.preload='auto';flipSound.volume=0.3;
 document.querySelectorAll('.brand-card').forEach(function(card){
-  card.addEventListener('click',function(){
+  card.setAttribute('tabindex','0');
+  card.style.cursor='pointer';
+  // Use pointerup on the card itself — fires reliably on desktop and mobile
+  // without conflict from the tilt mousemove/mouseleave handlers
+  card.addEventListener('pointerup',function(e){
     flipSound.currentTime=0;flipSound.play().catch(function(){});
     card.classList.toggle('flipped');
+  });
+  // Keyboard accessibility
+  card.addEventListener('keydown',function(e){
+    if(e.key===' '||e.key==='Enter'){
+      e.preventDefault();
+      flipSound.currentTime=0;flipSound.play().catch(function(){});
+      card.classList.toggle('flipped');
+    }
   });
 });
 
