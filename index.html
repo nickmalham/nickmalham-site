@@ -1356,6 +1356,13 @@ document.querySelectorAll('.brand-card').forEach(function(card){
   // Use pointerup on the card itself — fires reliably on desktop and mobile
   // without conflict from the tilt mousemove/mouseleave handlers
   card.addEventListener('pointerup',function(e){
+    // Clear any inline transform the tilt handler may have set on card-inner
+    // so the CSS .flipped .card-inner rule can take over cleanly
+    var inner=card.querySelector('.card-inner');
+    if(inner){
+      inner.style.transform='';
+      inner.style.transition='';
+    }
     flipSound.currentTime=0;flipSound.play().catch(function(){});
     card.classList.toggle('flipped');
   });
