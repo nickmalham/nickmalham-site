@@ -206,14 +206,14 @@ document.querySelectorAll('a,button,.audio-player,.coverage-card,.app-link,.ai-i
     <button class="ai-icon-btn" id="ai-btn" aria-label="Show AI summary" aria-expanded="false">✦</button>
     <div class="ai-content">
       <div class="ai-label" id="ai-label">AI Quick Read</div>
-      <div class="ai-text" id="ai-out" aria-live="polite"><em>Summarise.</em></div>
+      <div class="ai-text" id="ai-out" aria-live="polite"><em>Summarise</em></div>
     </div>
   </div>
   <script>
   (function(){
     var btn=document.getElementById('ai-btn');
     var out=document.getElementById('ai-out');
-    var summary="Nick Malham was the first hire into Medibank's Corporate Health venture, building the product, team and operating model from zero — the result is Work Better by Medibank, a live corporate wellness app on the App Store and Google Play, built on the League health platform and underpinned by a three-year enterprise AI strategy for four million members.";
+    var summary="Nick was the first hire into Medibank's Corporate Health venture, building the product, team and operating model from zero — the result is Work Better by Medibank, a live corporate wellness app on the App Store and Google Play, built on the League health platform and underpinned by a three-year enterprise AI strategy for four million members.";
     var shown=false;
     btn.addEventListener('click',function(){
       if(shown)return;
