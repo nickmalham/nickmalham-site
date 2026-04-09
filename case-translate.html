@@ -206,14 +206,14 @@ document.querySelectorAll('a,button,.audio-player,.coverage-card,.app-link,.ai-i
     <button class="ai-icon-btn" id="ai-btn" aria-label="Show AI summary" aria-expanded="false">✦</button>
     <div class="ai-content">
       <div class="ai-label" id="ai-label">AI Quick Read</div>
-      <div class="ai-text" id="ai-out" aria-live="polite"><em>Click ✦ for a one-sentence summary of this case study.</em></div>
+      <div class="ai-text" id="ai-out" aria-live="polite"><em>Summarise</em></div>
     </div>
   </div>
   <script>
   (function(){
     var btn=document.getElementById('ai-btn');
     var out=document.getElementById('ai-out');
-    var summary="Call Translate was the world's first AI-powered real-time voice translation service deployed within a live telco network — built by Nick Malham's team at Optus using Google Cloud NLP, launching in 2021 and expanding to 19 languages by 2022.";
+    var summary="Call Translate was the world's first AI-powered real-time voice translation service deployed within a live telco network — built using Google Cloud NLP, launching in 2021 and expanding to 19 languages by 2022.";
     var shown=false;
     btn.addEventListener('click',function(){
       if(shown)return;
