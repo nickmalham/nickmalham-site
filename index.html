@@ -946,6 +946,17 @@ footer span {
   margin-bottom: 28px; line-height: 1.1;
 }
 .ask-nick-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px; }
+@media(max-width:900px) {
+  .ask-nick-chips {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 6px;
+    scrollbar-width: none;
+  }
+  .ask-nick-chips::-webkit-scrollbar { display: none; }
+  .ask-chip { flex-shrink: 0; }
+}
 .ask-chip {
   font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: .06em;
   color: var(--text-60); background: rgba(255,255,255,0.05);
@@ -974,7 +985,7 @@ footer span {
 .ask-send:hover:not(:disabled) { background: rgba(59,127,212,0.35); border-color: rgba(59,127,212,0.6); }
 .ask-send:disabled { opacity: .45; cursor: not-allowed; }
 .ask-response { min-height: 0; max-height: 0; overflow: hidden; transition: max-height .5s var(--ease-spring), opacity .4s; opacity: 0; }
-.ask-response.visible { max-height: 300px; opacity: 1; }
+.ask-response.visible { max-height: 400px; opacity: 1; overflow-y: auto; }
 .ask-response-inner { background: rgba(59,127,212,0.06); border: 1px solid rgba(59,127,212,0.18); border-radius: 10px; padding: 18px 22px; font-size: 15px; line-height: 1.8; color: rgba(240,236,227,0.85); margin-bottom: 16px; }
 .ask-response-inner em { color: rgba(240,236,227,0.42); font-style: normal; font-size: 13px; }
 .ask-disclaimer { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: .1em; color: var(--text-25); line-height: 1.6; }
@@ -987,7 +998,6 @@ footer span {
 @keyframes thinkPulse { 0%,80%,100% { opacity:.2; transform:scale(.8); } 40% { opacity:1; transform:scale(1); } }
 @media(max-width:900px) {
   .ask-nick-wrap { padding: 28px 24px; }
-  .ask-nick-chips { gap: 8px; }
   .ask-input-row { flex-direction: column; }
   .ask-send { width: 100%; text-align: center; }
 }
@@ -1487,11 +1497,7 @@ var flipSound=new Audio('flip.mp3');flipSound.preload='auto';flipSound.volume=0.
 document.querySelectorAll('.brand-card').forEach(function(card){
   card.setAttribute('tabindex','0');
   card.style.cursor='pointer';
-  // Use pointerup on the card itself — fires reliably on desktop and mobile
-  // without conflict from the tilt mousemove/mouseleave handlers
   card.addEventListener('pointerup',function(e){
-    // Clear any inline transform the tilt handler may have set on card-inner
-    // so the CSS .flipped .card-inner rule can take over cleanly
     var inner=card.querySelector('.card-inner');
     if(inner){
       inner.style.transform='';
@@ -1500,7 +1506,6 @@ document.querySelectorAll('.brand-card').forEach(function(card){
     flipSound.currentTime=0;flipSound.play().catch(function(){});
     card.classList.toggle('flipped');
   });
-  // Keyboard accessibility
   card.addEventListener('keydown',function(e){
     if(e.key===' '||e.key==='Enter'){
       e.preventDefault();
@@ -1594,7 +1599,6 @@ document.querySelectorAll('.case-card').forEach(function(card){
   renderer.setSize(W,H);
   renderer.setClearColor(0x000000,0);
 
-  // Layer 1 — warm white particles
   var N=isTouch?100:260;
   var g=new THREE.BufferGeometry();
   var pos=new Float32Array(N*3);var spd=new Float32Array(N*3);
@@ -1609,7 +1613,6 @@ document.querySelectorAll('.case-card').forEach(function(card){
   g.setAttribute('position',new THREE.BufferAttribute(pos,3));
   var m=new THREE.PointsMaterial({color:0xf0ece3,size:.038,transparent:true,opacity:.48,sizeAttenuation:true});
 
-  // Layer 2 — cool blue accent particles
   var N2=50;
   var g2=new THREE.BufferGeometry();
   var pos2=new Float32Array(N2*3);
@@ -1664,7 +1667,6 @@ document.querySelectorAll('.case-card').forEach(function(card){
 
   var reduced=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
 
-  // Make everything visible immediately if reduced motion
   if(reduced){
     document.querySelectorAll('.gs-up,.brand-card,.cap-cell,.case-card-wrap,.exp-card,.about-inner,.contact-section').forEach(function(el){
       el.style.opacity='1';el.style.transform='none';
@@ -1672,57 +1674,46 @@ document.querySelectorAll('.case-card').forEach(function(card){
     return;
   }
 
-  // ── Section label + headline fade-ups ──
   document.querySelectorAll('.gs-up').forEach(function(el){
     gsap.from(el,{opacity:0,y:36,duration:.95,ease:'power3.out',
       scrollTrigger:{trigger:el,start:'top 88%',toggleActions:'play none none none'}});
   });
 
-  // ── Brand cards stagger ──
   gsap.to('.brands-grid .brand-card',{
     opacity:1,y:0,duration:.8,ease:'power3.out',stagger:.075,
     scrollTrigger:{trigger:'.brands-grid',start:'top 82%',toggleActions:'play none none none'}
   });
 
-  // ── Cap strip stagger ──
   gsap.to('.cap-cell',{
     opacity:1,y:0,duration:.7,ease:'power2.out',stagger:.08,
     scrollTrigger:{trigger:'.cap-strip',start:'top 86%',toggleActions:'play none none none'}
   });
 
-  // ── Case cards stagger ──
   gsap.to('.cases-grid .case-card-wrap',{
     opacity:1,y:0,scale:1,duration:.85,ease:'power3.out',stagger:.07,
     scrollTrigger:{trigger:'.cases-grid',start:'top 82%',toggleActions:'play none none none'}
   });
 
-  // ── Experiment cards slide from left ──
   gsap.to('.exp-grid .exp-card',{
     opacity:1,x:0,duration:.8,ease:'power3.out',stagger:.1,
     scrollTrigger:{trigger:'.exp-grid',start:'top 82%',toggleActions:'play none none none'}
   });
 
-  // ── About block ──
   gsap.to('.about-inner',{
     opacity:1,y:0,duration:1.1,ease:'power2.out',
     scrollTrigger:{trigger:'.about-inner',start:'top 84%',toggleActions:'play none none none'}
   });
 
-  // ── Contact ──
   gsap.to('.contact-section',{
     opacity:1,duration:.9,ease:'power2.out',
     scrollTrigger:{trigger:'.contact-section',start:'top 90%',toggleActions:'play none none none'}
   });
 
-
-  // ── How I Build cards ──
   gsap.to('.how-grid .how-card',{
     opacity:1,y:0,duration:.75,ease:'power3.out',stagger:.07,
     scrollTrigger:{trigger:'.how-grid',start:'top 84%',toggleActions:'play none none none'}
   });
 
-  // ── Parallax layers ──
-  // Subtle vertical parallax on branded text blocks as you scroll
   document.querySelectorAll('.parallax-layer').forEach(function(el){
     var speed = parseFloat(el.getAttribute('data-speed')||'0.1');
     gsap.to(el,{
@@ -1737,7 +1728,6 @@ document.querySelectorAll('.case-card').forEach(function(card){
     });
   });
 
-  // ── Section seams fade in ──
   document.querySelectorAll('.section-seam').forEach(function(el){
     gsap.from(el,{scaleX:0,transformOrigin:'left center',duration:1.2,ease:'power2.out',
       scrollTrigger:{trigger:el,start:'top 95%',toggleActions:'play none none none'}});
@@ -1746,12 +1736,10 @@ document.querySelectorAll('.case-card').forEach(function(card){
 })();
 
 // ── UNIFIED CURSOR TILT ───────────────────────────────────────
-// Same glass-depth tilt system applied to brand cards, case cards, exp cards
 (function(){
   if('ontouchstart' in window||navigator.maxTouchPoints>0)return;
   var ease=0.12,recovery=0.55;
 
-  // Brand cards — tilt the card-inner (preserves flip)
   document.querySelectorAll('.brand-card').forEach(function(card){
     var inner=card.querySelector('.card-inner');if(!inner)return;
     card.addEventListener('mousemove',function(e){
@@ -1769,7 +1757,6 @@ document.querySelectorAll('.case-card').forEach(function(card){
     });
   });
 
-  // Case cards — tilt the whole card
   document.querySelectorAll('.case-card').forEach(function(card){
     card.addEventListener('mousemove',function(e){
       var r=card.getBoundingClientRect();
@@ -1784,7 +1771,6 @@ document.querySelectorAll('.case-card').forEach(function(card){
     });
   });
 
-  // Experiment cards — tilt the whole card
   document.querySelectorAll('.exp-card').forEach(function(card){
     card.addEventListener('mousemove',function(e){
       var r=card.getBoundingClientRect();
@@ -1799,7 +1785,6 @@ document.querySelectorAll('.case-card').forEach(function(card){
     });
   });
 
-  // Capability cells — subtle tilt
   document.querySelectorAll('.cap-cell').forEach(function(cell){
     cell.addEventListener('mousemove',function(e){
       var r=cell.getBoundingClientRect();
@@ -1814,7 +1799,6 @@ document.querySelectorAll('.case-card').forEach(function(card){
     });
   });
 
-  // How I Build cards — subtle tilt
   document.querySelectorAll('.how-card').forEach(function(card){
     card.addEventListener('mousemove',function(e){
       var r=card.getBoundingClientRect();
