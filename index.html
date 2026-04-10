@@ -150,6 +150,7 @@ body {
   mix-blend-mode: difference;
 }
 #cur.h { width: 54px; height: 54px; background: rgba(240,236,227,0.08); }
+@media(max-width:900px){#cur{display:none;}}
 
 /* ─── SHARED GLASS MIXIN ─────────────────────────────── */
 .glass {
@@ -1000,7 +1001,7 @@ footer span {
   color: var(--text-60); background: rgba(255,255,255,0.05);
   border: 1px solid rgba(255,255,255,0.1); border-radius: 999px;
   padding: 9px 18px; cursor: pointer;
-  transition: background .2s, border-color .2s, color .2s; white-space: nowrap;
+  transition: background .2s, border-color .2s, color .2s; white-space: normal; word-break: break-word;
 }
 .ask-chip:hover { background: rgba(59,127,212,0.15); border-color: rgba(59,127,212,0.4); color: var(--text-100); }
 .ask-input-row { display: flex; gap: 12px; align-items: stretch; margin-bottom: 16px; }
