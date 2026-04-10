@@ -91,6 +91,54 @@ body {
   cursor: none;
 }
 
+
+/* ─── NEO RING — AI signal ───────────────────────────── */
+@keyframes neoSpin {
+  0%   { --neo-angle: 0deg; }
+  100% { --neo-angle: 360deg; }
+}
+@property --neo-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+.neo-ring {
+  position: relative;
+}
+.neo-ring::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--neo-angle),
+    transparent 0%,
+    rgba(99,179,237,0.0) 20%,
+    rgba(99,179,237,0.55) 38%,
+    rgba(147,112,219,0.6) 50%,
+    rgba(59,127,212,0.55) 62%,
+    rgba(99,179,237,0.0) 80%,
+    transparent 100%
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: neoSpin 4s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.7;
+}
+.tldr-circle.neo-ring::after {
+  inset: -3px;
+  border-radius: 50%;
+}
+.ask-input-row.neo-ring::after {
+  border-radius: 12px;
+}
+
 /* ─── CUSTOM CURSOR ──────────────────────────────────── */
 #cur {
   position: fixed; pointer-events: none; z-index: 9999;
@@ -946,17 +994,7 @@ footer span {
   margin-bottom: 28px; line-height: 1.1;
 }
 .ask-nick-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px; }
-@media(max-width:900px) {
-  .ask-nick-chips {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 6px;
-    scrollbar-width: none;
-  }
-  .ask-nick-chips::-webkit-scrollbar { display: none; }
-  .ask-chip { flex-shrink: 0; }
-}
+
 .ask-chip {
   font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: .06em;
   color: var(--text-60); background: rgba(255,255,255,0.05);
@@ -972,6 +1010,7 @@ footer span {
   padding: 14px 18px; color: var(--text-100);
   font-family: 'Manrope', sans-serif; font-size: 15px;
   outline: none; transition: border-color .2s, background .2s;
+  position: relative; z-index: 1;
 }
 .ask-input::placeholder { color: var(--text-25); }
 .ask-input:focus { border-color: rgba(59,127,212,0.5); background: rgba(255,255,255,0.07); }
@@ -981,6 +1020,7 @@ footer span {
   font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
   cursor: pointer; transition: background .2s, border-color .2s;
   white-space: nowrap; flex-shrink: 0;
+  position: relative; z-index: 1;
 }
 .ask-send:hover:not(:disabled) { background: rgba(59,127,212,0.35); border-color: rgba(59,127,212,0.6); }
 .ask-send:disabled { opacity: .45; cursor: not-allowed; }
@@ -1026,7 +1066,7 @@ footer span {
     <p class="hero-sub">Medibank &middot; BOQ &middot; Optus &middot; CommBank &middot; Sydney Opera House</p>
   </div>
   <button class="tldr-btn" id="tldr-btn" aria-label="Play TL;DR audio summary">
-    <div class="tldr-circle">
+    <div class="tldr-circle neo-ring">
       <div class="tldr-ring"></div>
       <div class="tldr-disc"></div>
       <div class="tldr-play"></div>
@@ -1225,7 +1265,7 @@ footer span {
 
   <!-- ── ASK NICK ─────────────────────────────────────── -->
   <div class="ask-nick-wrap gs-up" id="ask-nick">
-    <div class="ask-nick-label">Ask Nick</div>
+    <div class="ask-nick-label">Ask Nick AI</div>
     <h3 class="ask-nick-heading">Ask about ventures, product, AI, or how I work.</h3>
     <div class="ask-nick-chips">
       <button class="ask-chip" data-q="How do you validate a new venture?">How do you validate a new venture?</button>
@@ -1233,9 +1273,9 @@ footer span {
       <button class="ask-chip" data-q="How do you decide when to scale — and when to stop?">How do you decide when to scale &mdash; and when to stop?</button>
       <button class="ask-chip" data-q="How do you build the business case for something that doesn't exist yet?">How do you build the business case for something that doesn&rsquo;t exist yet?</button>
     </div>
-    <div class="ask-input-row">
+    <div class="ask-input-row neo-ring">
       <input class="ask-input" id="ask-input" type="text" placeholder="Ask your own question&hellip;" maxlength="400" autocomplete="off" aria-label="Ask Nick a question">
-      <button class="ask-send" id="ask-send" aria-label="Send question">Send</button>
+      <button class="ask-send" id="ask-send" aria-label="Ask Nick">Ask</button>
     </div>
     <div class="ask-response" id="ask-response" role="region" aria-live="polite" aria-label="Nick's response">
       <div class="ask-response-inner" id="ask-response-inner"></div>
@@ -1547,7 +1587,7 @@ document.querySelectorAll('.case-card').forEach(function(card){
   document.querySelectorAll('.ask-chip').forEach(function(chip){
     chip.addEventListener('click',function(){
       input.value=chip.getAttribute('data-q');
-      input.focus();
+      sendQuestion();
     });
   });
 
