@@ -2,6 +2,52 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="description" content="Nick Malham is a Brisbane-based product and venture leader with 15+ years building new revenue streams, ventures, and world-first digital products inside large Australian organisations including Medibank, Optus, BOQ, CommBank, and the Sydney Opera House.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://nickmalham.com/">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nickmalham.com/">
+<meta property="og:title" content="Nick Malham — 0 to 1 Product &amp; Venture Builder">
+<meta property="og:description" content="Senior product and venture leader with 15+ years building new revenue streams and world-first digital products inside large Australian organisations.">
+<meta property="og:image" content="https://nickmalham.com/og-image.png">
+<meta property="og:locale" content="en_AU">
+<meta property="og:site_name" content="Nick Malham">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Nick Malham — 0 to 1 Product &amp; Venture Builder">
+<meta name="twitter:description" content="Senior product and venture leader with 15+ years building new revenue streams and world-first digital products inside large Australian organisations.">
+<meta name="twitter:image" content="https://nickmalham.com/og-image.png">
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Nick Malham",
+  "url": "https://nickmalham.com",
+  "jobTitle": "Product and Venture Leader",
+  "description": "Senior product and venture leader with 15+ years building new ventures and digital products inside large Australian organisations.",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Brisbane",
+    "addressRegion": "Queensland",
+    "addressCountry": "AU"
+  },
+  "sameAs": [
+    "https://www.linkedin.com/in/nickmalham"
+  ],
+  "worksFor": [
+    {"@type": "Organization", "name": "Medibank"},
+    {"@type": "Organization", "name": "Bank of Queensland"},
+    {"@type": "Organization", "name": "Optus"},
+    {"@type": "Organization", "name": "CommBank"},
+    {"@type": "Organization", "name": "Sydney Opera House"}
+  ]
+}
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nick Malham — 0 to 1 Product &amp; Venture Builder</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -877,6 +923,74 @@ footer span {
   .how-grid { grid-template-columns: 1fr; }
 }
 
+
+/* ─── ASK NICK ───────────────────────────────────────── */
+.ask-nick-wrap {
+  margin-top: 52px;
+  background: rgba(255,255,255,0.03);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  box-shadow: inset 0 1px 0 var(--glass-shine), 0 8px 32px rgba(0,0,0,0.3);
+  border-radius: 14px;
+  padding: 36px 40px 32px;
+}
+.ask-nick-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--text-40); margin-bottom: 6px;
+}
+.ask-nick-heading {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(22px,2.5vw,30px); font-weight: 700;
+  letter-spacing: -.02em; color: var(--text-100);
+  margin-bottom: 28px; line-height: 1.1;
+}
+.ask-nick-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px; }
+.ask-chip {
+  font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: .06em;
+  color: var(--text-60); background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1); border-radius: 999px;
+  padding: 9px 18px; cursor: pointer;
+  transition: background .2s, border-color .2s, color .2s; white-space: nowrap;
+}
+.ask-chip:hover { background: rgba(59,127,212,0.15); border-color: rgba(59,127,212,0.4); color: var(--text-100); }
+.ask-input-row { display: flex; gap: 12px; align-items: stretch; margin-bottom: 16px; }
+.ask-input {
+  flex: 1; background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1); border-radius: 10px;
+  padding: 14px 18px; color: var(--text-100);
+  font-family: 'Manrope', sans-serif; font-size: 15px;
+  outline: none; transition: border-color .2s, background .2s;
+}
+.ask-input::placeholder { color: var(--text-25); }
+.ask-input:focus { border-color: rgba(59,127,212,0.5); background: rgba(255,255,255,0.07); }
+.ask-send {
+  background: rgba(59,127,212,0.2); border: 1px solid rgba(59,127,212,0.35);
+  border-radius: 10px; padding: 14px 24px; color: rgba(240,236,227,0.88);
+  font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
+  cursor: pointer; transition: background .2s, border-color .2s;
+  white-space: nowrap; flex-shrink: 0;
+}
+.ask-send:hover:not(:disabled) { background: rgba(59,127,212,0.35); border-color: rgba(59,127,212,0.6); }
+.ask-send:disabled { opacity: .45; cursor: not-allowed; }
+.ask-response { min-height: 0; max-height: 0; overflow: hidden; transition: max-height .5s var(--ease-spring), opacity .4s; opacity: 0; }
+.ask-response.visible { max-height: 300px; opacity: 1; }
+.ask-response-inner { background: rgba(59,127,212,0.06); border: 1px solid rgba(59,127,212,0.18); border-radius: 10px; padding: 18px 22px; font-size: 15px; line-height: 1.8; color: rgba(240,236,227,0.85); margin-bottom: 16px; }
+.ask-response-inner em { color: rgba(240,236,227,0.42); font-style: normal; font-size: 13px; }
+.ask-disclaimer { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: .1em; color: var(--text-25); line-height: 1.6; }
+.ask-disclaimer a { color: var(--text-40); text-decoration: none; }
+.ask-disclaimer a:hover { color: var(--text-60); }
+.ask-thinking { display: inline-flex; align-items: center; gap: 6px; color: rgba(240,236,227,0.42); font-size: 13px; }
+.ask-thinking-dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(59,127,212,0.6); animation: thinkPulse 1.2s ease-in-out infinite; }
+.ask-thinking-dot:nth-child(2) { animation-delay: .2s; }
+.ask-thinking-dot:nth-child(3) { animation-delay: .4s; }
+@keyframes thinkPulse { 0%,80%,100% { opacity:.2; transform:scale(.8); } 40% { opacity:1; transform:scale(1); } }
+@media(max-width:900px) {
+  .ask-nick-wrap { padding: 28px 24px; }
+  .ask-nick-chips { gap: 8px; }
+  .ask-input-row { flex-direction: column; }
+  .ask-send { width: 100%; text-align: center; }
+}
 </style>
 </head>
 <body>
@@ -927,8 +1041,7 @@ footer span {
   <div class="parallax-layer" data-speed="0.08">
     <p class="section-label gs-up">Background</p>
     <h2 class="section-hl gs-up">15 years. Six iconic organisations.</h2>
-    <p class="brand-intro gs-up">Most of my career has been spent building things large organisations need but struggle to build &mdash; new revenue streams, new ventures, and new products that get to market before the structure would normally allow. <strong>
-       The sector changes. The mandate doesn&rsquo;t: zero to one, high ambiguity, commercial accountability.</strong></p>
+    <p class="brand-intro gs-up">Most of my career has been spent building things large organisations need but struggle to build &mdash; new revenue streams, new ventures, and new products that get to market before the structure would normally allow. <strong>The sector changes. The mandate doesn&rsquo;t: zero to one, high ambiguity, commercial accountability.</strong></p>
   </div>
 
   <div class="brands-grid">
@@ -1069,7 +1182,7 @@ footer span {
 <!-- ══ HOW I BUILD ══════════════════════════════════════════ -->
 <section class="section how-section" id="how-i-build">
   <p class="section-label gs-up">Operating model</p>
-  <h2 class="section-hl gs-up">Building high performing teams</h2>
+  <h2 class="section-hl gs-up">How I build.</h2>
   <p class="brand-intro gs-up" style="margin-bottom:48px;">Fifteen years of building ventures and product capability inside large organisations has taught me that the principles don&rsquo;t change. What changes is everything around them &mdash; the tools, the pace, the expectations. <strong>What I bring is the ability to establish and lead the organisational capability that lets an enterprise move at speed.</strong></p>
 
   <div class="how-grid">
@@ -1095,12 +1208,32 @@ footer span {
     </div>
     <div class="how-card">
       <div class="how-card-n" aria-hidden="true">05</div>
-      <div class="how-card-title">AI in the room; Human-at-the-healm</div>
-      <div class="how-card-desc">AI is now embedded in discovery, delivery, and decision-making. The operating model has changed forever.</div>
+      <div class="how-card-title">AI in the room; Human-at-the-helm</div>
+      <div class="how-card-desc">AI is now embedded in discovery, delivery, and decision-making. The operating model has changed permanently.</div>
     </div>
   </div>
 
-  <div class="how-bridge gs-up">
+  <!-- ── ASK NICK ─────────────────────────────────────── -->
+  <div class="ask-nick-wrap gs-up" id="ask-nick">
+    <div class="ask-nick-label">Ask Nick</div>
+    <h3 class="ask-nick-heading">Ask about ventures, product, AI, or how I work.</h3>
+    <div class="ask-nick-chips">
+      <button class="ask-chip" data-q="How do you validate a new venture?">How do you validate a new venture?</button>
+      <button class="ask-chip" data-q="How do you get a large org to move fast?">How do you get a large org to move fast?</button>
+      <button class="ask-chip" data-q="How do you decide when to scale — and when to stop?">How do you decide when to scale &mdash; and when to stop?</button>
+      <button class="ask-chip" data-q="How do you build the business case for something that doesn't exist yet?">How do you build the business case for something that doesn&rsquo;t exist yet?</button>
+    </div>
+    <div class="ask-input-row">
+      <input class="ask-input" id="ask-input" type="text" placeholder="Ask your own question&hellip;" maxlength="400" autocomplete="off" aria-label="Ask Nick a question">
+      <button class="ask-send" id="ask-send" aria-label="Send question">Send</button>
+    </div>
+    <div class="ask-response" id="ask-response" role="region" aria-live="polite" aria-label="Nick's response">
+      <div class="ask-response-inner" id="ask-response-inner"></div>
+    </div>
+    <p class="ask-disclaimer">AI responses reflect Nick&rsquo;s thinking but are generated by Claude. For direct conversation, <a href="https://linkedin.com/in/nickmalham" target="_blank" rel="noopener">connect on LinkedIn</a>.</p>
+  </div>
+
+  <div class="how-bridge gs-up" style="margin-top:52px;">
     <div class="how-bridge-label">The Deep Dive &middot; 25 minutes</div>
     <h3 class="how-bridge-hl">The playbook is being rewritten.</h3>
     <p class="how-bridge-sub">AI has collapsed the product delivery cycle. The discovery model hasn&rsquo;t caught up yet. This episode explores what a genuinely AI-native operating model looks like in practice.</p>
@@ -1254,7 +1387,7 @@ footer span {
       <div class="exp-status s-active"><span class="e-dot"></span><span class="e-label">Active</span></div>
       <div class="exp-type">Tool &middot; Governance &middot; AI</div>
       <div class="exp-name">Cyber Ledger</div>
-      <p class="exp-desc">Learning that only ~20% of NFP's have completed a cybersecurity assessment but ~12%+ last year alone reported an incident I built a free AI risk assessment to democratise access. Built using Lovable and Claude AI.</p>
+      <p class="exp-desc">Learning that only ~20% of NFPs have completed a cybersecurity assessment but ~12%+ last year alone reported an incident I built a free AI risk assessment to democratise access. Built using Lovable and Claude AI.</p>
       <div class="exp-tags"><span class="exp-tag">Lovable</span><span class="exp-tag">Claude AI</span><span class="exp-tag">Governance</span></div>
       <span class="exp-link">View project &rarr;</span>
     </a>
@@ -1313,7 +1446,7 @@ var cur=document.getElementById('cur');
 document.addEventListener('mousemove',function(e){
   cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px';
 });
-document.querySelectorAll('a,button,.contact-link,.brand-card,.case-card,.exp-card,.how-card').forEach(function(el){
+document.querySelectorAll('a,button,.contact-link,.brand-card,.case-card,.exp-card,.how-card,.ask-chip').forEach(function(el){
   el.addEventListener('mouseenter',function(){cur.classList.add('h');});
   el.addEventListener('mouseleave',function(){cur.classList.remove('h');});
 });
@@ -1396,6 +1529,53 @@ document.querySelectorAll('.case-card').forEach(function(card){
       Math.max(0,Math.min(100,(y/r.height)*200-50))+'%';
   });
 });
+
+
+// ── ASK NICK ─────────────────────────────────────────────────
+(function(){
+  var input=document.getElementById('ask-input');
+  var sendBtn=document.getElementById('ask-send');
+  var responseWrap=document.getElementById('ask-response');
+  var responseInner=document.getElementById('ask-response-inner');
+  if(!input||!sendBtn||!responseWrap||!responseInner)return;
+
+  document.querySelectorAll('.ask-chip').forEach(function(chip){
+    chip.addEventListener('click',function(){
+      input.value=chip.getAttribute('data-q');
+      input.focus();
+    });
+  });
+
+  input.addEventListener('keydown',function(e){
+    if(e.key==='Enter'&&!sendBtn.disabled)sendQuestion();
+  });
+  sendBtn.addEventListener('click',sendQuestion);
+
+  function showThinking(){
+    responseInner.innerHTML='<span class="ask-thinking"><span class="ask-thinking-dot"></span><span class="ask-thinking-dot"></span><span class="ask-thinking-dot"></span></span>';
+    responseWrap.classList.add('visible');
+  }
+
+  async function sendQuestion(){
+    var q=input.value.trim();
+    if(!q)return;
+    if(q.length>400){responseInner.innerHTML='<em>Please keep your question under 400 characters.</em>';responseWrap.classList.add('visible');return;}
+    sendBtn.disabled=true;
+    showThinking();
+    try{
+      var res=await fetch('/api/ask-nick',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:q})});
+      if(!res.ok){var e=await res.json().catch(function(){return{};});throw new Error(e.error||'Request failed');}
+      var data=await res.json();
+      if(data.text){responseInner.textContent=data.text;}
+      else{responseInner.innerHTML='<em>No response. Try again.</em>';}
+    }catch(err){
+      console.error('Ask Nick:',err);
+      responseInner.innerHTML='<em>Something went wrong. Try again or connect on LinkedIn.</em>';
+    }finally{
+      sendBtn.disabled=false;
+    }
+  }
+})();
 
 // ── THREE.JS PARTICLE HERO ────────────────────────────────────
 (function(){
