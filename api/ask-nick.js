@@ -58,27 +58,35 @@ If asked about something outside your expertise, say so plainly.`,
   const aiData = await anthropicRes.json();
   const text = aiData.content?.[0]?.text || '';
 
-  // ── Log to Notion (fire-and-forget, don't block response) ──
-  const notionDatabaseId = 'ca85b229-ff41-4f6d-8ff7-5c16f14e45cd';
+  // ── Log to Notion (awaited) ────────────────────────────────
   const notionToken = process.env.NOTION_TOKEN;
-
   if (notionToken) {
-    fetch('https://api.notion.com/v1/pages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${notionToken}`,
-        'Notion-Version': '2022-06-28',
-      },
-      body: JSON.stringify({
-        parent: { database_id: notionDatabaseId },
-        properties: {
-          Question: {
-            title: [{ text: { content: message.slice(0, 2000) } }],
-          },
+    try {
+      const notionRes = await fetch('https://api.notion.com/v1/pages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${notionToken}`,
+          'Notion-Version': '2022-06-28',
         },
-      }),
-    }).catch(err => console.error('Notion log error:', err));
+        body: JSON.stringify({
+          parent: { database_id: 'ca85b229-ff41-4f6d-8ff7-5c16f14e45cd' },
+          properties: {
+            Question: {
+              title: [{ text: { content: message.slice(0, 2000) } }],
+            },
+          },
+        }),
+      });
+      if (!notionRes.ok) {
+        const notionErr = await notionRes.text();
+        console.error('Notion error:', notionRes.status, notionErr);
+      }
+    } catch (err) {
+      console.error('Notion fetch error:', err);
+    }
+  } else {
+    console.error('NOTION_TOKEN not set');
   }
 
   return new Response(JSON.stringify({ text }), {
