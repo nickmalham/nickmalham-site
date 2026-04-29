@@ -75,14 +75,28 @@ Be specific. Use names, dates, numbers where possible. If you cannot find solid 
     }
 
     const data = await response.json();
-    const textBlock = data.content?.find((b) => b.type === 'text');
 
-    if (!textBlock) {
+    // Web search causes multiple content blocks — get ALL text blocks
+    const textBlocks = data.content?.filter((b) => b.type === 'text') || [];
+
+    if (!textBlocks.length) {
       return res.status(502).json({ error: 'No response from AI. Please try again.' });
     }
 
-    const clean = textBlock.text.replace(/```json|```/g, '').trim();
-    const parsed = JSON.parse(clean);
+    // Use the last text block — it contains the final JSON after research
+    const lastText = textBlocks[textBlocks.length - 1].text;
+
+    // Extract JSON object — find first { to last }
+    const jsonStart = lastText.indexOf('{');
+    const jsonEnd = lastText.lastIndexOf('}');
+
+    if (jsonStart === -1 || jsonEnd === -1) {
+      console.error('No JSON found in response:', lastText.substring(0, 200));
+      return res.status(502).json({ error: 'Could not parse briefing. Please try again.' });
+    }
+
+    const jsonStr = lastText.slice(jsonStart, jsonEnd + 1);
+    const parsed = JSON.parse(jsonStr);
 
     return res.status(200).json({ briefing: parsed });
   } catch (err) {
