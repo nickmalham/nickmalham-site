@@ -543,7 +543,7 @@ body {
   <div class="agent-header">
     <div class="agent-tag">Live · Agent 01</div>
     <h2 class="agent-title">Executive Meeting Intelligence</h2>
-    <p class="agent-subtitle">Enter who you're meeting and what you want to achieve. The agent researches them in real time and returns a one-page brief — ready to download, print, and walk in with.</p>
+    <p class="agent-subtitle">Enter who you're meeting and what you want to achieve. The agent synthesises everything it knows about them and returns a one-page brief — ready to download, print, and walk in with.</p>
   </div>
 
   <!-- Input tool -->
@@ -611,12 +611,12 @@ body {
     </div>
     <div class="how-card">
       <div class="how-n">02</div>
-      <div class="how-title">Live web research</div>
-      <div class="how-desc">The agent searches the web in real time — news, interviews, announcements, LinkedIn signals — building a picture of who this person is right now, not six months ago.</div>
+      <div class="how-title">Deep knowledge synthesis</div>
+      <div class="how-desc">The agent draws on Claude's extensive training data — public statements, company strategy, industry context, leadership signals — to build a picture of who this person is and what they care about.</div>
     </div>
     <div class="how-card">
       <div class="how-n">03</div>
-      <div class="how-title">Agenda-aware synthesis</div>
+      <div class="how-title">Agenda-aware output</div>
       <div class="how-desc">The briefing isn't generic research. It's filtered through your specific agenda — what they'll likely care about, where your interests overlap, what questions will land.</div>
     </div>
     <div class="how-card">
@@ -624,6 +624,16 @@ body {
       <div class="how-title">One page. Download ready.</div>
       <div class="how-desc">The output is a clean, printable brief. No dashboard to learn. No subscription. Save as PDF and walk in prepared.</div>
     </div>
+  </div>
+
+  <div style="margin-top:32px; padding:24px 28px; background:rgba(59,127,212,0.06); border:1px solid rgba(59,127,212,0.18); border-radius:10px;">
+    <p style="font-family:'DM Mono',monospace; font-size:9px; letter-spacing:.16em; text-transform:uppercase; color:var(--accent); margin-bottom:10px;">A note on how this is built</p>
+    <p style="font-size:14px; line-height:1.8; color:var(--text-60);">
+      This version runs on Claude's training data alone — no live web search. That means it works best for well-known executives, major Australian organisations, and publicly documented strategic moves. It won't know about news from the last few months or people with a limited public profile.
+    </p>
+    <p style="font-size:14px; line-height:1.8; color:var(--text-60); margin-top:10px;">
+      A live web search version exists and produces richer, more current briefings — but at roughly <strong style="color:var(--text-100);">50&ndash;100&times; the token cost</strong> per call, making it impractical to offer freely. This is a deliberate tradeoff: a tool that works reliably for most use cases, at a cost that doesn't require a subscription to run.
+    </p>
   </div>
 </section>
 
@@ -637,7 +647,10 @@ body {
       Fifteen years of walking into high-stakes meetings with large organisations taught me that <strong>preparation is the only variable you fully control</strong>. Everyone else in the room has done their research. The question is whether yours goes deeper.
     </p>
     <p class="why-copy">
-      The problem isn't access to information — it's synthesis under time pressure. A CSO preparing for a partnership meeting doesn't need a Wikipedia summary. They need to know what that person cares about <em>this quarter</em>, what their company is betting on, and what questions will signal genuine preparation rather than a Google search. That's what this agent produces.
+      The problem isn't access to information — it's synthesis under time pressure. A CSO preparing for a partnership meeting doesn't need a Wikipedia summary. They need to know what that person cares about strategically, what their company is betting on, and what questions will signal genuine preparation rather than a Google search.
+    </p>
+    <p class="why-copy">
+      I also built this to understand the real cost and complexity of agentic AI tools in practice. Adding live web search multiplied the cost per call by 50&ndash;100&times; — a genuine product decision, not just a technical one. <strong>Knowing where to draw that line is part of building AI products that actually scale.</strong>
     </p>
   </div>
 </section>
@@ -676,10 +689,10 @@ agendaEl.addEventListener('input', checkFields);
 
 // ── LOADING STEPS ─────────────────────────────────────────
 var STEPS = [
-  'Researching professional background...',
-  'Scanning company strategy and announcements...',
-  'Finding recent news and public signals...',
-  'Mapping agenda to their priorities...',
+  'Analysing professional background...',
+  'Mapping company strategy and context...',
+  'Identifying likely priorities and pressure points...',
+  'Mapping agenda to their context...',
   'Synthesising your briefing...'
 ];
 
