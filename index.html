@@ -98,12 +98,14 @@ body {
 
 /* ─── CURSOR ─────────────────────────────────────────── */
 #cur {
-  position: fixed; pointer-events: none; z-index: 9999;
+  position: fixed; pointer-events: none; z-index: 999999;
   transform: translate(-50%,-50%);
   width: 10px; height: 10px;
   background: rgba(240,236,227,0.85); border-radius: 50%;
   transition: width .28s var(--ease-spring), height .28s var(--ease-spring), background .28s;
   mix-blend-mode: difference;
+  will-change: transform;
+  isolation: isolate;
 }
 #cur.h { width: 54px; height: 54px; background: rgba(240,236,227,0.08); }
 @media(max-width:900px){#cur{display:none;}}
@@ -823,8 +825,8 @@ footer span { font-family: 'DM Mono', monospace; font-size: 8.5px; color: var(--
       <div class="exp-status s-active"><span class="e-dot"></span><span class="e-label">Live</span></div>
       <div class="exp-type">Agent &middot; AI &middot; Executive Tools</div>
       <div class="exp-name">Executive Meeting Intelligence</div>
-      <p class="exp-desc">C-suite executives spend hours researching before high-stakes meetings. This agent does it in seconds &mdash; live web research, synthesised through your specific agenda, delivered as a one-page brief you can download and walk in with.</p>
-      <div class="exp-tags"><span class="exp-tag">Claude AI</span><span class="exp-tag">Web Search</span><span class="exp-tag">Vercel</span></div>
+      <p class="exp-desc">C-suite executives spend hours preparing for high-stakes meetings. This agent synthesises everything it knows about the person and their organisation, filters it through your specific agenda, and delivers a one-page brief you can download and walk in with.</p>
+      <div class="exp-tags"><span class="exp-tag">Claude AI</span><span class="exp-tag">Knowledge Synthesis</span><span class="exp-tag">Vercel</span></div>
       <span class="exp-link">Try the agent &rarr;</span>
     </a>
   </div>
@@ -877,7 +879,12 @@ footer span { font-family: 'DM Mono', monospace; font-size: 8.5px; color: var(--
 
 // ── CURSOR ────────────────────────────────────────────
 var cur=document.getElementById('cur');
-document.addEventListener('mousemove',function(e){cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px';});
+// Move cursor to end of body so it paints above everything
+document.body.appendChild(cur);
+document.addEventListener('mousemove',function(e){
+  cur.style.left=e.clientX+'px';
+  cur.style.top=e.clientY+'px';
+});
 document.querySelectorAll('a,button,.contact-link,.brand-card,.case-card,.exp-card,.how-card,.ask-chip').forEach(function(el){
   el.addEventListener('mouseenter',function(){cur.classList.add('h');});
   el.addEventListener('mouseleave',function(){cur.classList.remove('h');});
