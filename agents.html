@@ -50,12 +50,14 @@ body {
 
 /* ─── CURSOR ─────────────────────────────────────────── */
 #cur {
-  position: fixed; pointer-events: none; z-index: 9999;
+  position: fixed; pointer-events: none; z-index: 999999;
   transform: translate(-50%,-50%);
   width: 10px; height: 10px;
   background: rgba(240,236,227,0.85); border-radius: 50%;
   transition: width .28s var(--ease-spring), height .28s var(--ease-spring), background .28s;
   mix-blend-mode: difference;
+  will-change: transform;
+  isolation: isolate;
 }
 #cur.h { width: 54px; height: 54px; background: rgba(240,236,227,0.08); }
 @media(max-width:900px){#cur{display:none;}}
@@ -666,6 +668,8 @@ body {
 // ── CURSOR ────────────────────────────────────────────────
 var cur = document.getElementById('cur');
 if (cur) {
+  // Move to end of body so it paints above everything
+  document.body.appendChild(cur);
   document.addEventListener('mousemove', function(e) {
     cur.style.left = e.clientX + 'px';
     cur.style.top = e.clientY + 'px';
