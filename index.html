@@ -238,9 +238,6 @@ body {
 }
 .brand-card.flipped .card-inner { transform: rotateY(180deg); }
 
-/* ══════════════════════════════════════════════════════════
-   CARD FRONT — dark dot-grid, logo floats
-   ══════════════════════════════════════════════════════════ */
 .card-front {
   backface-visibility: hidden; -webkit-backface-visibility: hidden;
   border-radius: 10px; overflow: hidden;
@@ -250,19 +247,16 @@ body {
   background: #0a0806;
 }
 
-/* Logo image area — dot grid background */
 .brand-img-wrap {
   position: relative;
   width: 100%; aspect-ratio: 4/3;
   overflow: hidden;
   display: flex; align-items: center; justify-content: center;
-  /* Dot grid — same frequency as hero */
   background-image: radial-gradient(circle, rgba(240,236,227,0.065) 1px, transparent 1px);
   background-size: 22px 22px;
   background-color: #0a0806;
 }
 
-/* Radial vignette — fades dots toward edges so logo floats cleanly */
 .brand-img-wrap::before {
   content: ''; position: absolute; inset: 0;
   background: radial-gradient(
@@ -274,14 +268,12 @@ body {
   z-index: 1; pointer-events: none;
 }
 
-/* Top-edge depth shine */
 .brand-img-wrap::after {
   content: ''; position: absolute; inset: 0;
   background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, transparent 35%);
   z-index: 2; pointer-events: none;
 }
 
-/* Logo — white monochrome, floats above dot grid */
 .brand-img {
   position: relative; z-index: 3;
   width: 56%; max-width: 172px; height: auto;
@@ -292,12 +284,10 @@ body {
 }
 .brand-card:hover .brand-img { opacity: 1; transform: scale(1.05); }
 
-/* Kill any old contain-specific overrides */
 .brand-card.contain .card-front { background: #0a0806; }
 .brand-card.contain .card-front::after { display: none; }
 .brand-card.contain .brand-img { object-fit: contain; padding: 0; opacity: 0.80; }
 
-/* Label strip */
 .brand-label {
   background: rgba(14,12,10,0.95);
   backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
@@ -308,15 +298,11 @@ body {
 .brand-label-name { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 700; color: var(--text-100); margin-bottom: 2px; line-height: 1.1; }
 .brand-label-role { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--text-60); }
 
-/* ══════════════════════════════════════════════════════════
-   CARD BACK — dark, matched to front
-   ══════════════════════════════════════════════════════════ */
 .card-back {
   position: absolute; inset: 0;
   backface-visibility: hidden; -webkit-backface-visibility: hidden;
   transform: rotateY(180deg);
   border-radius: 10px;
-  /* Same dot grid as front */
   background-color: #0a0806;
   background-image: radial-gradient(circle, rgba(240,236,227,0.04) 1px, transparent 1px);
   background-size: 22px 22px;
@@ -326,7 +312,6 @@ body {
   padding: 26px 24px;
   overflow: hidden;
 }
-/* Radial vignette on back too */
 .card-back::before {
   content: ''; position: absolute; inset: 0; border-radius: 10px;
   background: radial-gradient(ellipse 80% 80% at 50% 50%, transparent 0%, rgba(10,8,6,0.55) 65%, rgba(10,8,6,0.96) 100%);
@@ -518,6 +503,7 @@ footer span { font-family: 'DM Mono', monospace; font-size: 8.5px; color: var(--
     <li><a href="#overview">Background</a></li>
     <li><a href="#work">Work</a></li>
     <li><a href="#experiments">Experiments</a></li>
+    <li><a href="agents.html">Agents</a></li>
     <li><a href="#about">About</a></li>
   </ul>
 </nav>
@@ -559,13 +545,10 @@ footer span { font-family: 'DM Mono', monospace; font-size: 8.5px; color: var(--
   </div>
 
   <div class="brands-grid">
-
     <div class="brand-card contain">
       <div class="card-inner">
         <div class="card-front">
-          <div class="brand-img-wrap">
-            <img class="brand-img" src="logo-medibank.png" alt="Medibank">
-          </div>
+          <div class="brand-img-wrap"><img class="brand-img" src="logo-medibank.png" alt="Medibank"></div>
           <div class="brand-label">
             <div class="brand-label-years">2023 &mdash; Present</div>
             <div class="brand-label-name">Medibank</div>
@@ -579,13 +562,10 @@ footer span { font-family: 'DM Mono', monospace; font-size: 8.5px; color: var(--
         </div>
       </div>
     </div>
-
     <div class="brand-card contain">
       <div class="card-inner">
         <div class="card-front">
-          <div class="brand-img-wrap">
-            <img class="brand-img" src="logo-boq.png" alt="Bank of Queensland">
-          </div>
+          <div class="brand-img-wrap"><img class="brand-img" src="logo-boq.png" alt="Bank of Queensland"></div>
           <div class="brand-label">
             <div class="brand-label-years">2018 &mdash; 2023</div>
             <div class="brand-label-name">Bank of Queensland</div>
@@ -599,13 +579,10 @@ footer span { font-family: 'DM Mono', monospace; font-size: 8.5px; color: var(--
         </div>
       </div>
     </div>
-
     <div class="brand-card contain">
       <div class="card-inner">
         <div class="card-front">
-          <div class="brand-img-wrap">
-            <img class="brand-img" src="logo-optus.png" alt="Optus">
-          </div>
+          <div class="brand-img-wrap"><img class="brand-img" src="logo-optus.png" alt="Optus"></div>
           <div class="brand-label">
             <div class="brand-label-years">2015 &mdash; 2018</div>
             <div class="brand-label-name">Optus</div>
@@ -619,13 +596,10 @@ footer span { font-family: 'DM Mono', monospace; font-size: 8.5px; color: var(--
         </div>
       </div>
     </div>
-
     <div class="brand-card contain">
       <div class="card-inner">
         <div class="card-front">
-          <div class="brand-img-wrap">
-            <img class="brand-img" src="logo-commbank.png" alt="CommBank">
-          </div>
+          <div class="brand-img-wrap"><img class="brand-img" src="logo-commbank.png" alt="CommBank"></div>
           <div class="brand-label">
             <div class="brand-label-years">2014 &mdash; 2015</div>
             <div class="brand-label-name">CommBank</div>
@@ -639,13 +613,10 @@ footer span { font-family: 'DM Mono', monospace; font-size: 8.5px; color: var(--
         </div>
       </div>
     </div>
-
     <div class="brand-card contain">
       <div class="card-inner">
         <div class="card-front">
-          <div class="brand-img-wrap">
-            <img class="brand-img" src="logo-opera.png" alt="Sydney Opera House">
-          </div>
+          <div class="brand-img-wrap"><img class="brand-img" src="logo-opera.png" alt="Sydney Opera House"></div>
           <div class="brand-label">
             <div class="brand-label-years">2012 &mdash; 2014</div>
             <div class="brand-label-name">Sydney Opera House</div>
@@ -659,13 +630,10 @@ footer span { font-family: 'DM Mono', monospace; font-size: 8.5px; color: var(--
         </div>
       </div>
     </div>
-
     <div class="brand-card contain">
       <div class="card-inner">
         <div class="card-front">
-          <div class="brand-img-wrap">
-            <img class="brand-img" src="logo-worldvision.png" alt="World Vision">
-          </div>
+          <div class="brand-img-wrap"><img class="brand-img" src="logo-worldvision.png" alt="World Vision"></div>
           <div class="brand-label">
             <div class="brand-label-years">2010 &mdash; 2012</div>
             <div class="brand-label-name">World Vision</div>
@@ -679,7 +647,6 @@ footer span { font-family: 'DM Mono', monospace; font-size: 8.5px; color: var(--
         </div>
       </div>
     </div>
-
   </div>
   <p class="card-hint">Click any card to learn more</p>
 
@@ -850,6 +817,15 @@ footer span { font-family: 'DM Mono', monospace; font-size: 8.5px; color: var(--
       <p class="exp-desc">Learning that only ~20% of NFPs have completed a cybersecurity assessment but ~12%+ last year alone reported an incident I built a free AI risk assessment to democratise access. Built using Lovable and Claude AI.</p>
       <div class="exp-tags"><span class="exp-tag">Lovable</span><span class="exp-tag">Claude AI</span><span class="exp-tag">Governance</span></div>
       <span class="exp-link">View project &rarr;</span>
+    </a>
+    <a href="agents.html" class="exp-card">
+      <span class="exp-n">04</span>
+      <div class="exp-status s-active"><span class="e-dot"></span><span class="e-label">Live</span></div>
+      <div class="exp-type">Agent &middot; AI &middot; Executive Tools</div>
+      <div class="exp-name">Executive Meeting Intelligence</div>
+      <p class="exp-desc">C-suite executives spend hours researching before high-stakes meetings. This agent does it in seconds &mdash; live web research, synthesised through your specific agenda, delivered as a one-page brief you can download and walk in with.</p>
+      <div class="exp-tags"><span class="exp-tag">Claude AI</span><span class="exp-tag">Web Search</span><span class="exp-tag">Vercel</span></div>
+      <span class="exp-link">Try the agent &rarr;</span>
     </a>
   </div>
 </section>
