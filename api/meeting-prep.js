@@ -1,11 +1,8 @@
 export default async function handler(req, res) {
-  // Only allow POST
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // Basic rate limiting via Vercel's edge — one request at a time per session
-  // For production, consider upstash/redis for proper rate limiting
   const { person, agenda } = req.body;
 
   if (!person || !agenda) {
@@ -18,7 +15,7 @@ export default async function handler(req, res) {
 
   const SYSTEM_PROMPT = `You are an elite executive research analyst. Your job is to prepare a concise, insight-rich one-page briefing for a senior executive before a high-stakes meeting.
 
-Given the person being met and the meeting agenda, produce a structured briefing that is sharp, specific, and actionable. Never be generic. Every insight should be grounded in real, verifiable signals — recent interviews, announcements, LinkedIn activity, company news, earnings calls, strategic moves.
+Given the person being met and the meeting agenda, produce a structured briefing that is sharp, specific, and actionable. Draw on everything you know about this person, their organisation, their industry, and their public statements and strategic moves.
 
 Return ONLY a JSON object with this exact structure:
 {
@@ -44,7 +41,7 @@ Return ONLY a JSON object with this exact structure:
   "watchOut": "One thing to be careful of — a sensitivity, a recent failure, a topic to avoid or handle carefully"
 }
 
-Be specific. Use names, dates, numbers where possible. If you cannot find solid evidence, say so briefly rather than fabricating. No preamble, no markdown, return only the JSON.`;
+Be specific. Use names, dates, numbers where possible. If you are uncertain about something, say so briefly rather than fabricating. No preamble, no markdown, return only the JSON.`;
 
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -58,11 +55,10 @@ Be specific. Use names, dates, numbers where possible. If you cannot find solid 
         model: 'claude-sonnet-4-20250514',
         max_tokens: 1500,
         system: SYSTEM_PROMPT,
-        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
         messages: [
           {
             role: 'user',
-            content: `I am meeting with: ${person}\n\nMy meeting agenda / what I want to achieve: ${agenda}\n\nResearch this person and their organisation thoroughly using web search, then produce the executive briefing JSON.`,
+            content: `I am meeting with: ${person}\n\nMy meeting agenda / what I want to achieve: ${agenda}\n\nProduce the executive briefing JSON.`,
           },
         ],
       }),
@@ -75,30 +71,26 @@ Be specific. Use names, dates, numbers where possible. If you cannot find solid 
     }
 
     const data = await response.json();
+    const textBlock = data.content?.find((b) => b.type === 'text');
 
-    // Web search causes multiple content blocks — get ALL text blocks
-    const textBlocks = data.content?.filter((b) => b.type === 'text') || [];
-
-    if (!textBlocks.length) {
+    if (!textBlock) {
       return res.status(502).json({ error: 'No response from AI. Please try again.' });
     }
 
-    // Use the last text block — it contains the final JSON after research
-    const lastText = textBlocks[textBlocks.length - 1].text;
-
-    // Extract JSON object — find first { to last }
-    const jsonStart = lastText.indexOf('{');
-    const jsonEnd = lastText.lastIndexOf('}');
+    // Extract JSON — find first { to last }
+    const jsonStart = textBlock.text.indexOf('{');
+    const jsonEnd = textBlock.text.lastIndexOf('}');
 
     if (jsonStart === -1 || jsonEnd === -1) {
-      console.error('No JSON found in response:', lastText.substring(0, 200));
+      console.error('No JSON found in response:', textBlock.text.substring(0, 200));
       return res.status(502).json({ error: 'Could not parse briefing. Please try again.' });
     }
 
-    const jsonStr = lastText.slice(jsonStart, jsonEnd + 1);
+    const jsonStr = textBlock.text.slice(jsonStart, jsonEnd + 1);
     const parsed = JSON.parse(jsonStr);
 
     return res.status(200).json({ briefing: parsed });
+
   } catch (err) {
     console.error('Handler error:', err);
     return res.status(500).json({ error: 'Something went wrong. Please try again.' });
