@@ -97,18 +97,19 @@ body {
 .ask-input-row.neo-ring::after { border-radius: 12px; }
 
 /* ─── CURSOR ─────────────────────────────────────────── */
+html, body, * { cursor: none !important; }
 #cur {
-  position: fixed; pointer-events: none; z-index: 999999;
-  transform: translate(-50%,-50%);
-  width: 10px; height: 10px;
-  background: rgba(240,236,227,0.85); border-radius: 50%;
-  transition: width .28s var(--ease-spring), height .28s var(--ease-spring), background .28s;
-  mix-blend-mode: difference;
-  will-change: transform;
-  isolation: isolate;
+  position: fixed;
+  pointer-events: none;
+  z-index: 999999;
+  width: 10px;
+  height: 10px;
+  background: #f0ece3;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  top: 0; left: 0;
 }
-#cur.h { width: 54px; height: 54px; background: rgba(240,236,227,0.08); }
-@media(max-width:900px){#cur{display:none;}}
+@media(max-width:900px){ #cur { display:none; } }
 
 /* ─── NAV ────────────────────────────────────────────── */
 .site-nav {
@@ -873,22 +874,19 @@ footer span { font-family: 'DM Mono', monospace; font-size: 8.5px; color: var(--
 (function(){
   var el=document.getElementById('cemail'); if(!el)return;
   var e='nick'+'malham'+'@'+'gmail'+'.com';
-  el.textContent=e; el.style.cursor='pointer';
+  el.textContent=e;
   el.onclick=function(){window.location='mai'+'lto:'+e;};
 })();
 
 // ── CURSOR ────────────────────────────────────────────
-var cur=document.getElementById('cur');
-// Move cursor to end of body so it paints above everything
-document.body.appendChild(cur);
-document.addEventListener('mousemove',function(e){
-  cur.style.left=e.clientX+'px';
-  cur.style.top=e.clientY+'px';
-});
-document.querySelectorAll('a,button,.contact-link,.brand-card,.case-card,.exp-card,.how-card,.ask-chip').forEach(function(el){
-  el.addEventListener('mouseenter',function(){cur.classList.add('h');});
-  el.addEventListener('mouseleave',function(){cur.classList.remove('h');});
-});
+(function(){
+  var cur = document.getElementById('cur');
+  if (!cur) return;
+  document.addEventListener('mousemove', function(e) {
+    cur.style.left = e.clientX + 'px';
+    cur.style.top  = e.clientY + 'px';
+  });
+})();
 
 // ── NAV SCROLL ────────────────────────────────────────
 (function(){
@@ -916,7 +914,7 @@ document.querySelectorAll('a,button,.contact-link,.brand-card,.case-card,.exp-ca
 // ── CARD FLIP ─────────────────────────────────────────
 var flipSound=new Audio('flip.mp3'); flipSound.preload='auto'; flipSound.volume=0.3;
 document.querySelectorAll('.brand-card').forEach(function(card){
-  card.setAttribute('tabindex','0'); card.style.cursor='pointer';
+  card.setAttribute('tabindex','0');
   card.addEventListener('pointerup',function(e){
     var inner=card.querySelector('.card-inner');
     if(inner){inner.style.transform='';inner.style.transition='';}
