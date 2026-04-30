@@ -129,21 +129,16 @@ body {
 }
 
 /* ─── CURSOR ─────────────────────────────────────────── */
-#cur {
-  position: fixed;
-  pointer-events: none;
-  z-index: 2147483647;
-  width: 11px; height: 11px;
-  background: var(--cur-color);
-  border-radius: 50%;
-  top: 0; left: 0;
-  /* translate3d forces GPU compositing layer above everything */
-  transform: translate3d(-50%, -50%, 0);
-  will-change: transform;
-  transition: background 0.3s;
-  /* DO NOT add isolation, contain, or mix-blend-mode — they break cursor */
+/* ── CURSOR: pure CSS SVG approach — no z-index wars ── */
+html, body, * {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Ccircle cx='6' cy='6' r='5' fill='%23f0ece3'/%3E%3C/svg%3E") 6 6, auto !important;
 }
-@media(max-width:900px){ #cur { display:none !important; } }
+[data-theme="light"] html,
+[data-theme="light"] body,
+[data-theme="light"] * {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Ccircle cx='6' cy='6' r='5' fill='%231a1714'/%3E%3C/svg%3E") 6 6, auto !important;
+}
+#cur { display: none; }
 
 /* ─── THEME TOGGLE ───────────────────────────────────── */
 /* Sun/moon toggle — styled like reference */
@@ -893,17 +888,7 @@ footer span { font-family: 'DM Mono', monospace; font-size: 8.5px; color: var(--
   el.onclick=function(){window.location='mai'+'lto:'+e;};
 })();
 
-// ── CURSOR ────────────────────────────────────────────
-(function(){
-  if (window.matchMedia('(max-width:900px)').matches) return;
-  var cur = document.getElementById('cur');
-  if (!cur) return;
-  // Move to end of body — paints above all other elements regardless of stacking
-  document.body.appendChild(cur);
-  document.addEventListener('mousemove', function(e) {
-    cur.style.transform = 'translate3d(calc(' + e.clientX + 'px - 50%), calc(' + e.clientY + 'px - 50%), 0px)';
-  }, {passive: true});
-})();
+// ── CURSOR: handled by CSS SVG data URI — no JS needed ──
 
 // ── THEME TOGGLE ──────────────────────────────────────
 (function(){
