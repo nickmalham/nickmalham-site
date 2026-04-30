@@ -137,10 +137,11 @@ body {
   background: var(--cur-color);
   border-radius: 50%;
   top: 0; left: 0;
-  transform: translate3d(-50%, -50%, 0) translateZ(0);
+  /* translate3d forces GPU compositing layer above everything */
+  transform: translate3d(-50%, -50%, 0);
   will-change: transform;
   transition: background 0.3s;
-  contain: strict;
+  /* DO NOT add isolation, contain, or mix-blend-mode — they break cursor */
 }
 @media(max-width:900px){ #cur { display:none !important; } }
 
@@ -897,9 +898,10 @@ footer span { font-family: 'DM Mono', monospace; font-size: 8.5px; color: var(--
   if (window.matchMedia('(max-width:900px)').matches) return;
   var cur = document.getElementById('cur');
   if (!cur) return;
-  // Use translate3d — forces own GPU compositing layer above everything
+  // Move to end of body — paints above all other elements regardless of stacking
+  document.body.appendChild(cur);
   document.addEventListener('mousemove', function(e) {
-    cur.style.transform = 'translate3d(calc(' + e.clientX + 'px - 50%), calc(' + e.clientY + 'px - 50%), 9999px)';
+    cur.style.transform = 'translate3d(calc(' + e.clientX + 'px - 50%), calc(' + e.clientY + 'px - 50%), 0px)';
   }, {passive: true});
 })();
 
