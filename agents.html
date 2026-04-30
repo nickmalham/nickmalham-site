@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,6 +10,13 @@
 <meta property="og:description" content="Practical AI agents built for executives. Meeting intelligence, market briefings, and more.">
 <meta property="og:url" content="https://nickmalham.com/agents">
 <meta property="og:locale" content="en_AU">
+<script>
+  // Apply saved theme before first paint — no flash
+  (function(){
+    var t = localStorage.getItem('nm-theme');
+    if (t === 'light') document.documentElement.setAttribute('data-theme','light');
+  })();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Manrope:wght@300;400;500;600&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
@@ -17,7 +24,8 @@
 /* ═══════════════════════════════════════════════════════
    DESIGN SYSTEM — mirrors index.html exactly
    ═══════════════════════════════════════════════════════ */
-:root {
+:root,
+[data-theme="dark"] {
   --bg-0: #080604;
   --bg-1: #0a0806;
   --bg-2: #0d0b09;
@@ -36,6 +44,35 @@
   --accent: #3b7fd4;
   --ease-spring: cubic-bezier(0.23,1,0.32,1);
   --ease-in: cubic-bezier(0.4,0,0.2,1);
+  --nav-bg: rgba(8,6,4,0.88);
+  --cur-color: #f0ece3;
+  --how-card-hover-bg: rgba(255,255,255,0.07);
+  --how-card-hover-border: rgba(255,255,255,0.16);
+}
+
+[data-theme="light"] {
+  --bg-0: #ede6d6;
+  --bg-1: #f5f0e8;
+  --bg-2: #ede6d6;
+  --bg-3: #e8e0ce;
+  --bg-4: #f0ead8;
+  --bg-5: #ebe4d4;
+  --glass-fill:    rgba(255,255,255,0.55);
+  --glass-border:  rgba(26,23,20,0.10);
+  --glass-shine:   rgba(255,255,255,0.90);
+  --glass-shadow:  rgba(0,0,0,0.08);
+  --glass-blur:    blur(16px);
+  --text-100: #1a1714;
+  --text-60:  rgba(26,23,20,0.60);
+  --text-40:  rgba(26,23,20,0.40);
+  --text-25:  rgba(26,23,20,0.25);
+  --accent: #2d6ab8;
+  --ease-spring: cubic-bezier(0.23,1,0.32,1);
+  --ease-in: cubic-bezier(0.4,0,0.2,1);
+  --nav-bg: rgba(245,240,232,0.92);
+  --cur-color: #1a1714;
+  --how-card-hover-bg: rgba(255,255,255,0.80);
+  --how-card-hover-border: rgba(26,23,20,0.18);
 }
 
 *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
@@ -45,33 +82,35 @@ body {
   color: var(--text-100);
   font-family: 'Manrope', sans-serif;
   overflow-x: hidden;
-  cursor: none;
+  transition: background 0.4s ease, color 0.4s ease;
 }
 
 /* ─── CURSOR ─────────────────────────────────────────── */
-/* ─── CURSOR ─────────────────────────────────────────── */
-html, body, * { cursor: none !important; }
+@media(min-width:901px){ html, body, * { cursor: none !important; } }
 #cur {
   position: fixed;
   pointer-events: none;
-  z-index: 999999;
-  width: 10px;
-  height: 10px;
-  background: #f0ece3;
+  z-index: 2147483647;
+  width: 11px; height: 11px;
+  background: var(--cur-color);
   border-radius: 50%;
-  transform: translate(-50%, -50%);
   top: 0; left: 0;
+  transform: translate3d(-50%, -50%, 0) translateZ(0);
+  will-change: transform;
+  transition: background 0.3s;
+  contain: strict;
 }
-@media(max-width:900px){ #cur { display:none; } }
+@media(max-width:900px){ #cur { display:none !important; } }
 
 /* ─── NAV ────────────────────────────────────────────── */
 .site-nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
   display: flex; align-items: center; justify-content: space-between;
   padding: 20px 52px;
-  background: rgba(8,6,4,0.82);
+  background: var(--nav-bg);
   backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--glass-border);
+  transition: background 0.4s;
 }
 .nav-wordmark {
   font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700;
@@ -452,9 +491,10 @@ html, body, * { cursor: none !important; }
 
 /* ─── FOOTER ─────────────────────────────────────────── */
 .site-footer {
-  border-top: 1px solid rgba(255,255,255,0.04);
+  border-top: 1px solid var(--glass-border);
   background: var(--bg-0); padding: 22px 52px;
   display: flex; justify-content: space-between; align-items: center;
+  transition: background 0.4s, border-color 0.4s;
 }
 .site-footer span {
   font-family: 'DM Mono', monospace; font-size: 8.5px;
@@ -667,14 +707,20 @@ html, body, * { cursor: none !important; }
 
 <!-- ══ SCRIPTS ════════════════════════════════════════════ -->
 <script>
+// ── THEME PERSISTENCE — read from homepage localStorage ───
+(function(){
+  var t = localStorage.getItem('nm-theme');
+  if (t === 'light') document.documentElement.setAttribute('data-theme','light');
+})();
+
 // ── CURSOR ────────────────────────────────────────────────
 (function(){
+  if (window.matchMedia('(max-width:900px)').matches) return;
   var cur = document.getElementById('cur');
   if (!cur) return;
   document.addEventListener('mousemove', function(e) {
-    cur.style.left = e.clientX + 'px';
-    cur.style.top  = e.clientY + 'px';
-  });
+    cur.style.transform = 'translate3d(calc(' + e.clientX + 'px - 50%), calc(' + e.clientY + 'px - 50%), 9999px)';
+  }, {passive: true});
 })();
 
 // ── ENABLE BUTTON WHEN BOTH FIELDS FILLED ────────────────
