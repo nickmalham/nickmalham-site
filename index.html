@@ -383,7 +383,6 @@ body {
   transform-style: preserve-3d;
   transition: transform .68s var(--ease-in);
   border-radius: 10px;
-  isolation: isolate;
 }
 .brand-card.flipped .card-inner { transform: rotateY(180deg); }
 
@@ -395,8 +394,7 @@ body {
   box-shadow: inset 0 1px 0 var(--glass-shine);
   background: var(--bg-1);
   transition: background 0.4s, border-color 0.4s;
-  /* Force front face hidden on mobile Safari */
-  -webkit-transform: rotateY(0deg);
+
 }
 .brand-img-wrap {
   position: relative; width: 100%; aspect-ratio: 4/3;
