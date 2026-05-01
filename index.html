@@ -438,8 +438,8 @@ html, body, * {
 .card-back {
   position: absolute; inset: 0;
   backface-visibility: hidden; -webkit-backface-visibility: hidden;
-  transform: rotateY(180deg);
-  -webkit-transform: rotateY(180deg);
+  transform: rotateY(180deg) translateZ(2px);
+  -webkit-transform: rotateY(180deg) translateZ(2px);
   border-radius: 10px;
   background-color: var(--card-back-bg);
   background-image: radial-gradient(circle, var(--card-back-dot) 1px, transparent 1px);
@@ -449,8 +449,6 @@ html, body, * {
   display: flex; flex-direction: column; justify-content: center;
   padding: 26px 24px; overflow: hidden;
   transition: background-color 0.4s, border-color 0.4s;
-  /* Ensure back fully covers front on mobile */
-  opacity: 1;
   -webkit-backface-visibility: hidden !important;
 }
 /* card-back::before removed — was covering text content */
@@ -609,11 +607,11 @@ footer span { font-family: 'DM Mono', monospace; font-size: 8.5px; color: var(--
   .site-nav { padding: 16px 20px; }
   .nav-links { display: none; }
   .nav-right { gap: 0; }
-  /* Mobile card flip — force GPU layer and hide front face properly */
-  .card-inner { -webkit-transform-style: preserve-3d; }
-  .brand-card.flipped .card-inner { -webkit-transform: rotateY(180deg); }
-  .card-front { -webkit-backface-visibility: hidden !important; backface-visibility: hidden !important; }
-  .card-back  { -webkit-backface-visibility: hidden !important; backface-visibility: hidden !important; }
+  /* Mobile card flip */
+  .card-inner { -webkit-transform-style: preserve-3d; transform-style: preserve-3d; }
+  .brand-card.flipped .card-inner { -webkit-transform: rotateY(180deg); transform: rotateY(180deg); }
+  .card-front { -webkit-backface-visibility: hidden !important; backface-visibility: hidden !important; -webkit-transform: translateZ(0); }
+  .card-back  { -webkit-backface-visibility: hidden !important; backface-visibility: hidden !important; -webkit-transform: rotateY(180deg) translateZ(2px); }
   .brand-img-wrap { -webkit-backface-visibility: hidden; }
   .brand-img { -webkit-backface-visibility: hidden; }
   .section { padding: 64px 20px 52px; }
@@ -670,7 +668,7 @@ footer span { font-family: 'DM Mono', monospace; font-size: 8.5px; color: var(--
   <canvas id="fluid-canvas"></canvas>
   <div class="hero-inner parallax-layer" data-speed="0.3">
     <h1 class="hero-hl">0 to 1<br>Product &amp;<br>Venture<br><em>Builder.</em></h1>
-    <p class="hero-sub">Medibank &middot; BOQ &middot; Optus &middot; CommBank &middot; Sydney Opera House &middot; World Vision</p>
+    <p class="hero-sub">From strategic ambiguity to differentiated brands through products customers love.</p>
   </div>
   <button class="tldr-btn" id="tldr-btn" aria-label="Play TL;DR audio summary">
     <div class="tldr-circle neo-ring">
@@ -698,7 +696,8 @@ footer span { font-family: 'DM Mono', monospace; font-size: 8.5px; color: var(--
   <div class="parallax-layer" data-speed="0.08">
     <p class="section-label gs-up">Background</p>
     <h2 class="section-hl gs-up">15 years. Six iconic organisations.</h2>
-    <p class="brand-intro gs-up">Most of my career has been spent building things large organisations need but struggle to build &mdash; new revenue streams, new ventures, and new products that get to market before the structure would normally allow. <strong>The sector changes. The mandate doesn&rsquo;t: zero to one, high ambiguity, commercial accountability.</strong></p>
+    <p class="brand-intro gs-up">Every organisation I&rsquo;ve joined has been at an inflection point. A competitive threat, a market shift, a strategic ambition with no clear path to execution. My role is consistent across all of them. Make sense of the ambiguity, set the vision, build the team and operating model, and take something from idea to market at a speed the core business can&rsquo;t move at and with the conviction of a startup.</p>
+    <p class="brand-intro gs-up">The sector changes every time. The challenge doesn&rsquo;t. <strong>Large organisations with real governance, legacy constraints and slow capital cycles, trying to build something genuinely new.</strong></p>
   </div>
   <div class="brands-grid">
     <div class="brand-card contain">
